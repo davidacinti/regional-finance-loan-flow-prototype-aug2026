@@ -19,8 +19,15 @@ The supplied Figma screenshots and approved mockups are the visual source of tru
 - Mobile: replace the large panel with a subtle, transparent floating gear button that opens the flow controls.
 - The initial chooser screen should link to all three flows.
 - Reset must clear the prototype state, including authentication, checkboxes, selections, and entered data.
+- Selecting a different demo flow starts a fresh customer session and clears authentication inherited from the previously tested flow.
 
 ## Flow definitions
+
+The landing-page flow chooser should identify the intended audiences:
+
+- Known Customer: former customers, affiliate audiences, and other recognized customers.
+- Unknown Customer: new customers entering through new marketing campaigns.
+- Offer Code Customer: direct-mail recipients and customers entering an offer or reservation code.
 
 ### Known Customer
 
@@ -105,6 +112,8 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 ## Bank-link simulation
 
 - Bank linking is simulated and must never collect or transmit real credentials.
+- Every customer flow must complete bank linking; no flow may inherit or bypass bank verification from another demo session.
+- The final credit-authorization screen may only be entered from the bank-link success screen. The prototype must redirect any other attempted route through bank linking.
 - Include bank selection/search, a realistic fictional sign-in screen, an animated connection state, and account-success state.
 - Keep mobile browser behavior natural; do not simulate an operating-system keyboard.
 - Use clearly fictional/demo credential guidance.
