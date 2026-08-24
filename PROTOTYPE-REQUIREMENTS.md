@@ -147,3 +147,12 @@ Do not add a success checkmark, “Funding initiated” badge, account summary, 
 - Flow and authentication state live in the `S` object and click/input handlers near the end of the file.
 - When a new screenshot conflicts with this document, the newest user-approved screenshot wins.
 - After changes, test all three entry flows, Reset, mobile flow controls, both OTP experiences, bank linking, account selection, signing, sticky actions, and the funded screen.
+
+## Design concepts
+
+- The prototype supports multiple visual concepts without duplicating or changing the underlying customer journeys.
+- **Classic** is the original Regional Finance prototype styling.
+- **Bold Rounded** is the newer proposed direction with Poppins typography, heavier headings, pill-shaped actions, larger radii, and a light-gray footer with a rounded top edge.
+- The selected concept persists while navigating between screens and customer flows, and it is preserved when Reset is used.
+- Customers can switch concepts from the start screen or from Prototype controls (the gear button on mobile).
+- Add future concepts to `DESIGN_NAMES`, the concept picker/control buttons, and a scoped `.phone.design-*` CSS block. Keep business logic, customer state, loan values, and flow routing shared.
