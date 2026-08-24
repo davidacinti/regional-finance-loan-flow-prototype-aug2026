@@ -25,9 +25,9 @@ The supplied Figma screenshots and approved mockups are the visual source of tru
 
 The landing-page flow chooser should identify the intended audiences:
 
-- Known Customer: former customers, affiliate audiences, and other recognized customers.
-- Unknown Customer: new customers entering through new marketing campaigns.
-- Offer Code Customer: direct-mail recipients and customers entering an offer or reservation code.
+- Known Customer: former customers, affiliate audiences, and other known customers whose information we already have.
+- New Customer: new customers whose information we do not have yet.
+- Offer Code Customer: direct-mail recipients entering an offer code whose information we already have.
 
 ### Known Customer
 
@@ -92,11 +92,17 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 - Show SSN digits while the customer types, then mask them after entry loses focus.
 - Address entry should show simulated autocomplete suggestions suitable for a static prototype.
 - Back and edit paths should preserve plausible state.
+- New Customer name, birth date, address, home ownership, income, SSN, phone, and email entries must persist and appear consistently on confirmation and downstream screens.
+- Offer selection is stateful. Loan amount, term, APR, monthly payment, and autopay selection must remain consistent on Save Offer, credit authorization, funding, agreement, and funded-confirmation screens.
+- The maximum selectable loan amount is $15,000. The amount selector supports $1,000 increments from $1,000 through $15,000.
+- Loan Proceeds and Term rows expand independently to show their interactive selection states. Amount and term options must use consistent alignment and spacing.
 
 ## Terminology and data
 
 - Use “pre-qualified” consistently. Do not use “preapproved” or “pre-approved.”
 - Use fictional demo customer and account data only.
+- Standard known-customer test identity: Test User, 123-456-7890, and Testuser@gmail.com.
+- Display known phone numbers as `***-***-7890` on phone-confirmation and SMS OTP screens.
 - Do not connect to real identity, credit, banking, document-signing, or funding services.
 
 ## Visual requirements
