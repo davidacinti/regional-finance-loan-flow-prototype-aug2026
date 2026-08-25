@@ -153,7 +153,7 @@ Do not add a success checkmark, “Funding initiated” badge, account summary, 
 - The prototype supports multiple visual concepts without duplicating or changing the underlying customer journeys.
 - **V1** is the original Regional Finance prototype styling.
 - **V2** is the newer proposed direction with Poppins typography, heavier headings, pill-shaped actions, larger radii, and a light-gray footer with a rounded top edge.
-- **V3** is the secure, trust-led offer direction based on `regional_finance_secure_flow.html`: Plus Jakarta Sans typography, a compact 102 × 26 logo, pill actions, pale-blue form surfaces, filled consent panels, colorful benefit cues, and a standard navy footer. Its known-customer entry includes the expanded reassurance and trust treatment; all three customer journeys continue through the same shared screens and logic.
+- **V3** is the secure, trust-led offer direction based on `regional_finance_secure_flow.html`: Plus Jakarta Sans typography, a compact 102 × 26 logo, pill actions, pale-blue form surfaces, filled consent panels, colorful benefit cues, and a standard navy footer. Its known-customer entry includes the expanded reassurance and trust treatment, and the “See your options in one click” screen includes personalized-offer artwork; all three customer journeys continue through the same shared screens and logic.
 - The selected concept persists while navigating between screens and customer flows, and it is preserved when Reset is used.
 - Customers can switch concepts from the start screen or from Prototype controls (the gear button on mobile).
 - The compact version picker is designed to grow cleanly to V3, V4, and V5.
