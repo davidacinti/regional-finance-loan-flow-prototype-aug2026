@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: regional-finance-loan-flow-prototype
+    runtime: static
+    buildCommand: echo "Static prototype ready"
+    staticPublishPath: .
+    autoDeployTrigger: commit
