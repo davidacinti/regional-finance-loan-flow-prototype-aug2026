@@ -2,6 +2,6 @@ services:
   - type: web
     name: regional-finance-loan-flow-prototype
     runtime: static
-    buildCommand: echo "Static prototype ready"
-    staticPublishPath: .
+    buildCommand: rm -rf dist && mkdir -p dist && cp -R assets dist/assets && npx --yes pagecrypt@5 index.html dist/index.html "$PASSWORD"
+    staticPublishPath: ./dist
     autoDeployTrigger: commit
