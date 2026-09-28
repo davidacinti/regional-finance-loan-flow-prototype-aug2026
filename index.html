@@ -245,4 +245,14 @@ render=function(shouldScroll=true){
 document.head.insertAdjacentHTML('beforeend', `<style>
 .phone.design-v4 .v4-review-card .review-row:after,.phone.design-v4 .v4-review-card .v4-review-row:after{content:none}.phone.design-v4 .v4-review-card .v4-review-row:before{content:'';position:absolute;right:8px;top:50%;width:8px;height:8px;border-top:2px solid #8e9ab5;border-right:2px solid #8e9ab5;transform:translateY(-50%) rotate(45deg)}
 </style>`);
+document.head.insertAdjacentHTML('beforeend', `<style>
+.phone.design-v4 .v4-edit-row .v4-income-disclosure{margin:8px 30px 0 0;color:#6a6a6a;font-size:9px;line-height:1.35;text-align:left}
+</style>`);
+const renderIncomeDisclosureBase=render;
+render=function(shouldScroll=true){
+  renderIncomeDisclosureBase(shouldScroll);
+  if(S.design!=='v4'||!['knownConfirm','review'].includes(S.page)||S.confirmEdit!=='income')return;
+  const incomeInput=app.querySelector('#editIncome');
+  if(incomeInput&&!app.querySelector('.v4-income-disclosure'))incomeInput.insertAdjacentHTML('afterend','<p class="v4-income-disclosure">Alimony, child support or separate maintenance income need not be revealed if you do not wish to have it considered as a basis for repaying this obligation.</p>');
+};
 </script></body></html>
