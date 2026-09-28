@@ -255,4 +255,8 @@ render=function(shouldScroll=true){
   const incomeInput=app.querySelector('#editIncome');
   if(incomeInput&&!app.querySelector('.v4-income-disclosure'))incomeInput.insertAdjacentHTML('afterend','<p class="v4-income-disclosure">Alimony, child support or separate maintenance income need not be revealed if you do not wish to have it considered as a basis for repaying this obligation.</p>');
 };
+document.head.insertAdjacentHTML('beforeend', `<style>
+/* Preserve the original confirmation-card rhythm; the row itself supplies vertical spacing. */
+.phone.design-v4 .v4-review-card .v4-review-row{padding:0 28px 0 0}
+</style>`);
 </script></body></html>
