@@ -242,4 +242,7 @@ render=function(shouldScroll=true){
   app.querySelectorAll('[data-edit-row]').forEach(button=>button.onclick=()=>{S.confirmEdit=button.dataset.editRow;render(false)});
   const close=app.querySelector('[data-close-edit]');if(close)close.onclick=()=>{S.confirmEdit=null;render(false)};
 };
+document.head.insertAdjacentHTML('beforeend', `<style>
+.phone.design-v4 .v4-review-card .review-row:after,.phone.design-v4 .v4-review-card .v4-review-row:after{content:none}.phone.design-v4 .v4-review-card .v4-review-row:before{content:'';position:absolute;right:8px;top:50%;width:8px;height:8px;border-top:2px solid #8e9ab5;border-right:2px solid #8e9ab5;transform:translateY(-50%) rotate(45deg)}
+</style>`);
 </script></body></html>
