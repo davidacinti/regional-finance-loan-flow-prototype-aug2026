@@ -1,0 +1,11 @@
+/* Regional Finance design system tokens for the board mockups (same source as styles/ds.css in the prototype).
+   Scope: typography colors, control shapes and shadows. Layouts and legal copy are untouched. */
+:root{--rf-blue:#2A71D4;--rf-blue-hover:#1E4F95;--rf-navy:#0D2240;--rf-text:#363636;--rf-text-2:#595959;--rf-line:#CDCDCD;--rf-gray-1:#F2F2F2;--rf-danger:#D32F2F;--rf-green:#177245}
+body,.screen,.phone{font-family:'Plus Jakarta Sans','Segoe UI',sans-serif;color:var(--rf-text)}
+h1,h2,h3,.title,.lf2-h1,.lf2-title{color:var(--rf-text)!important;letter-spacing:0}
+.sub,.lf2-sub,p.sub{color:var(--rf-text-2)}
+button:not(.x):not(.back):not(.link):not(.lf2-link):not(.lf-link):not(.fcancel):not(.ghost):not([class*="icon"]):not([aria-label="Close"]),.btn-primary,.save,.lf2-cta{border-radius:9999px;box-shadow:none}
+input:not([type=checkbox]):not([type=radio]):not(.otp-digit),select{border-color:var(--rf-line);border-radius:16px;box-shadow:none;color:var(--rf-text)}
+input:focus,select:focus{border-color:var(--rf-text-2)!important;box-shadow:none!important;outline:0}
+.card,.confirm,.pick,.lf2-card,.lf2-offer,.option,.choice{box-shadow:none!important}
+.ferr,.err,.error{color:var(--rf-danger)}
