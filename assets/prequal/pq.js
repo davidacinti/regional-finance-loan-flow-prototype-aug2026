@@ -7,5 +7,6 @@
     var m = document.getElementById('mobile');
     parent.postMessage({ rfPq: 'continue', phone: m ? m.value : '' }, '*');
   });
+  document.querySelectorAll('[data-pq-continue]').forEach(function (x) { x.addEventListener('click', function () { parent.postMessage({ rfPq: 'continue', phone: '' }, '*'); }); });
   document.querySelectorAll('a[href="#"]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
 })();
