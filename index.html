@@ -293,7 +293,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     }
     if (S.page !== 'prequalLanding') return;
     app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html"></iframe>';
+    sizeFrame();
   };
+  // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
+  function sizeFrame(){ const f = app.querySelector('.pq-frame'); if (!f) return; if (!matchMedia('(max-width:720px)').matches) { f.style.height = ''; return; } const vh = (window.visualViewport ? visualViewport.height : innerHeight); f.style.height = Math.max(320, Math.round(vh - f.getBoundingClientRect().top - (window.scrollY || 0))) + 'px'; }
+  addEventListener('resize', sizeFrame); if (window.visualViewport) visualViewport.addEventListener('resize', sizeFrame);
   window.addEventListener('message', (e) => {
     if (!e.data || e.data.rfPq !== 'continue' || S.page !== 'prequalLanding') return;
     if (e.data.phone) S.customer.phone = e.data.phone;
@@ -307,7 +311,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const syncEmail = () => document.querySelectorAll('[data-pq-email]').forEach(b => b.classList.toggle('active', (S.pqEmail === false ? 'off' : 'on') === b.dataset.pqEmail));
     document.querySelectorAll('[data-pq-email]').forEach(b => b.onclick = () => { S.pqEmail = b.dataset.pqEmail === 'on'; syncEmail(); });
     syncEmail(); }
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100vh - 18px)}}</style>');
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100dvh - 18px)}.phone.page-prequal{min-height:0}html:has(.phone.page-prequal),html:has(.phone.page-prequal) body{overflow:hidden;height:100%}}</style>');
   render(false);
 })();
 </script></body></html>
