@@ -270,11 +270,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const phone = document.querySelector('.phone');
   // Is this you? → straight to bank verification (no offer, save or email code: the offer was picked on the landing).
   const baseGo = go;
-  // POSSIBLE STEP before signing (panel switch, on by default): confirm their email with the existing email code screen.
   go = function(p, push = true){
     if (S.pq && S.page === 'review' && p === 'ready') p = 'bankIntro';
-    if (S.pq && S.pqEmail !== false && S.page === 'funding' && p === 'sign' && !S.email) p = 'emailOtp';
-    if (S.pq && S.page === 'emailOtp' && p === 'bankIntro' && S.bank) p = 'sign';
     return baseGo(p, push);
   };
   // Start: same known-customer session, then the landing.
@@ -305,12 +302,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   });
   // Demo panel: the two prequal entries above the existing ones.
   const grp = document.querySelector('.panel [data-flow="known"]');
-  if (grp) { grp.insertAdjacentHTML('beforebegin', '<button data-flow="prequal">Known Customer Prequal</button><button data-flow="prequalb">Prequal · no phone on file</button>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow));
-    // Switch for the possible email step before signing (prequal only).
-    grp.parentNode.insertAdjacentHTML('afterend', '<div class="control-group pq-email-ctl"><span class="control-label">Prequal · before signing</span><button type="button" data-pq-email="on">Email code: on</button><button type="button" data-pq-email="off">Email code: off</button></div>');
-    const syncEmail = () => document.querySelectorAll('[data-pq-email]').forEach(b => b.classList.toggle('active', (S.pqEmail === false ? 'off' : 'on') === b.dataset.pqEmail));
-    document.querySelectorAll('[data-pq-email]').forEach(b => b.onclick = () => { S.pqEmail = b.dataset.pqEmail === 'on'; syncEmail(); });
-    syncEmail(); }
+  if (grp) { grp.insertAdjacentHTML('beforebegin', '<button data-flow="prequal">Known Customer Prequal</button><button data-flow="prequalb">Prequal · no phone on file</button>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow)); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100dvh - 18px)}.phone.page-prequal{min-height:0}html:has(.phone.page-prequal),html:has(.phone.page-prequal) body{overflow:hidden;height:100%}}</style>');
   render(false);
 })();
