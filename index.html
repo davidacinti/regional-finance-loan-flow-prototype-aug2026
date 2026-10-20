@@ -273,6 +273,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const baseGo = go;
   go = function(p, push = true){
     if (S.pq && S.page === 'review' && p === 'ready') p = 'bankIntro';
+    // No email code anywhere in the prototype: the offer goes straight to the bank link.
+    if (p === 'save' || p === 'emailOtp') { S.email = true; p = 'bankIntro'; }
     return baseGo(p, push);
   };
   // Start: same known-customer session, then the landing.
