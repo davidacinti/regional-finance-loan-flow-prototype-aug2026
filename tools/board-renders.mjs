@@ -15,6 +15,9 @@ const SHOTS = [
   { file: 'prequal-landing-a.png', page: 'landing-a.html' },
   { file: 'prequal-landing-a-customize.png', page: 'landing-a.html', open: true },
   { file: 'prequal-landing-b-creditkarma.png', page: 'landing-b.html' },
+  // Nov 2026 board: offer changes happen on the existing Pre-Approval Offer page (7), so the landing shows no editor link.
+  { file: 'prequal-landing-a-nov.png', page: 'landing-a.html', hide: '.lf2-more, #pqEdit' },
+  { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html', hide: '.lf2-more, #pqEdit' },
   // Interaction state for the board: only the top of the page, down to the end of the open editor (the rest is unchanged).
   { file: 'prequal-landing-customize-state.png', page: 'landing-a.html', open: true, clipTo: '.lf2-edit' },
 ];
@@ -30,6 +33,7 @@ for (const s of SHOTS) {
   await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   await tab.goto(BASE + s.page + '?t=' + Date.now(), { waitUntil: 'networkidle0' });
   if (s.open) await tab.click('.lf2-toggle');
+  if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));
   if (s.clipTo) {
     const bottom = await tab.evaluate((sel) => { document.querySelector('.lf2-paybar').style.display = 'none'; return Math.ceil(document.querySelector(sel).getBoundingClientRect().bottom + 24); }, s.clipTo);
