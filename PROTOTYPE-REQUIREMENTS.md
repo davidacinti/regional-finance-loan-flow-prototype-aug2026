@@ -92,7 +92,7 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 ### Prequal offer
 
 - The offer card says "Your pre-qualified offer" for every channel and never names the partner. Aggregators (Even Financial / Engine by MoneyLion, QuinStreet) are embedded in other companies' sites, so "from Even Financial" would not match where the customer came from.
-- The line under the greeting is "100% online, start to finish." (replaced "Helping customers since 1987."; these customers may not know Regional, so no mention of branches).
+- The line under the greeting is "Simple, fast, and 100% online." (replaced "Helping customers since 1987."; these customers may not know Regional, so no mention of branches).
 - "Select another option" opens an editor in the offer card: loan amount ($1,000–$15,000 in $1,000 steps; slider with − and +), term (3, 4 or 5 years, each with its APR), origination fee, APR and an autopay switch. The card's Monthly/Term/APR and the pinned payment update live. The editor is in the page markup (hidden until opened) so the agent copy includes it.
 - Price model, kept the same in `assets/prequal/pq.js` and `index.html`: APR 13.01% / 13.49% / 13.99% for 3 / 4 / 5 years, 0.25% off with autopay, origination fee 3% of the amount, fixed amortized monthly payment. Default: $15,000, 3 years, autopay off ($505/mo).
 - Continue carries amount, term and autopay into the funnel: the credit check, funding loan details, signing and funded screens show the same offer. Other flows keep their own prices.
