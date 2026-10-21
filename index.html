@@ -293,13 +293,14 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const CH_KEY = 'rf-v1-prequal-channel';
   let channel = 'moneylion';
   try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) channel = v; } catch (e) {}
-  const channelOptions = () => Object.keys(CHANNELS).map(k => '<option value="' + k + '"' + (k === channel ? ' selected' : '') + '>' + CHANNELS[k].label + '</option>').join('');
-  function setChannel(k){ if (!CHANNELS[k]) return; channel = k; try { localStorage.setItem(CH_KEY, k); } catch (e) {} document.querySelectorAll('[data-channel]').forEach(s => s.value = k); }
+  // Picking a channel loads the flow at once (no Start button). The picker shows the running channel, else a prompt.
+  const channelOptions = () => '<option value="" disabled' + (S.pq ? '' : ' selected') + '>Choose where it starts…</option>' + Object.keys(CHANNELS).map(k => '<option value="' + k + '"' + (S.pq && k === channel ? ' selected' : '') + '>' + CHANNELS[k].label + '</option>').join('');
+  function setChannel(k){ if (!CHANNELS[k]) return; channel = k; try { localStorage.setItem(CH_KEY, k); } catch (e) {} }
   // Start: same known-customer session, then the affiliate page(s) for the chosen channel, then the landing.
   const baseStart = start;
   start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
   const baseSync = syncControls;
-  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = channel); if (!S.pq) return; document.querySelectorAll('[data-flow]').forEach(b => b.classList.toggle('active', b.dataset.flow === 'prequal')); };
+  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = S.pq ? channel : ''); document.querySelectorAll('.pq-group').forEach(g => g.classList.toggle('active', !!S.pq)); };
   const baseRender = render;
   render = function(shouldScroll = true){
     baseRender(shouldScroll);
@@ -307,9 +308,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
     if (S.page === 'blank' && !app.querySelector('[data-start="prequal"]')) {
       const first = app.querySelector('.flow-choice');
-      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><label class="pq-ch-label" for="pqChannel">Starts from</label><select class="pq-ch" id="pqChannel" data-channel>' + channelOptions() + '</select><button class="btn-main" data-start="prequal">Known Customer Prequal</button><p>Known customers with a pre-qualified offer (Nov 2026). The affiliate’s page, then Regional’s new landing, then the existing flow from the SMS code. Credit Karma also asks for a mobile number.</p></div>');
+      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><label class="pq-start-label" for="pqChannel">Known Customer Prequal</label><select class="pq-ch pq-ch-start" id="pqChannel" data-channel>' + channelOptions() + '</select><p>Known customers with a pre-qualified offer (Nov 2026). The affiliate’s page, then Regional’s new landing, then the existing flow from the SMS code. Credit Karma also asks for a mobile number.</p></div>');
       app.querySelectorAll('[data-start^="prequal"]').forEach(x => x.onclick = (e) => { e.preventDefault(); start(x.dataset.start); });
-      app.querySelectorAll('[data-channel]').forEach(s => s.onchange = () => setChannel(s.value));
+      app.querySelectorAll('[data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); start('prequal'); });
     }
     if (aff) {
       const ch = CHANNELS[S.channel] || CHANNELS.moneylion, i = +S.page.slice(4);
@@ -343,10 +344,10 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   });
   // Demo panel: the two prequal entries above the existing ones.
   const grp = document.querySelector('.panel [data-flow="known"]');
-  if (grp) { grp.insertAdjacentHTML('beforebegin', '<div class="pq-group"><label class="pq-ch-label" for="pqChannelPanel">Known Customer Prequal · starts from</label><select class="pq-ch" id="pqChannelPanel" data-channel>' + channelOptions() + '</select><button data-flow="prequal">Start</button></div>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow)); }
+  if (grp) { grp.insertAdjacentHTML('beforebegin', '<div class="pq-group"><label class="pq-ch-label" for="pqChannelPanel">Known Customer Prequal · starts from</label><select class="pq-ch" id="pqChannelPanel" data-channel>' + channelOptions() + '</select></div>'); }
   // Changing the channel in the panel during a prequal run restarts that run from the new channel.
-  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); if (S.pq) start('prequal'); });
-  document.head.insertAdjacentHTML('beforeend', '<style>.pq-ch-label{display:block;margin:2px 0 4px;font-size:12px;font-weight:600;color:inherit;opacity:.8}.pq-group{margin:0 0 10px;padding:10px;border:1px solid rgba(255,255,255,.22);border-radius:12px}.pq-group button{margin-bottom:0!important;width:100%}.pq-ch{display:block;width:100%;margin:0 0 8px;padding:9px 10px;border:1px solid #CDCDCD;border-radius:10px;background:#fff;color:#363636;font:inherit;font-size:14px}' +
+  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); start('prequal'); });
+  document.head.insertAdjacentHTML('beforeend', '<style>.pq-ch-label{display:block;margin:2px 0 4px;font-size:12px;font-weight:600;color:inherit;opacity:.8}.pq-group{margin:0 0 10px;padding:10px;border:1px solid rgba(255,255,255,.22);border-radius:12px}.pq-group.active{border-color:#fff;background:rgba(255,255,255,.08)}.pq-group .pq-ch{margin:0}.pq-start-label{display:block;margin:0 0 6px;font-weight:700;color:#363636;text-align:center}.pq-ch.pq-ch-start{min-height:48px;margin:0 0 5px;border:2px solid #2A71D4;border-radius:9999px;padding:0 16px;font-weight:600;color:#2A71D4}.pq-ch{display:block;width:100%;margin:0 0 8px;padding:9px 10px;border:1px solid #CDCDCD;border-radius:10px;background:#fff;color:#363636;font:inherit;font-size:14px}' +
     '.aff-note{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;background:#F1F3F4;border-bottom:1px solid #E1E3E6;font:500 13px/1.2 "Plus Jakarta Sans",sans-serif;cursor:help}@media(max-width:720px){.aff-note{padding-right:68px}}' +
     '.aff-url{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:9999px;background:#fff;color:#363636;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aff-url svg{flex:none;width:12px;height:12px;color:#595959}' +
     '.aff-tag{flex:none;padding:4px 9px;border-radius:9999px;background:#FFE9A8;border:1px dashed #B7791F;color:#5C3D00;font-size:11px;font-weight:700;white-space:nowrap}');
