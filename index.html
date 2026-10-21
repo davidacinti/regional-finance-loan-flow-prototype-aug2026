@@ -289,6 +289,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     chatgpt: { label: 'ChatGPT (prototype, not in production)', short: 'ChatGPT', domain: 'chatgpt.com', concept: true, pages: ['ai-chat-1-ask.html', 'ai-chat-2-form.html', 'ai-chat-3-offers.html'] },
     direct: { label: 'Regional email or text (no affiliate)', short: 'Regional', pages: [] },
   };
+  // Frames load fresh on every page load: a browser must never show an old copy of a landing or partner page.
+  const FRESH = '?t=' + Date.now();
   const CH_KEY = 'rf-v1-prequal-channel';
   let channel = 'moneylion';
   try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) channel = v; } catch (e) {}
@@ -321,12 +323,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       app.innerHTML = '<div class="aff-note" role="note" aria-label="' + say + (ch.pages.length > 1 ? ' Screen ' + (i + 1) + ' of ' + ch.pages.length + '.' : '') + '" title="' + say + '">' +
         '<span class="aff-url" aria-hidden="true">' + lock + ch.domain + '</span>' +
         '<span class="aff-tag" aria-hidden="true">' + (ch.concept ? 'Not in production' : 'Out of scope') + (ch.pages.length > 1 ? ' · ' + (i + 1) + '/' + ch.pages.length : '') + '</span></div>' +
-        '<iframe class="pq-frame" title="' + ch.short + ' (partner page, out of scope)" src="assets/affiliates/' + ch.pages[i] + '"></iframe>';
+        '<iframe class="pq-frame" title="' + ch.short + ' (partner page, out of scope)" src="assets/affiliates/' + ch.pages[i] + FRESH + '"></iframe>';
       sizeFrame(); return;
     }
-    if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html"></iframe>'; sizeFrame(); return; }
+    if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html' + FRESH + '"></iframe>'; sizeFrame(); return; }
     if (S.page !== 'prequalLanding') return;
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html"></iframe>';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html' + FRESH + '"></iframe>';
     sizeFrame();
   };
   // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
