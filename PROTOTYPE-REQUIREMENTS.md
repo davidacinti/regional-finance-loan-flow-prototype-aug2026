@@ -76,6 +76,7 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 - The scenario builder (start screen and Demo controls) has a "Starts from" picker: MoneyLion (Engine by MoneyLion), Credit Karma, LendingTree, NerdWallet, AmONE (QuinStreet), ChatGPT (prototype, not in production), or Regional email or text (no affiliate). The choice persists in the browser.
 - An affiliate channel first shows that affiliate's page (`assets/affiliates/`, copied from loan-flow-v2 mockups). A navy callout above it says it is the affiliate's page, hosted by the affiliate and out of scope. ChatGPT shows 3 chat screens, with a "Concept · not in production" callout.
 - Tapping Regional's offer on the affiliate page opens Regional's pre-qualified offer landing. The landing's "Your offer from …" line names the channel (`?via=`). From the landing on, the funnel is unchanged and identical for every channel.
+- Credit Karma sends no usable phone number, so its run opens the no-phone landing (B), which asks for a mobile number; the code is texted to that number. Other channels use landing A (phone on file). Set `noPhone: true` on a channel in `CHANNELS` for any other partner like this.
 - Competing lender cards on affiliate pages (AmONE, LendingTree) do not advance the prototype.
 
 ### New Customer landing

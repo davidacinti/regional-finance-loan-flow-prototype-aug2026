@@ -41,7 +41,7 @@ if (!SHELL) { console.log('Headless browser not installed (see the top of tools/
 const AFFILIATE = 'The page before Regional’s landing is the affiliate’s own page (a prototype of it, hosted by the affiliate, out of scope for Regional). Tapping Regional’s offer there opens Regional’s pre-qualified offer landing; from there the funnel is the same for every channel.';
 const JOURNEYS = [
   { id: 'prequal-moneylion', flow: 'prequal', channel: 'moneylion', name: 'Known customer prequal · MoneyLion (Engine by MoneyLion)', about: 'A known customer is matched with Regional on MoneyLion (Engine by MoneyLion, formerly Even Financial). ' + AFFILIATE },
-  { id: 'prequal-creditkarma', flow: 'prequal', channel: 'creditkarma', name: 'Known customer prequal · Credit Karma', about: 'A known customer sees Regional as the top suggested offer in Credit Karma’s Loans tab. ' + AFFILIATE },
+  { id: 'prequal-creditkarma', flow: 'prequal', channel: 'creditkarma', name: 'Known customer prequal · Credit Karma', about: 'A known customer sees Regional as the top suggested offer in Credit Karma’s Loans tab. Credit Karma does not send a usable phone number, so Regional’s landing asks for a mobile number (the no-phone landing). ' + AFFILIATE },
   { id: 'prequal-lendingtree', flow: 'prequal', channel: 'lendingtree', name: 'Known customer prequal · LendingTree', about: 'A known customer sees Regional as the top offer on LendingTree’s results page (a competing lender is shown below it). ' + AFFILIATE },
   { id: 'prequal-nerdwallet', flow: 'prequal', channel: 'nerdwallet', name: 'Known customer prequal · NerdWallet', about: 'A known customer is matched with Regional on NerdWallet. ' + AFFILIATE },
   { id: 'prequal-amone', flow: 'prequal', channel: 'amone', name: 'Known customer prequal · AmONE (QuinStreet)', about: 'A known customer sees Regional as the recommended offer on AmONE (a competing lender is shown below it). ' + AFFILIATE },
@@ -56,7 +56,7 @@ const JOURNEYS = [
 // What each screen is for (the agent sees this above the screen's content).
 const NOTES = {
   aff: 'The affiliate’s page (prototype, hosted by the affiliate, out of scope for Regional). Regional supplies the offer; layout, ratings and badges are the affiliate’s.',
-  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The offer from the channel is loaded; the customer accepts the consents in the pinned bar and continues. Next: the SMS code.',
+  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The offer from the channel is loaded; the customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma, or no phone on file) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
   newLanding: 'New borrower landing (regionalfinance.com patterns): why Regional, 3 steps to funded, a personal approach, reviews, approved legal footer. “Check your offers” opens the About-you pages.',
   confirmPhone: 'Confirm the phone number on file before a code is texted.',
   reentry: 'Returning customer: confirm the phone on file to continue the application.',

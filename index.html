@@ -279,10 +279,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   };
   // CHANNEL (scenario builder): where the known prequal customer starts. An affiliate's own page(s) come first
   // (assets/affiliates, copied from loan-flow-v2; the affiliate's page, not Regional's), then the same landing and funnel.
+  // noPhone = the partner sends no usable phone, so the landing asks for a mobile number (landing B).
   // via = the name on the landing's "Your offer from …" line ('' = Regional's own channel).
   const CHANNELS = {
     moneylion: { label: 'MoneyLion (Engine by MoneyLion)', short: 'MoneyLion', domain: 'moneylion.com', via: 'Even Financial', pages: ['even-financial-moneylion.html'] },
-    creditkarma: { label: 'Credit Karma', short: 'Credit Karma', domain: 'creditkarma.com', via: 'Credit Karma', pages: ['credit-karma.html'] },
+    creditkarma: { label: 'Credit Karma', short: 'Credit Karma', domain: 'creditkarma.com', via: 'Credit Karma', noPhone: true, pages: ['credit-karma.html'] },
     lendingtree: { label: 'LendingTree', short: 'LendingTree', domain: 'lendingtree.com', via: 'LendingTree', pages: ['lendingtree-v2.html'] },
     nerdwallet: { label: 'NerdWallet', short: 'NerdWallet', domain: 'nerdwallet.com', via: 'NerdWallet', pages: ['nerdwallet.html'] },
     amone: { label: 'AmONE (QuinStreet)', short: 'AmONE', domain: 'amone.com', via: 'AmONE', pages: ['amone.html'] },
@@ -296,9 +297,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   function setChannel(k){ if (!CHANNELS[k]) return; channel = k; try { localStorage.setItem(CH_KEY, k); } catch (e) {} document.querySelectorAll('[data-channel]').forEach(s => s.value = k); }
   // Start: same known-customer session, then the affiliate page(s) for the chosen channel, then the landing.
   const baseStart = start;
-  start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = f === 'prequalb' ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
+  start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pqFlow = f; S.pq = f === 'prequalb' || CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
   const baseSync = syncControls;
-  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = channel); if (!S.pq) return; document.querySelectorAll('[data-flow]').forEach(b => b.classList.toggle('active', b.dataset.flow === (S.pq === 'b' ? 'prequalb' : 'prequal'))); };
+  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = channel); if (!S.pq) return; document.querySelectorAll('[data-flow]').forEach(b => b.classList.toggle('active', b.dataset.flow === (S.pqFlow || 'prequal'))); };
   const baseRender = render;
   render = function(shouldScroll = true){
     baseRender(shouldScroll);
@@ -344,7 +345,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const grp = document.querySelector('.panel [data-flow="known"]');
   if (grp) { grp.insertAdjacentHTML('beforebegin', '<label class="control-label pq-ch-label" for="pqChannelPanel">Known prequal starts from</label><select class="pq-ch" id="pqChannelPanel" data-channel>' + channelOptions() + '</select><button data-flow="prequal">Known Customer Prequal</button><button data-flow="prequalb">Prequal · no phone on file</button>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow)); }
   // Changing the channel in the panel during a prequal run restarts that run from the new channel.
-  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); if (S.pq) start(S.pq === 'b' ? 'prequalb' : 'prequal'); });
+  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); if (S.pq) start(S.pqFlow || 'prequal'); });
   document.head.insertAdjacentHTML('beforeend', '<style>.pq-ch-label{display:block;margin:2px 0 4px;font-size:12px;font-weight:600;color:inherit;opacity:.8}.pq-ch{display:block;width:100%;margin:0 0 8px;padding:9px 10px;border:1px solid #CDCDCD;border-radius:10px;background:#fff;color:#363636;font:inherit;font-size:14px}' +
     '.aff-note{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;background:#F1F3F4;border-bottom:1px solid #E1E3E6;font:500 13px/1.2 "Plus Jakarta Sans",sans-serif;cursor:help}@media(max-width:720px){.aff-note{padding-right:68px}}' +
     '.aff-url{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:9999px;background:#fff;color:#363636;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aff-url svg{flex:none;width:12px;height:12px;color:#595959}' +
