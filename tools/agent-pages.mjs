@@ -55,7 +55,7 @@ const JOURNEYS = [
 // What each screen is for (the agent sees this above the screen's content).
 const NOTES = {
   aff: 'The affiliate’s page (prototype, hosted by the affiliate, out of scope for Regional). Regional supplies the offer; layout, ratings and badges are the affiliate’s.',
-  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The offer from the channel is loaded; the customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
+  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is loaded ($15,000, 36 months, 13.01% APR). “Change amount or term” opens an editor in the offer card: loan amount ($1,000–$15,000), term (3, 4 or 5 years, each with its APR), origination fee (3%), APR, and autopay (0.25% off the APR); the card and the pinned payment update as they change, and the chosen offer carries through the rest of the flow. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
   newLanding: 'New borrower landing (regionalfinance.com patterns): why Regional, 3 steps to funded, a personal approach, reviews, approved legal footer. “Check your offers” opens the About-you pages.',
   confirmPhone: 'Confirm the phone number on file before a code is texted.',
   reentry: 'Returning customer: confirm the phone on file to continue the application.',

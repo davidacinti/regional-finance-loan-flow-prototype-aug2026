@@ -1,0 +1,43 @@
+/* Prequal landing (A and B): the offer editor behind "Change amount or term" (Oct 21 2026).
+   Amount, term, origination fee, APR and autopay; every change updates the offer card and the pinned bar (pq.js). */
+.lf2-toggle{display:inline-flex;align-items:center;gap:4px;padding:0;border:0;background:none;color:#2A71D4;font:700 15px/1.3 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.lf2-toggle svg{width:16px;height:16px;transition:transform .2s ease}
+.lf2-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.lf2-toggle:focus-visible,.lf2-edit button:focus-visible,.lf2-edit input:focus-visible{outline:2px solid #2A71D4;outline-offset:2px}
+
+.lf2-edit{margin-top:12px;border-top:1px solid #CDCDCD}
+.lf2-edit[hidden]{display:none}
+.lf2-erow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #E6E6E6;font-size:15px;color:#363636}
+.lf2-erow b{font-size:16px;font-weight:800;color:#363636;white-space:nowrap}
+.lf2-erow:last-child{border-bottom:0;padding-bottom:4px}
+
+/* Amount: − slider + (the row above shows the value). */
+.lf2-edit .lf2-erow:first-child{border-bottom:0;padding-bottom:6px}
+.lf2-amt{display:grid;grid-template-columns:36px 1fr 36px;align-items:center;gap:12px}
+.lf2-step{width:36px;height:36px;display:flex;align-items:center;justify-content:center;padding:0;border:1px solid #CDCDCD;border-radius:50%!important;background:#fff;color:#363636;font:500 22px/1 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.lf2-step:disabled{color:#BDBDBD;cursor:default}
+.lf2-amt input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;margin:0;border:0!important;border-radius:9999px!important;background:linear-gradient(#2A71D4,#2A71D4) 0/var(--p,100%) 100% no-repeat,#D6E4F7;cursor:pointer}
+.lf2-amt input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid #2A71D4;box-shadow:0 1px 3px rgba(13,34,64,.2)}
+.lf2-amt input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid #2A71D4}
+.lf2-range{display:flex;justify-content:space-between;padding:4px 48px 14px;border-bottom:1px solid #E6E6E6;font-size:12px;color:#595959}
+
+/* Term: three choices with their APR; the selected one is filled. */
+.lf2-erow-term{border-bottom:0;padding-bottom:8px}
+.lf2-terms3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-bottom:14px;border-bottom:1px solid #E6E6E6}
+.lf2-terms3 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border:1.5px solid #2A71D4;border-radius:12px!important;background:#fff;color:#2A71D4;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.lf2-terms3 b{font-size:15px;font-weight:700}
+.lf2-terms3 small{font-size:12px;opacity:.85}
+.lf2-terms3 button[aria-checked="true"]{background:#2A71D4;color:#fff}
+
+/* Autopay switch. */
+.lf2-auto>div{min-width:0}
+.lf2-auto small{display:block;margin-top:2px;font-size:12.5px;line-height:1.4;color:#595959}
+.lf2-switch{flex:none;position:relative;width:44px;height:26px;padding:0;border:0;border-radius:9999px!important;background:#BDBDBD;cursor:pointer;transition:background .2s ease}
+.lf2-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .2s ease}
+.lf2-switch[aria-checked="true"]{background:#177245}
+.lf2-switch[aria-checked="true"]::after{transform:translateX(18px)}
+
+/* Changed values flash once so the customer sees what moved. */
+@keyframes lf2-flash{from{background:#FFF3C4}to{background:transparent}}
+.lf2-flash{animation:lf2-flash .7s ease;border-radius:4px}
+.lf2-more .lf2-toggle span{font-size:inherit;color:inherit}
