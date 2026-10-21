@@ -1,0 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&family=Lato:wght@400;700;900&display=swap');
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #FFFFFF; }
+.phone { width: 390px; height: 900px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.rf-logo { display: block; height: 30px; width: auto; }
+.redline { margin-top: auto; flex-shrink: 0; font: 600 11px/1.35 'Plus Jakarta Sans', sans-serif; color: #FFFFFF; background: #0D2240; padding: 9px 12px 11px; }
+.redline .demo-tag { display: inline-block; font-weight: 800; font-size: 10px; letter-spacing: .04em; color: #0D2240; background: #CDD929; padding: 2px 7px; border-radius: 9999px; margin-right: 6px; }

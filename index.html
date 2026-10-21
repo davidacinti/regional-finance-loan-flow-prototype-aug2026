@@ -277,29 +277,60 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (p === 'save' || p === 'emailOtp') { S.email = true; p = 'bankIntro'; }
     return baseGo(p, push);
   };
-  // Start: same known-customer session, then the landing.
+  // CHANNEL (scenario builder): where the known prequal customer starts. An affiliate's own page(s) come first
+  // (assets/affiliates, copied from loan-flow-v2; the affiliate's page, not Regional's), then the same landing and funnel.
+  // via = the name on the landing's "Your offer from …" line ('' = Regional's own channel).
+  const CHANNELS = {
+    moneylion: { label: 'MoneyLion (Engine by MoneyLion)', short: 'MoneyLion', via: 'Even Financial', pages: ['even-financial-moneylion.html'] },
+    creditkarma: { label: 'Credit Karma', short: 'Credit Karma', via: 'Credit Karma', pages: ['credit-karma.html'] },
+    lendingtree: { label: 'LendingTree', short: 'LendingTree', via: 'LendingTree', pages: ['lendingtree-v2.html'] },
+    nerdwallet: { label: 'NerdWallet', short: 'NerdWallet', via: 'NerdWallet', pages: ['nerdwallet.html'] },
+    amone: { label: 'AmONE (QuinStreet)', short: 'AmONE', via: 'AmONE', pages: ['amone.html'] },
+    chatgpt: { label: 'ChatGPT (prototype, not in production)', short: 'ChatGPT', via: 'ChatGPT', concept: true, pages: ['ai-chat-1-ask.html', 'ai-chat-2-form.html', 'ai-chat-3-offers.html'] },
+    direct: { label: 'Regional email or text (no affiliate)', short: 'Regional', via: '', pages: [] },
+  };
+  const CH_KEY = 'rf-v1-prequal-channel';
+  let channel = 'moneylion';
+  try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) channel = v; } catch (e) {}
+  const channelOptions = () => Object.keys(CHANNELS).map(k => '<option value="' + k + '"' + (k === channel ? ' selected' : '') + '>' + CHANNELS[k].label + '</option>').join('');
+  function setChannel(k){ if (!CHANNELS[k]) return; channel = k; try { localStorage.setItem(CH_KEY, k); } catch (e) {} document.querySelectorAll('[data-channel]').forEach(s => s.value = k); }
+  // Start: same known-customer session, then the affiliate page(s) for the chosen channel, then the landing.
   const baseStart = start;
-  start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = f === 'prequalb' ? 'b' : 'a'; S.hist = []; go('prequalLanding', false); syncControls(); };
+  start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = f === 'prequalb' ? 'b' : 'a'; S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
   const baseSync = syncControls;
-  syncControls = function(){ baseSync(); if (!S.pq) return; document.querySelectorAll('[data-flow]').forEach(b => b.classList.toggle('active', b.dataset.flow === (S.pq === 'b' ? 'prequalb' : 'prequal'))); };
+  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = channel); if (!S.pq) return; document.querySelectorAll('[data-flow]').forEach(b => b.classList.toggle('active', b.dataset.flow === (S.pq === 'b' ? 'prequalb' : 'prequal'))); };
   const baseRender = render;
   render = function(shouldScroll = true){
     baseRender(shouldScroll);
-    phone.classList.toggle('page-prequal', S.page === 'prequalLanding' || S.page === 'newLanding');
+    const aff = /^aff:\d+$/.test(S.page);
+    phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
     if (S.page === 'blank' && !app.querySelector('[data-start="prequal"]')) {
       const first = app.querySelector('.flow-choice');
-      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><button class="btn-main" data-start="prequal">Known Customer Prequal</button><p>Known customers with a pre-qualified offer (Nov 2026). New landing, then the existing flow from the SMS code. <a href="#" data-start="prequalb">No phone on file version</a></p></div>');
+      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><label class="pq-ch-label" for="pqChannel">Starts from</label><select class="pq-ch" id="pqChannel" data-channel>' + channelOptions() + '</select><button class="btn-main" data-start="prequal">Known Customer Prequal</button><p>Known customers with a pre-qualified offer (Nov 2026). The affiliate’s page, then Regional’s new landing, then the existing flow from the SMS code. <a href="#" data-start="prequalb">No phone on file version</a></p></div>');
       app.querySelectorAll('[data-start^="prequal"]').forEach(x => x.onclick = (e) => { e.preventDefault(); start(x.dataset.start); });
+      app.querySelectorAll('[data-channel]').forEach(s => s.onchange = () => setChannel(s.value));
+    }
+    if (aff) {
+      const ch = CHANNELS[S.channel] || CHANNELS.moneylion, i = +S.page.slice(4);
+      // The callout sits outside the affiliate's page: it is the affiliate's (or OpenAI's) screen, out of scope for Regional.
+      app.innerHTML = '<div class="aff-note" role="note"><span class="aff-tag">' + (ch.concept ? 'Concept · not in production' : 'Affiliate page · out of scope') + '</span> ' +
+        (ch.concept ? 'A prototype of a ChatGPT app. Hosted by OpenAI, not Regional.' : 'A prototype of ' + ch.short + '’s page. Hosted by ' + ch.short + ', not Regional.') +
+        (ch.pages.length > 1 ? ' <b>Screen ' + (i + 1) + ' of ' + ch.pages.length + '.</b>' : '') + '</div>' +
+        '<iframe class="pq-frame" title="' + ch.short + ' (affiliate page)" src="assets/affiliates/' + ch.pages[i] + '"></iframe>';
+      sizeFrame(); return;
     }
     if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html"></iframe>'; sizeFrame(); return; }
     if (S.page !== 'prequalLanding') return;
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html"></iframe>';
+    const via = S.channel && CHANNELS[S.channel] ? '?via=' + encodeURIComponent(CHANNELS[S.channel].via) : '';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html' + via + '"></iframe>';
     sizeFrame();
   };
   // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
   function sizeFrame(){ const f = app.querySelector('.pq-frame'); if (!f) return; if (!matchMedia('(max-width:720px)').matches) { f.style.height = ''; return; } const vh = (window.visualViewport ? visualViewport.height : innerHeight); f.style.height = Math.max(320, Math.round(vh - f.getBoundingClientRect().top - (window.scrollY || 0))) + 'px'; }
   addEventListener('resize', sizeFrame); if (window.visualViewport) visualViewport.addEventListener('resize', sizeFrame);
   window.addEventListener('message', (e) => {
+    // Regional's offer tapped on the affiliate's page: the affiliate's next screen, then Regional's landing.
+    if (e.data && e.data.rfAff === 'next' && /^aff:\d+$/.test(S.page)) { const n = +S.page.slice(4) + 1, ch = CHANNELS[S.channel] || CHANNELS.moneylion; go(n < ch.pages.length ? 'aff:' + n : 'prequalLanding'); return; }
     if (e.data && e.data.rfPq === 'continue' && S.page === 'newLanding') { go('known1'); return; }
     if (!e.data || e.data.rfPq !== 'continue' || S.page !== 'prequalLanding') return;
     if (e.data.phone) S.customer.phone = e.data.phone;
@@ -307,7 +338,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   });
   // Demo panel: the two prequal entries above the existing ones.
   const grp = document.querySelector('.panel [data-flow="known"]');
-  if (grp) { grp.insertAdjacentHTML('beforebegin', '<button data-flow="prequal">Known Customer Prequal</button><button data-flow="prequalb">Prequal · no phone on file</button>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow)); }
+  if (grp) { grp.insertAdjacentHTML('beforebegin', '<label class="control-label pq-ch-label" for="pqChannelPanel">Known prequal starts from</label><select class="pq-ch" id="pqChannelPanel" data-channel>' + channelOptions() + '</select><button data-flow="prequal">Known Customer Prequal</button><button data-flow="prequalb">Prequal · no phone on file</button>'); grp.parentNode.querySelectorAll('[data-flow^="prequal"]').forEach(x => x.onclick = () => start(x.dataset.flow)); }
+  // Changing the channel in the panel during a prequal run restarts that run from the new channel.
+  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); if (S.pq) start(S.pq === 'b' ? 'prequalb' : 'prequal'); });
+  document.head.insertAdjacentHTML('beforeend', '<style>.pq-ch-label{display:block;margin:2px 0 4px;font-size:12px;font-weight:600;color:inherit;opacity:.8}.pq-ch{display:block;width:100%;margin:0 0 8px;padding:9px 10px;border:1px solid #CDCDCD;border-radius:10px;background:#fff;color:#363636;font:inherit;font-size:14px}' +
+    '.aff-note{padding:9px 14px 10px;background:#0D2240;color:#fff;font:500 12px/1.4 "Plus Jakarta Sans",sans-serif}.aff-note b{font-weight:700}@media(max-width:720px){.aff-note{padding-right:60px}}.aff-tag{display:inline-block;margin-right:6px;padding:2px 8px;border-radius:9999px;background:#CDD929;color:#0D2240;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}</style>');
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100dvh - 18px)}.phone.page-prequal{min-height:0}html:has(.phone.page-prequal),html:has(.phone.page-prequal) body{overflow:hidden;height:100%}}</style>');
   render(false);
 })();

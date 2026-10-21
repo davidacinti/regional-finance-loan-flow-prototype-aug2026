@@ -1,0 +1,11 @@
+{
+  "name": "regional-finance-loan-flow-prototype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "agents": "node tools/agent-pages.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "23.11.1"
+  }
+}

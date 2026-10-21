@@ -1,0 +1,56 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NerdWallet – Regional offer (mockup)</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .nw { font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif; color: #111; background: #FFFFFF; height: 900px; }
+  .nw header { height: 58px; display: flex; align-items: center; justify-content: center; gap: 6px; border-bottom: 1px solid #E5E5E5; }
+  .nw .n { width: 22px; height: 22px; border-radius: 4px; background: #39A35F; color: #fff; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .nw .wm { font-weight: 800; font-size: 20px; color: #39A35F; letter-spacing: -.3px; }
+  .hero { background: #EAF8F1; padding: 22px 20px 24px; }
+  .hero h1 { margin: 0 0 10px; font-size: 26px; line-height: 1.2; font-weight: 800; }
+  .hero p { margin: 0; font-size: 14px; line-height: 1.45; color: #333; }
+  .match { padding: 20px 20px 10px; }
+  .match h2 { margin: 0 0 8px; font-size: 19px; font-weight: 800; }
+  .facts { display: flex; gap: 14px; font-size: 12px; color: #444; }
+  .facts div + div { border-left: 1px solid #CCC; padding-left: 14px; }
+  .facts b { display: block; color: #111; font-size: 13px; }
+  .card { margin: 10px 20px 0; border: 1px solid #E2E2E2; border-radius: 10px; padding: 18px 16px 8px; }
+  .logo { display: flex; justify-content: center; }
+  .rate { text-align: center; font-size: 13px; margin: 10px 0 14px; color: #3B7A57; }
+  .rate a { color: #2E5AAC; text-decoration: none; margin-left: 6px; }
+  .btn { background: #3B7A57; color: #FFF; text-align: center; font-weight: 800; font-size: 14px; letter-spacing: .03em; padding: 13px; border-radius: 9999px; }
+  .rows { margin-top: 14px; font-size: 13px; }
+  .rows div { display: grid; grid-template-columns: 1fr 1fr; padding: 10px 0; border-top: 1px solid #EEE; }
+  .rows b { font-weight: 800; }
+  .see { color: #2E5AAC; font-size: 13px; padding: 10px 0; border-top: 1px solid #EEE; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="phone nw">
+  <header><span class="n">N</span><span class="wm">nerdwallet</span></header>
+  <section class="hero">
+    <h1>Congrats Jordan,<br>you're pre-qualified!</h1>
+    <p>Explore personalized options from top lenders, selected based on your profile, to find the best match for your needs.</p>
+  </section>
+  <section class="match">
+    <h2>We matched you with 1 lender:</h2>
+    <div class="facts"><div>Loan Amount:<b>$15,000</b></div><div>Loan Purpose:<b>Debt consolidation</b></div></div>
+  </section>
+  <section class="card">
+    <div class="logo"><img class="rf-logo" src="rf-logo.svg" alt="Regional Finance" style="height:40px"></div>
+    <div class="rate">Rating: TBD <a>NerdWallet Review</a></div>
+    <div class="btn">SEE OFFERS ↗</div>
+    <div class="rows">
+      <div><span>Lowest APR</span><b>13.01%</b></div>
+      <div><span>Lowest Mo. Pymnt</span><b>$505</b></div>
+      <div><span>Terms vary</span><b>36 months</b></div>
+    </div>
+    <div class="see"><span>See details</span><span>⌄</span></div>
+  </section>
+  <div class="redline"><span class="demo-tag">MOCKUP · DEMO VALUES</span>NerdWallet results layout from the benchmark capture (NW0 screen 17). NerdWallet shows "Lowest" APR and payment, so it needs Regional's best terms, not just one offer. Rating is NerdWallet's.</div>
+</div>
+<script src="aff.js"></script></body>
+</html>

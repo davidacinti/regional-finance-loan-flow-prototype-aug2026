@@ -194,10 +194,11 @@
 .nb-checks img{width:20px;height:20px;flex:0 0 20px}
 .nb .nb-cta{min-height:52px;padding:0 28px;font-size:16px;font-weight:700}
 .nb-fine{margin:10px 0 0;font-size:12.5px;line-height:1.45;color:var(--nb-text2)}
-.nb-photos{position:relative;height:210px;margin:26px 4px 0}
+/* The collage scales with its width (a fixed height let the photos run into the next section on wider screens). */
+.nb-photos{position:relative;aspect-ratio:1/.8;max-width:440px;margin:26px 4px 0}
 .nb-photos img{position:absolute;width:62%;aspect-ratio:5/4;object-fit:cover;border-radius:24px;box-shadow:0 12px 28px rgba(13,34,64,.18)}
-.nb-photos img:first-child{right:0;top:0;transform:rotate(4deg)}
-.nb-photos img:last-child{left:0;top:62px;transform:rotate(-4deg)}
+.nb-photos img:first-child{right:0;top:2%;transform:rotate(4deg)}
+.nb-photos img:last-child{left:0;top:32%;transform:rotate(-4deg)}
 .nb .nb-h2{margin:0 0 20px;font-size:30px;line-height:1.15;font-weight:700;color:var(--nb-text)!important}
 .nb-steps{padding:36px 0 8px}
 .nb-steps ol{list-style:none;margin:0;padding:0;display:grid;gap:14px}
@@ -228,9 +229,9 @@
 .nb-bar .rf-btn{min-height:50px;font-weight:700}
 body:has(.nb-bar.on) .pq-legal-footer{padding-bottom:90px}
 </style>
-<script src="pq.js"></script>
+<script src="pq.js?v=2"></script>
 <script>(function(){var bar=document.getElementById('nbBar'),cta=document.getElementById('heroCta'),mid=document.querySelector('.nb-inline-cta');if(!bar||!cta||!('IntersectionObserver' in window))return;
 // The pinned bar shows once the hero button has scrolled away, and steps aside while the navy section's own button is on screen.
 var past=false,midIn=false;function sync(){var on=past&&!midIn;bar.classList.toggle('on',on);bar.setAttribute('aria-hidden',on?'false':'true');bar.querySelector('button').tabIndex=on?0:-1;}
 new IntersectionObserver(function(e){past=!e[0].isIntersecting&&e[0].boundingClientRect.top<0;sync();}).observe(cta);
-if(mid)new IntersectionObserver(function(e){midIn=e[0].isIntersecting;sync();},{rootMargin:'0px 0px -80px 0px'}).observe(mid);})();</script></body></html>
+if(mid)new IntersectionObserver(function(e){midIn=e[0].isIntersecting;sync();},{rootMargin:'0px'}).observe(mid);})();</script></body></html>

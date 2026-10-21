@@ -1,0 +1,59 @@
+/* ChatGPT-style chat, dark mode (board + prototype mockups for the AI assistant channel). Regional's widgets stay light. */
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #212121; }
+body { font-family: 'Segoe UI', system-ui, sans-serif; color: #ECECEC; min-height: 100vh; }
+.top { position: sticky; top: 0; z-index: 2; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #212121; }
+.top .ham, .top .new { font-size: 20px; color: #B4B4B4; width: 26px; text-align: center; }
+.top .who { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.top .chev { color: #9B9B9B; font-size: 14px; }
+.chat { padding: 8px 16px 130px; display: flex; flex-direction: column; gap: 12px; }
+.me { align-self: flex-end; max-width: 82%; background: #303030; border-radius: 22px; padding: 10px 15px; font-size: 15px; line-height: 1.4; }
+.ai { font-size: 15px; line-height: 1.5; }
+.tool { align-self: flex-start; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: #B4B4B4; }
+.tool img { width: 18px; height: 18px; border-radius: 5px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; align-self: flex-end; }
+.chip { border: 1px solid #4A4A4A; background: transparent; color: #ECECEC; border-radius: 999px; padding: 8px 14px; font: 600 14px 'Segoe UI', system-ui, sans-serif; cursor: pointer; }
+.chip.main { background: #ECECEC; color: #0D0D0D; border-color: #ECECEC; }
+/* Regional's widget inside the chat */
+.card { background: #FFFFFF; color: #0D2240; border-radius: 16px; overflow: hidden; }
+.card .hd { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #F5F8FC; border-bottom: 1px solid #E5EBF2; }
+.card .hd img { height: 24px; }
+.card .hd span { font-size: 11px; color: #4A5A70; background: #FFFFFF; border: 1px solid #DCE3EC; border-radius: 999px; padding: 3px 8px; }
+.card .bd { padding: 12px 14px 14px; }
+.go { display: block; width: 100%; border: 0; text-align: center; background: #2A71D4; color: #FFFFFF; font: 700 15px 'Segoe UI', system-ui, sans-serif; border-radius: 999px; padding: 12px; text-decoration: none; cursor: pointer; }
+.fine { margin-top: 8px; font-size: 11px; color: #7A8796; text-align: center; }
+/* Secure form */
+.fld { border: 1px solid #CBD5E1; border-radius: 10px; padding: 7px 12px; margin-bottom: 8px; }
+.fld small { display: block; font-size: 11px; color: #5B6B80; }
+.fld b { font-size: 15px; color: #0D2240; letter-spacing: 1px; }
+.lock { font-size: 12px; color: #20794F; display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+.consent { display: flex; gap: 10px; align-items: flex-start; margin: 4px 0 12px; font-size: 12px; color: #4A5A70; }
+.consent .box { width: 18px; height: 18px; border-radius: 4px; background: #2A71D4; color: #FFFFFF; font-size: 12px; display: grid; place-items: center; flex: none; }
+.lines { flex: 1; }
+.lines i { display: block; height: 7px; border-radius: 4px; background: #E3E8EF; margin: 5px 0; }
+/* Offers (tap one to pick it) */
+.oc { width: 100%; text-align: left; background: #FFFFFF; font-family: inherit; cursor: pointer; border: 1px solid #DCE3EC; border-radius: 12px; padding: 9px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.oc.on { border: 2px solid #2A71D4; background: #F4F8FE; }
+.oc .why { display: block; font-size: 10px; font-weight: 700; letter-spacing: .5px; color: #2A71D4; text-transform: uppercase; }
+.oc b { display: block; font-size: 17px; color: #0D2240; }
+.oc small { font-size: 12px; color: #4A5A70; }
+.oc .r { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #B8C4D3; flex: none; }
+.oc.on .r { border: 5px solid #2A71D4; }
+.oc em { display: none; }
+.disc { display: block; font-size: 12px; color: #2A71D4; text-decoration: underline; margin: 2px 0 12px; }
+/* Composer */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 14px 8px; background: #212121; }
+.bar .in { background: #303030; border-radius: 28px; padding: 13px 16px; color: #9B9B9B; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+.bar em { font-style: normal; margin-right: 10px; color: #ECECEC; }
+.bar b { width: 28px; height: 28px; border-radius: 50%; background: #ECECEC; color: #0D0D0D; display: grid; place-items: center; font-size: 14px; margin: -4px -4px -4px 0; }
+.disc-ai { margin: 8px 0 0; text-align: center; font-size: 11px; color: #9B9B9B; }
+/* Secure form: real inputs */
+.fld { display: block; cursor: text; }
+.fld:focus-within { border-color: #2A71D4; box-shadow: 0 0 0 3px rgba(42,113,212,.18); }
+.fld input { display: block; width: 100%; border: 0; outline: 0; padding: 2px 0 0; background: transparent; font: 600 16px 'Segoe UI', system-ui, sans-serif; color: #0D2240; letter-spacing: 1px; }
+.fld input::placeholder { color: #9AA8BA; font-weight: 500; }
+.fld-row { display: flex; align-items: center; gap: 8px; }
+.eye { border: 0; background: none; color: #2A71D4; font: 600 13px 'Segoe UI', system-ui, sans-serif; cursor: pointer; padding: 2px 0; }
+.consent { cursor: pointer; }
+.consent input { width: 18px; height: 18px; margin: 0; accent-color: #2A71D4; flex: none; }
+.go:disabled { background: #A9C3EA; cursor: not-allowed; }

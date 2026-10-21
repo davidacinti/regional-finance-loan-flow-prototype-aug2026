@@ -1,0 +1,45 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT – collects info (mockup)</title>
+<link rel="stylesheet" href="ai-chat.css">
+</head>
+<body>
+<div class="top"><span class="ham">☰</span><div class="who">ChatGPT <span class="chev">⌄</span></div><span class="new">✎</span></div>
+<div class="chat">
+  <div class="me">Yes, let’s see.</div>
+  <div class="ai">How much would you like to borrow, and what’s it for?</div>
+  <div class="me">$15,000 to pay off my cards.</div>
+  <div class="ai">What’s your ZIP code and yearly income?</div>
+  <div class="me">29601 · about $52,000</div>
+  <div class="ai">For the sensitive details, use Regional’s secure form. I won’t see them.</div>
+  <div class="card">
+    <div class="hd"><img src="rf-logo.svg" alt="Regional Finance"><span>Secure form</span></div>
+    <div class="bd">
+      <div class="lock">🔒 Sent straight to Regional Finance</div>
+      <label class="fld" for="aiDob"><small>Date of birth</small><input id="aiDob" type="text" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></label>
+      <label class="fld" for="aiSsn"><small>Social Security number</small><span class="fld-row"><input id="aiSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" maxlength="11"><button type="button" class="eye" aria-label="Show SSN">Show</button></span></label>
+      <label class="consent"><input id="aiConsent" type="checkbox"><span class="lines">Regional’s required consents<i></i><i style="width:80%"></i></span></label>
+      <button type="button" class="go" id="aiGo" disabled>Check my offers</button>
+    </div>
+  </div>
+</div>
+<div class="bar"><div class="in"><span><em>＋</em>Ask anything</span><b>↑</b></div><p class="disc-ai">ChatGPT can make mistakes. Check important info.</p></div>
+<script src="aff.js"></script>
+<script>
+(function () {
+  var dob = document.getElementById('aiDob'), ssn = document.getElementById('aiSsn'), ok = document.getElementById('aiConsent'), go = document.getElementById('aiGo'), eye = document.querySelector('.eye');
+  var dig = function (v, n) { return v.replace(/\D/g, '').slice(0, n); };
+  var check = function () { go.disabled = !(dig(dob.value, 8).length === 8 && dig(ssn.value, 9).length === 9 && ok.checked); };
+  dob.addEventListener('input', function () { var d = dig(dob.value, 8); dob.value = d.length > 4 ? d.slice(0, 2) + '/' + d.slice(2, 4) + '/' + d.slice(4) : d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d; check(); });
+  ssn.addEventListener('input', function () { var d = dig(ssn.value, 9); ssn.value = d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d; check(); });
+  ok.addEventListener('change', check);
+  eye.addEventListener('click', function (e) { e.preventDefault(); var show = ssn.type === 'password'; ssn.type = show ? 'text' : 'password'; eye.textContent = show ? 'Hide' : 'Show'; eye.setAttribute('aria-label', show ? 'Hide SSN' : 'Show SSN'); });
+  // Board render (opened on its own): show it filled in.
+  if (window.parent === window) { dob.value = '05/14/1990'; ssn.value = '123-45-1234'; ok.checked = true; check(); }
+})();
+</script>
+</body>
+</html>

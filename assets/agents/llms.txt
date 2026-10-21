@@ -1,0 +1,19 @@
+# Regional Finance · loan flow prototype (v1)
+
+> A clickable prototype of Regional Finance's online loan flow. Known customers with a pre-qualified offer start from a channel (MoneyLion, Credit Karma, LendingTree, NerdWallet, AmONE, ChatGPT concept, or Regional's own email/text), then the same Regional landing and funnel. New customers start on a new borrower landing. The live prototype is password-protected and needs JavaScript; use the agent-readable copy below.
+
+## Agent-readable copy (plain HTML, no JavaScript)
+- All journeys: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/index.html
+- Known customer prequal · MoneyLion (Engine by MoneyLion): https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-moneylion/index.html
+- Known customer prequal · Credit Karma: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-creditkarma/index.html
+- Known customer prequal · LendingTree: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-lendingtree/index.html
+- Known customer prequal · NerdWallet: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-nerdwallet/index.html
+- Known customer prequal · AmONE (QuinStreet): https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-amone/index.html
+- Known customer prequal · ChatGPT (concept, not in production): https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-chatgpt/index.html
+- Known customer prequal · Regional email or text (no affiliate): https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-direct/index.html
+- Known customer prequal · no phone on file: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/prequal-no-phone/index.html
+- Known customer (existing flow): https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/known/index.html
+- New customer: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/new/index.html
+- Re-entry customer: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/reentry/index.html
+
+Demo data only. Affiliate and ChatGPT pages are prototypes of pages Regional does not host. Legal copy on Regional's screens is verbatim.

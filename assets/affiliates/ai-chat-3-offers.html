@@ -1,0 +1,30 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatGPT – shows offers (mockup)</title>
+<link rel="stylesheet" href="ai-chat.css">
+</head>
+<body>
+<div class="top"><span class="ham">☰</span><div class="who">ChatGPT <span class="chev">⌄</span></div><span class="new">✎</span></div>
+<div class="chat">
+  <span class="tool"><img src="rf-mark.svg" alt="">Regional Finance · prequalification complete</span>
+  <div class="ai">You’re prequalified with Regional Finance. Here are the offers they returned. Tap one to pick it:</div>
+  <div class="card">
+    <div class="hd"><img src="rf-logo.svg" alt="Regional Finance"><span>From Regional Finance</span></div>
+    <div class="bd">
+      <button type="button" class="oc on" data-pick="15000|505|36"><span><span class="why">Your offer</span><b>$505/month</b><small>$15,000 · 36 months · 13.01% APR</small></span><span class="r"></span></button>
+      <button type="button" class="oc" data-pick="15000|341|60"><span><span class="why">Lowest payment</span><b>$341/month</b><small>$15,000 · 60 months · 13.01% APR</small></span><span class="r"></span></button>
+      <button type="button" class="oc" data-pick="15000|713|24"><span><span class="why">Pay it off sooner</span><b>$713/month</b><small>$15,000 · 24 months · 13.01% APR</small></span><span class="r"></span></button>
+      <a class="disc" href="#">Disclosures and terms</a>
+      <button type="button" class="go">Continue with Regional ↗</button>
+      <div class="fine">Opens regionalfinance.com with this offer loaded</div>
+    </div>
+  </div>
+</div>
+<div class="bar"><div class="in"><span><em>＋</em>Ask anything</span><b>↑</b></div><p class="disc-ai">ChatGPT can make mistakes. Check important info.</p></div>
+<script src="aff.js"></script>
+<script>document.querySelectorAll('.oc').forEach(function (b) { b.addEventListener('click', function () { document.querySelectorAll('.oc').forEach(function (x) { x.classList.toggle('on', x === b); }); }); });</script>
+</body>
+</html>
