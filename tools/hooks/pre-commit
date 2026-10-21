@@ -1,0 +1,8 @@
+#!/bin/sh
+# Keep the agent-readable copy (assets/agents/) in step with the prototype: rebuild it when this commit changes the
+# app or its assets, and add it to the same commit. Enable once per clone: git config core.hooksPath tools/hooks
+if git diff --cached --name-only | grep -v '^assets/agents/' | grep -qE '^(index\.html|assets/|tools/agent-pages\.mjs)'; then
+  echo "pre-commit: updating the agent-readable copy (assets/agents/)..."
+  node tools/agent-pages.mjs || { echo "pre-commit: agent copy failed; fix it, or commit with --no-verify and run npm run agents"; exit 1; }
+  git add -A assets/agents
+fi

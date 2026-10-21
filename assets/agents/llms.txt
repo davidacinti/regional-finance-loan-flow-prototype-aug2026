@@ -17,3 +17,4 @@
 - Re-entry customer: https://regional-finance-loan-flow-prototype.onrender.com/assets/agents/reentry/index.html
 
 Demo data only. Affiliate and ChatGPT pages are prototypes of pages Regional does not host. Legal copy on Regional's screens is verbatim.
+Updated Oct 21, 2026, 9:25 AM ET (version b455dd2bbe40). This copy is regenerated with every change to the prototype, so it always matches what is deployed.
