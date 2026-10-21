@@ -47,7 +47,6 @@ const JOURNEYS = [
   { id: 'prequal-amone', flow: 'prequal', channel: 'amone', name: 'Known customer prequal · AmONE (QuinStreet)', about: 'A known customer sees Regional as the recommended offer on AmONE (a competing lender is shown below it). ' + AFFILIATE },
   { id: 'prequal-chatgpt', flow: 'prequal', channel: 'chatgpt', name: 'Known customer prequal · ChatGPT (concept, not in production)', about: 'A concept, not in production: the customer asks ChatGPT about credit card debt, ChatGPT suggests Regional, collects the basics, Regional’s secure form takes date of birth, SSN and consents, and ChatGPT shows Regional’s offers. Continuing opens Regional’s pre-qualified offer landing; from there the funnel is the same for every channel.' },
   { id: 'prequal-direct', flow: 'prequal', channel: 'direct', name: 'Known customer prequal · Regional email or text (no affiliate)', about: 'Regional emails or texts a known customer a pre-qualified offer link. The customer starts on Regional’s pre-qualified offer landing.' },
-  { id: 'prequal-no-phone', flow: 'prequalb', channel: 'direct', name: 'Known customer prequal · no phone on file', about: 'Same as the prequal journey, but Regional has no usable phone for the customer, so the landing asks for a mobile number before the code is texted.' },
   { id: 'known', flow: 'known', name: 'Known customer (existing flow)', about: 'An existing Regional customer confirms the phone on file, enters a code, confirms their details, gives the soft-pull consent, picks an offer and continues into the shared flow.' },
   { id: 'new', flow: 'unknown', name: 'New customer', about: 'A new customer starts on the new borrower landing, fills in the three About-you pages, confirms their information and mobile number, enters a code, gives the soft-pull consent, picks an offer and continues into the shared flow.' },
   { id: 'reentry', flow: 'reentry', name: 'Re-entry customer', about: 'A customer returning to finish an application they started confirms their phone, enters a code and goes back to their offer.' },
@@ -56,7 +55,7 @@ const JOURNEYS = [
 // What each screen is for (the agent sees this above the screen's content).
 const NOTES = {
   aff: 'The affiliate’s page (prototype, hosted by the affiliate, out of scope for Regional). Regional supplies the offer; layout, ratings and badges are the affiliate’s.',
-  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The offer from the channel is loaded; the customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma, or no phone on file) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
+  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The offer from the channel is loaded; the customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
   newLanding: 'New borrower landing (regionalfinance.com patterns): why Regional, 3 steps to funded, a personal approach, reviews, approved legal footer. “Check your offers” opens the About-you pages.',
   confirmPhone: 'Confirm the phone number on file before a code is texted.',
   reentry: 'Returning customer: confirm the phone on file to continue the application.',
@@ -118,7 +117,7 @@ const step = () => tab.evaluate(async () => {
   const AUTO = { checking: 'offer', processing: 'funding', bankConnecting: 'bankSuccess' };
   const p = S.page;
   if (/^aff:/.test(p)) window.postMessage({ rfAff: 'next' }, '*');
-  // Only landing B (no phone on file) has a mobile number field.
+  // Only landing B (Credit Karma: no usable phone) has a mobile number field.
   else if (p === 'prequalLanding' || p === 'newLanding') window.postMessage({ rfPq: 'continue', phone: S.pq === 'b' ? '(555) 123-7890' : '' }, '*');
   else if (AUTO[p]) go(AUTO[p]);
   else {
