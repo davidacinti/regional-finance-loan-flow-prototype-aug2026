@@ -6,6 +6,14 @@ services:
     staticPublishPath: ./dist
     autoDeployTrigger: commit
     # Every push shows up right away: no CDN or browser caching (Render's default keeps pages up to 5 minutes).
+    # Render's static hosting keeps files a later deploy no longer has; send removed agent pages to the agent-copy home.
+    routes:
+      - type: redirect
+        source: /assets/agents/prequal-email-code/*
+        destination: /assets/agents/index.html
+      - type: redirect
+        source: /assets/agents/prequal-no-phone/*
+        destination: /assets/agents/index.html
     headers:
       - path: /*
         name: Cache-Control
