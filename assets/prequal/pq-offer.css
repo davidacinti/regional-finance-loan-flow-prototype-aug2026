@@ -41,3 +41,20 @@
 @keyframes lf2-flash{from{background:#FFF3C4}to{background:transparent}}
 .lf2-flash{animation:lf2-flash .7s ease;border-radius:4px}
 .lf2-more .lf2-toggle span{font-size:inherit;color:inherit}
+
+/* Editor reassurance line. */
+.lf2-edit-note{margin:12px 0 0;font-size:13px;line-height:1.4;color:#595959}
+
+/* Mobile number (landing B, Credit Karma): one field, says why we ask, shows when it's complete. */
+.lf2-ph{background:#fff;border:1px solid #CDCDCD;border-radius:20px;padding:14px 16px 12px}
+.lf2-ph-label{display:block;margin:0 0 8px;font:700 15px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636}
+.lf2-ph-box{display:flex;align-items:center;gap:10px;height:56px;padding:0 14px;border:1px solid #CDCDCD;border-radius:16px;background:#fff;transition:border-color .15s ease,box-shadow .15s ease}
+.lf2-ph-box:focus-within{border-color:#2A71D4;box-shadow:0 0 0 3px rgba(42,113,212,.15)}
+.lf2-ph-ico{flex:none;width:20px;height:20px;color:#595959}
+.lf2-ph-box input{flex:1;min-width:0;height:100%;padding:0;border:0!important;border-radius:0!important;background:transparent;font:500 17px/1 'Plus Jakarta Sans',sans-serif;color:#363636;outline:0!important;box-shadow:none!important}
+.lf2-ph-box input::placeholder{color:#9AA3AE}
+.lf2-ph-ok{flex:none;width:22px;height:22px;color:#177245;opacity:0;transform:scale(.6);transition:opacity .15s ease,transform .15s ease}
+.lf2-ph-help{margin:8px 2px 0;font-size:12.5px;line-height:1.4;color:#595959}
+.lf2-ph.is-valid .lf2-ph-ok{opacity:1;transform:none}
+.lf2-ph.is-error .lf2-ph-box{border-color:#D32F2F;box-shadow:0 0 0 3px rgba(211,47,47,.12)}
+.lf2-ph.is-error .lf2-ph-help{color:#D32F2F;font-weight:600}
