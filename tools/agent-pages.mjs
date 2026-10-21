@@ -142,7 +142,7 @@ for (const J of JOURNEYS) {
     const frame = tab.frames().find(f => /\/assets\/(prequal|affiliates)\//.test(f.url()));
     if (frame) for (let k = 0; k < 20; k++) { const t = await frame.evaluate(() => document.body ? document.body.innerText.trim().length : 0).catch(() => 0); if (t) break; await W(150); }
     await W(250);
-    const data = await tab.evaluate(() => { const a = document.querySelector('#app'), n = a.querySelector('.aff-note'); return { app: a.innerHTML, note: n ? n.innerText : '' }; });
+    const data = await tab.evaluate(() => { const a = document.querySelector('#app'), n = a.querySelector('.aff-note'); return { app: a.innerHTML, note: n ? n.getAttribute('aria-label') || n.innerText : '' }; });
     const inner = frame ? await frame.evaluate(() => document.body.innerHTML).catch(() => '') : '';
     screens.push({ key, base: key.replace(/:\d+$/, ''), ...data, inner });
     if (key === 'funded') break;
