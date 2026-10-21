@@ -37,14 +37,14 @@ The landing-page flow chooser should identify the intended audiences:
 4. Ready for your instant decision?
 5. Checking for offers
 6. Pre-qualified offer
-7. Save offer
-8. Email OTP
-9. Bank verification
-10. Final credit authorization
-11. Processing
-12. Choose funding account
-13. Review and sign agreement
-14. Funded confirmation
+7. Bank verification
+8. Final credit authorization
+9. Processing
+10. Choose funding account
+11. Review and sign agreement
+12. Funded confirmation
+
+No email code (email OTP) anywhere in the prototype, in any flow (user decision, Oct 2026): the offer goes straight to the bank link, and funding goes straight to signing. The old Save offer and Email OTP screens are never shown.
 
 Selecting “This isn’t my phone number” starts the Unknown Customer flow.
 
@@ -94,7 +94,6 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 - The offer card says "Your pre-qualified offer" for every channel and never names the partner. Aggregators (Even Financial / Engine by MoneyLion, QuinStreet) are embedded in other companies' sites, so "from Even Financial" would not match where the customer came from.
 - The line under the greeting is "Simple, fast, and 100% online." (replaced "Helping customers since 1987."; these customers may not know Regional, so no mention of branches).
 - Route (Nov 2026 board): landing → SMS code → Is this you? → the existing Pre-Approval Offer page → bank link → the rest of the funnel. No "Check for offers" or loader: the offer already exists. Customers change amount, term and autopay on the offer page.
-- OPTION, off by default (board: dashed "prequal: possible"): "Email code before signing" checkbox under the prequal picker (start screen and Demo controls, remembered per browser). When on, prequal goes funding → the existing email code screen ("Let's confirm your email") → sign (Docusign). The code is typed by hand (no prefill); "Wrong email" does nothing on this step. Known and New flows never show it.
 - The landing's "Customize your offer" editor is PARKED for a later release: its markup sits in `<template id="pq-editor-later">` on both landings (move it out of the template to bring it back; `pq.js` and `pq-offer.css` still support it).
 - Price model for prequal runs, kept the same in `assets/prequal/pq.js` and `index.html`: APR 13.01% / 13.49% / 13.99% for 3 / 4 / 5 years, 0.25% off with autopay, origination fee 3% of the amount, fixed amortized monthly payment. Default: $15,000, 3 years, autopay off ($505/mo). The offer page, credit check, funding loan details, signing and funded screens use it. Other flows keep their own prices.
 
@@ -105,7 +104,6 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 - The notification displays code `429833` and a “Tap to prefill” action.
 - Only tapping “Tap to prefill” fills the six OTP boxes.
 - Do not show a simulated keyboard.
-- Email OTP fields start empty and must be entered manually. Do not show an SMS notification or prefill control for email OTP.
 - Once an OTP has been completed, treat that channel as authenticated when revisiting screens. Reset clears authentication.
 
 ## Inputs and state

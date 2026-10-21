@@ -47,7 +47,6 @@ const JOURNEYS = [
   { id: 'prequal-amone', flow: 'prequal', channel: 'amone', name: 'Known customer prequal · AmONE (QuinStreet)', about: 'A known customer sees Regional as the recommended offer on AmONE (a competing lender is shown below it). ' + AFFILIATE },
   { id: 'prequal-chatgpt', flow: 'prequal', channel: 'chatgpt', name: 'Known customer prequal · ChatGPT (concept, not in production)', about: 'A concept, not in production: the customer asks ChatGPT about credit card debt, ChatGPT suggests Regional, collects the basics, Regional’s secure form takes date of birth, SSN and consents, and ChatGPT shows Regional’s offers. Continuing opens Regional’s pre-qualified offer landing; from there the funnel is the same for every channel.' },
   { id: 'prequal-direct', flow: 'prequal', channel: 'direct', name: 'Known customer prequal · Regional email or text (no affiliate)', about: 'Regional emails or texts a known customer a pre-qualified offer link. The customer starts on Regional’s pre-qualified offer landing.' },
-  { id: 'prequal-email-code', flow: 'prequal', channel: 'direct', emailCode: true, name: 'Known customer prequal · option: email code before signing', about: 'An optional variant (off by default; may not be needed): after the funding page, the prequal customer confirms their email with the existing 6-digit email code screen, then signs the loan documents (Docusign). Otherwise identical to the prequal journey.' },
   { id: 'known', flow: 'known', name: 'Known customer (existing flow)', about: 'An existing Regional customer confirms the phone on file, enters a code, confirms their details, gives the soft-pull consent, picks an offer and continues into the shared flow.' },
   { id: 'new', flow: 'unknown', name: 'New customer', about: 'A new customer starts on the new borrower landing, fills in the three About-you pages, confirms their information and mobile number, enters a code, gives the soft-pull consent, picks an offer and continues into the shared flow.' },
   { id: 'reentry', flow: 'reentry', name: 'Re-entry customer', about: 'A customer returning to finish an application they started confirms their phone, enters a code and goes back to their offer.' },
@@ -60,7 +59,6 @@ const NOTES = {
   newLanding: 'New borrower landing (regionalfinance.com patterns): why Regional, 3 steps to funded, a personal approach, reviews, approved legal footer. “Check your offers” opens the About-you pages.',
   confirmPhone: 'Confirm the phone number on file before a code is texted.',
   reentry: 'Returning customer: confirm the phone on file to continue the application.',
-  emailOtp: 'Optional (off by default): confirm the email with a 6-digit code before signing. The code is typed in by hand (no prefill). Next: sign the loan documents (Docusign).',
   sms: 'Enter the 6-digit code texted to the customer. (Demo: a simulated text notification offers “Tap to prefill”; code 429833.)',
   review: '“Is this you?” — the details Regional has on file, to confirm.',
   ready: 'Soft-pull consent before checking for offers (no credit impact).',
@@ -81,7 +79,7 @@ const NOTES = {
   sign: 'Review and sign the loan agreement.',
   funded: 'Funded confirmation: the money has been sent, disclosures, portal login.',
 };
-const TITLES = { aff: 'Affiliate page', prequalLanding: 'Pre-qualified offer landing', newLanding: 'New borrower landing', confirmPhone: 'Confirm phone', reentry: 'Re-entry: confirm phone', sms: 'SMS code', emailOtp: 'Email code (optional)', review: 'Is this you?', ready: 'Soft-pull consent', checking: 'Checking for offers', offer: 'Offer', known1: 'About you 1/3', known2: 'About you 2/3', unknown3: 'About you 3/3', knownConfirm: 'Confirm your information', bankIntro: 'Bank verification', bankPick: 'Pick a bank', bankLogin: 'Bank sign-in', bankConnecting: 'Connecting', bankSuccess: 'Bank connected', credit: 'Credit authorization (hard pull)', processing: 'Processing', funding: 'Choose funding account', sign: 'Sign the agreement', funded: 'Funded' };
+const TITLES = { aff: 'Affiliate page', prequalLanding: 'Pre-qualified offer landing', newLanding: 'New borrower landing', confirmPhone: 'Confirm phone', reentry: 'Re-entry: confirm phone', sms: 'SMS code', review: 'Is this you?', ready: 'Soft-pull consent', checking: 'Checking for offers', offer: 'Offer', known1: 'About you 1/3', known2: 'About you 2/3', unknown3: 'About you 3/3', knownConfirm: 'Confirm your information', bankIntro: 'Bank verification', bankPick: 'Pick a bank', bankLogin: 'Bank sign-in', bankConnecting: 'Connecting', bankSuccess: 'Bank connected', credit: 'Credit authorization (hard pull)', processing: 'Processing', funding: 'Choose funding account', sign: 'Sign the agreement', funded: 'Funded' };
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const clean = html => String(html || '')
@@ -136,7 +134,6 @@ rmSync(OUT, { recursive: true, force: true }); mkdirSync(OUT, { recursive: true 
 const list = [];
 for (const J of JOURNEYS) {
   await tab.goto(BASE + 'index.html', { waitUntil: 'load' }); await W(600);
-  await tab.evaluate((on) => { const c = document.querySelector('#pqEmailPanel'); if (c && c.checked !== on) c.click(); }, !!J.emailCode);
   await tab.evaluate((ch) => { if (ch) { const s = document.querySelector('.panel [data-channel]'); s.value = ch; s.dispatchEvent(new Event('change')); } }, J.channel || null);
   await tab.evaluate((f) => start(f), J.flow); await W(900);
   const screens = [];
