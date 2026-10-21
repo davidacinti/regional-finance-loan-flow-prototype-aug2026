@@ -5,3 +5,8 @@ services:
     buildCommand: rm -rf dist && mkdir -p dist && cp -R assets dist/assets && npx --yes pagecrypt@7.1.0 index.html dist/index.html "$PASSWORD"
     staticPublishPath: ./dist
     autoDeployTrigger: commit
+    # Every push shows up right away: no CDN or browser caching (Render's default keeps pages up to 5 minutes).
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache
