@@ -83,6 +83,7 @@ const TITLES = { aff: 'Affiliate page', prequalLanding: 'Pre-qualified offer lan
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const clean = html => String(html || '')
+  .replace(/<!--[\s\S]*?-->/g, '')
   .replace(/<(script|style|svg|noscript|template)[\s\S]*?<\/\1>/gi, '')
   .replace(/<(link|meta|iframe|source)[^>]*>/gi, '').replace(/<\/iframe>/gi, '')
   .replace(/<i [^>]*class="bi[^"]*"[^>]*><\/i>/gi, '')
