@@ -55,7 +55,7 @@ const JOURNEYS = [
 // What each screen is for (the agent sees this above the screen's content).
 const NOTES = {
   aff: 'The affiliate’s page (prototype, hosted by the affiliate, out of scope for Regional). Regional supplies the offer; layout, ratings and badges are the affiliate’s.',
-  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is loaded ($15,000, 36 months, 13.01% APR). “Customize your offer” opens an editor in the offer card: loan amount ($1,000–$15,000), term (3, 4 or 5 years, each with its APR), origination fee (3%), APR, and autopay (0.25% off the APR); the card and the pinned payment update as they change, and the chosen offer carries through the rest of the flow. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
+  prequalLanding: 'Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is shown ($15,000, 36 months, 13.01% APR); the customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.',
   newLanding: 'New borrower landing (regionalfinance.com patterns): why Regional, 3 steps to funded, a personal approach, reviews, approved legal footer. “Check your offers” opens the About-you pages.',
   confirmPhone: 'Confirm the phone number on file before a code is texted.',
   reentry: 'Returning customer: confirm the phone on file to continue the application.',
@@ -63,7 +63,7 @@ const NOTES = {
   review: '“Is this you?” — the details Regional has on file, to confirm.',
   ready: 'Soft-pull consent before checking for offers (no credit impact).',
   checking: 'Loader while offers are checked.',
-  offer: 'The pre-qualified offer: amount ($1,000–$15,000), term, APR, monthly payment, autopay.',
+  offer: 'The pre-qualified offer (existing page): amount ($1,000–$15,000), term, origination fee, APR, monthly payment, autopay. Prequal customers come here straight from “Is this you?” (no Check-for-offers step: the offer already exists).',
   known1: 'About you 1 of 3: name and date of birth.',
   known2: 'About you 2 of 3: home address (simulated autocomplete) and home ownership.',
   unknown3: 'About you 3 of 3: annual income and Social Security number.',
@@ -169,7 +169,7 @@ await browser.close(); server.close();
 writeFileSync(OUT + '/index.html', page('All journeys', `<h1>Regional Finance loan flow v1 · agent-readable copy</h1>
 <p>A plain-HTML copy of the v1 loan flow prototype for AI agents and reviewers. Each journey lists its screens in order; each screen page says what the screen is for and shows what the customer sees (headings, copy, fields, buttons, legal text). Demo data only (“Jordan Rivera”, “Test User”).</p>
 <h2>How the prototype is organized</h2>
-<ul><li><strong>Known customer prequal (Nov 2026 release):</strong> a known customer with a pre-qualified offer starts on a channel: an affiliate’s page (MoneyLion, Credit Karma, LendingTree, NerdWallet, AmONE), ChatGPT (a concept, not in production) or Regional’s own email or text. Affiliate and ChatGPT pages are prototypes of pages Regional does not host; they are out of scope. Every channel then opens the same Regional pre-qualified offer landing and the same funnel: SMS code → Is this you? → bank verification → credit authorization → processing → funding account → sign → funded.</li>
+<ul><li><strong>Known customer prequal (Nov 2026 release):</strong> a known customer with a pre-qualified offer starts on a channel: an affiliate’s page (MoneyLion, Credit Karma, LendingTree, NerdWallet, AmONE), ChatGPT (a concept, not in production) or Regional’s own email or text. Affiliate and ChatGPT pages are prototypes of pages Regional does not host; they are out of scope. Every channel then opens the same Regional pre-qualified offer landing and the same funnel: SMS code → Is this you? → the existing offer page (change amount, term, autopay) → bank verification → credit authorization → processing → funding account → sign → funded.</li>
 <li><strong>New customer:</strong> new borrower landing → About you (3 pages) → confirm → SMS code → soft-pull consent → offer → the shared funnel.</li>
 <li><strong>Known customer</strong> and <strong>re-entry</strong>: the existing flows.</li></ul>
 <h2>Journeys</h2><ul>${list.join('')}</ul>`, '', 'index.html'));

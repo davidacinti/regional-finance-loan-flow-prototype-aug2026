@@ -93,9 +93,9 @@ Unknown-customer fields must start blank. The prototype does not know the custom
 
 - The offer card says "Your pre-qualified offer" for every channel and never names the partner. Aggregators (Even Financial / Engine by MoneyLion, QuinStreet) are embedded in other companies' sites, so "from Even Financial" would not match where the customer came from.
 - The line under the greeting is "Simple, fast, and 100% online." (replaced "Helping customers since 1987."; these customers may not know Regional, so no mention of branches).
-- "Customize your offer" opens an editor in the offer card: loan amount ($1,000–$15,000 in $1,000 steps; slider with − and +), term (3, 4 or 5 years, each with its APR), origination fee, APR and an autopay switch. The card's Monthly/Term/APR and the pinned payment update live. The editor is in the page markup (hidden until opened) so the agent copy includes it.
-- Price model, kept the same in `assets/prequal/pq.js` and `index.html`: APR 13.01% / 13.49% / 13.99% for 3 / 4 / 5 years, 0.25% off with autopay, origination fee 3% of the amount, fixed amortized monthly payment. Default: $15,000, 3 years, autopay off ($505/mo).
-- Continue carries amount, term and autopay into the funnel: the credit check, funding loan details, signing and funded screens show the same offer. Other flows keep their own prices.
+- Route (Nov 2026 board): landing → SMS code → Is this you? → the existing Pre-Approval Offer page → bank link → the rest of the funnel. No "Check for offers" or loader: the offer already exists. Customers change amount, term and autopay on the offer page.
+- The landing's "Customize your offer" editor is PARKED for a later release: its markup sits in `<template id="pq-editor-later">` on both landings (move it out of the template to bring it back; `pq.js` and `pq-offer.css` still support it).
+- Price model for prequal runs, kept the same in `assets/prequal/pq.js` and `index.html`: APR 13.01% / 13.49% / 13.99% for 3 / 4 / 5 years, 0.25% off with autopay, origination fee 3% of the amount, fixed amortized monthly payment. Default: $15,000, 3 years, autopay off ($505/mo). The offer page, credit check, funding loan details, signing and funded screens use it. Other flows keep their own prices.
 
 ## Authentication behavior
 

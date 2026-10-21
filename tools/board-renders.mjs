@@ -12,14 +12,9 @@ if (!SHELL) { console.log('Headless browser not installed (see tools/agent-pages
 
 // file, page, what to do before the shot
 const SHOTS = [
-  { file: 'prequal-landing-a.png', page: 'landing-a.html' },
-  { file: 'prequal-landing-a-customize.png', page: 'landing-a.html', open: true },
-  { file: 'prequal-landing-b-creditkarma.png', page: 'landing-b.html' },
-  // Nov 2026 board: offer changes happen on the existing Pre-Approval Offer page (7), so the landing shows no editor link.
-  { file: 'prequal-landing-a-nov.png', page: 'landing-a.html', hide: '.lf2-more, #pqEdit' },
-  { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html', hide: '.lf2-more, #pqEdit' },
-  // Interaction state for the board: only the top of the page, down to the end of the open editor (the rest is unchanged).
-  { file: 'prequal-landing-customize-state.png', page: 'landing-a.html', open: true, clipTo: '.lf2-edit' },
+  // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
+  { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
+  { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
