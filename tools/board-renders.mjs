@@ -1,4 +1,4 @@
-// Board renders of the prequal landings: full mobile pages (390 wide, @2x) for the FigJam board, written to assets/board/.
+// Board renders of the prequal landings: full mobile pages (390 wide, 1x; the cropped state @2x) for the FigJam board, written to assets/board/.
 // Render publishes assets/ without the password, so the board loads them with figma.createImageAsync(<site>/assets/board/<file>).
 //   node tools/board-renders.mjs
 import { createServer } from 'node:http';
@@ -38,7 +38,8 @@ for (const s of SHOTS) {
   }
   // Full page: grow the viewport to the page height so the pinned bar sits at the very bottom, under the footer.
   const h = await tab.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
-  await tab.setViewport({ width: 390, height: h, deviceScaleFactor: 2 });
+  // Figma takes images up to 4096 px per side: full pages render at 1x (390 wide is still sharper than the 300 px board slot).
+  await tab.setViewport({ width: 390, height: h, deviceScaleFactor: 1 });
   await new Promise(r => setTimeout(r, 600));
   await tab.screenshot({ path: 'assets/board/' + s.file, fullPage: false });
   console.log(s.file, 390 + 'x' + h);
