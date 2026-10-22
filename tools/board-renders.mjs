@@ -24,6 +24,8 @@ const SHOTS = [
   { file: 'option-3-steps-b.png', page: 'option-3-steps.html', q: '&state=b' },
   { file: 'option-4-minimal-a.png', page: 'option-4-minimal.html' },
   { file: 'option-4-minimal-b.png', page: 'option-4-minimal.html', q: '&state=b' },
+  { file: 'option-5-getstarted-a.png', page: 'option-5-getstarted.html' },
+  { file: 'option-5-getstarted-b.png', page: 'option-5-getstarted.html', q: '&state=b' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };

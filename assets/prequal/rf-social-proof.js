@@ -22,6 +22,7 @@
  *   cta-label / cta-href         CTA overrides ("" hides the button)
  *   cta-target                   Link target, e.g. "_blank" (default "_self")
  *   no-images                    Omit the three fanned portraits
+ *   compact                      Portraits, heading and rating only (no review cards, note or button)
  *
  * Inline data (no fetch): put the feed JSON in a child
  *   <script type="application/json">…</script>
@@ -300,6 +301,7 @@ class RfSocialProof extends HTMLElement {
       : A.portraits;
 
     const showImages = !this.hasAttribute("no-images");
+    const compact = this.hasAttribute("compact");
 
     this.#root.innerHTML = `<style>${STYLES}</style>
       <section class="wrap" aria-labelledby="rf-title">
@@ -320,7 +322,7 @@ class RfSocialProof extends HTMLElement {
           <img class="leaf" src="${A.leafR}" alt="" aria-hidden="true">
         </div>
 
-        <div class="carousel">
+        ${compact ? "" : `<div class="carousel">
           <div class="vp" tabindex="0" role="region" aria-label="Customer reviews">
             <div class="track">${this.#track(data.reviews)}</div>
           </div>
@@ -331,11 +333,11 @@ class RfSocialProof extends HTMLElement {
         </div>
 
         <p class="note">${esc(note)}</p>
-        ${ctaLabel ? `<div class="cta"><a href="${esc(ctaHref)}" target="${esc(ctaTarget)}"${ctaRel}>${esc(ctaLabel)}</a></div>` : ""}
+        ${ctaLabel ? `<div class="cta"><a href="${esc(ctaHref)}" target="${esc(ctaTarget)}"${ctaRel}>${esc(ctaLabel)}</a></div>` : ""}`}
       </section>`;
 
     if (showImages) this.#wirePortraits();
-    this.#wireCarousel();
+    if (!compact) this.#wireCarousel();
   }
 
   /* Fan the portraits out once the section scrolls into view. */

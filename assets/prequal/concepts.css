@@ -74,3 +74,25 @@
 .cx-terms-toggle dd{margin:0;font-weight:800;color:#363636;text-align:right}
 .opt-min .lf2-h1{text-align:center}
 .opt-min .lf2-lead{justify-content:center}
+
+/* Option 5 · Get started: the known-customer "Get Started" page design. */
+.opt-o5{padding-top:0}
+.o5{padding:26px 0 10px;background:#fff}
+.o5-hi{margin:0 0 6px;text-align:center;font:700 20px/1.3 'Plus Jakarta Sans',sans-serif;color:#7A8699}
+.o5-h1{margin:0 0 22px;text-align:center;font:800 34px/1.15 'Plus Jakarta Sans',sans-serif;letter-spacing:-.5px;color:#363636!important}
+.o5-h1 span{color:#2A71D4}
+.o5-checks{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:12px}
+.o5-checks li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.4;color:#363636}
+.o5-checks img{flex:none;width:20px;height:20px;margin-top:1px}
+.o5-h2{margin:0 0 12px;font:700 18px/1.35 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.o5-phone{display:flex;align-items:center;justify-content:center;height:64px;border-radius:16px;background:#F2F2F2;font:600 26px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.04em;color:#363636}
+.o5-note{margin:10px 0 18px;text-align:center;font-size:14px;color:#595959}
+.o5-note-b{text-align:left;margin:0 0 14px}
+.o5-b[hidden],.o5-a[hidden],.o5-btn[hidden]{display:none}
+.o5-consent{margin:0 0 14px}
+.o5-consent .lf2-consent .form-check-label{font-size:12px;line-height:1.45;color:#5B6675}
+.o5-btn{display:block;width:100%;min-height:54px;margin:0 0 12px;border-radius:9999px!important;font:700 17px/1 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.o5-primary{border:0;background:#2A71D4;color:#fff}
+.o5-primary:disabled{background:#BFD3F0;cursor:not-allowed}
+.o5-outline{border:2px solid #2A71D4;background:#fff;color:#2A71D4}
+.opt-o5 + .rf-section.rf-social{padding-top:8px!important}
