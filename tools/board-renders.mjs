@@ -24,8 +24,9 @@ const SHOTS = [
   { file: 'option-3-steps-b.png', page: 'option-3-steps.html', q: '&state=b' },
   { file: 'option-4-minimal-a.png', page: 'option-4-minimal.html' },
   { file: 'option-4-minimal-b.png', page: 'option-4-minimal.html', q: '&state=b' },
-  { file: 'option-5-getstarted-a.png', page: 'option-5-getstarted.html' },
-  { file: 'option-5-getstarted-b.png', page: 'option-5-getstarted.html', q: '&state=b' },
+  // Option 5 is rendered from the prototype app itself (the funnel's Get Started screen).
+  { file: 'option-5-getstarted-a.png', app: '?option=5' },
+  { file: 'option-5-getstarted-b.png', app: '?option=5&state=b' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -37,7 +38,8 @@ const tab = await browser.newPage();
 mkdirSync('assets/board', { recursive: true });
 for (const s of SHOTS) {
   await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
-  await tab.goto(BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
+  await tab.goto(s.app ? BASE.replace('/assets/prequal/', '/index.html') + s.app + '&t=' + Date.now() : BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
+  if (s.app) await tab.addStyleTag({ content: 'html body .panel button.flow-fab,html body .flow-fab{display:none!important;visibility:hidden!important}' });
   if (s.open) await tab.click('.lf2-toggle');
   if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));

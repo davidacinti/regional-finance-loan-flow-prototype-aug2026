@@ -85,45 +85,7 @@ const OPTIONS = [
 <details class="cx-terms-toggle"><summary>See all terms</summary><dl><dt>Monthly payment</dt><dd>$505</dd><dt>Term</dt><dd>36 months</dd><dt>APR</dt><dd>13.01%</dd><dt>Origination fee</dt><dd>$450</dd></dl></details></div>` + verify + steps()) },
 ];
 
-// Option 5 · Get started: the existing known-customer "Get Started" page design (centered greeting, amount headline,
-// checks, phone in a gray box, two full-width buttons, compact reviews). Same security rule; the number is masked,
-// the consent sits above the buttons (no pinned bar), and the second button opens the same PII check.
-const consent = base.match(/<div class="form-check rf-form-check lf2-consent">[\s\S]*?<\/label><\/div>/)[0];
-OPTIONS.push({ file: 'option-5-getstarted.html', title: 'Option 5 · Get started', cls: 'opt-o5', noBar: true,
-  main: `<section class="o5"><div class="rf-shell"><div class="rf-task">
-<p class="o5-hi">Hi Jordan,</p>
-<h1 class="o5-h1">Explore loan options up to <span>$15,000</span> in a few simple clicks.<sup class="lf2-fn">1</sup></h1>
-<ul class="o5-checks">
-<li><img src="rf-check-seal.svg" alt=""><span>Checking your options won’t impact your credit score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></li>
-<li><img src="rf-check-seal.svg" alt=""><span>Instant funding available for eligible bank accounts.<sup class="lf2-fn">2</sup></span></li>
-<li><img src="rf-check-seal.svg" alt=""><span>Easy application process, 100% online.</span></li>
-</ul>
-<div class="o5-a"><h2 class="o5-h2">Confirm your phone number to get started.</h2><div class="o5-phone">***-***-7890</div><p class="o5-note">We’ll text a 6-digit code to this number.</p></div>
-<div class="o5-b" hidden><h2 class="o5-h2">Confirm it’s you</h2><p class="o5-note o5-note-b">For your security, we confirm a few details before we text a new number.</p>
-<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-<div class="cx-field"><label for="cxPhone">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-</div>
-<div class="o5-consent">${consent}</div>
-<button type="button" class="o5-btn o5-primary" id="o5Send" disabled>Confirm and send code</button>
-<button type="button" class="o5-btn o5-outline" id="cxNotMine">Have a new number? Update it</button>
-<button type="button" class="o5-btn o5-outline" id="cxBack" hidden>Use ***-***-7890 instead</button>
-</div></div></section>`,
-  js: `<script>(function(){
-var c=document.getElementById('legal'),b=document.getElementById('o5Send'),A=document.querySelector('.o5-a'),B=document.querySelector('.o5-b'),nm=document.getElementById('cxNotMine'),bk=document.getElementById('cxBack');
-var d=function(v,n){return v.replace(/\\D/g,'').slice(0,n)};
-var fmt={cxPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
- cxDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},cxSsn:function(v){return d(v,4)}};
-var need={cxDob:8,cxSsn:4,cxPhone:10};
-function ok(){return B.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
-function s(){b.disabled=!(c.checked&&ok())}
-Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
-function show(useNew){A.hidden=useNew;B.hidden=!useNew;nm.hidden=useNew;bk.hidden=!useNew;s()}
-nm.addEventListener('click',function(){show(true);document.getElementById('cxDob').focus({preventScroll:true})});
-bk.addEventListener('click',function(){show(false)});
-c.addEventListener('change',s);s();
-if(/[?&]state=b/.test(location.search))show(true);
-})();</script>` });
+// Option 5 · Get started lives in the prototype itself (index.html, ?option=5): it is the funnel's own Get Started screen.
 
 for (const o of OPTIONS) {
   let html = base.slice(0, mainStart) + `<main class="rf-main lf2${o.cls ? ' ' + o.cls : ''}">` + o.main + '</main>' + base.slice(mainEnd);
