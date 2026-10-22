@@ -17,7 +17,7 @@ const SHOTS = [
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
   // One example of the "This isn't my number" / no number on file (Credit Karma) scenario, under the designs:
   // the input, then the lookup: match → the real code screen with the new number; no match → no offer, new application.
-  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
+  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck', hide: '.demo-hint' },
   { file: 'scenario-match.png', app: '?scenario=1', run: "start('prequal'); S.customer.phone='(864) 555-1234'; S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
   { file: 'scenario-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
   // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
@@ -28,7 +28,7 @@ const SHOTS = [
   // Three landing designs (1 Today, 2 Get started and 3 Offer page in the prototype): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
-  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-alt' },
+  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-main' },
   { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file' },
   // The same three designs as full-page mockups (top to footer, pinned bar at the bottom), without the prototype's design toggle.
   { file: 'design-1-full.png', page: 'design-1-today.html' },

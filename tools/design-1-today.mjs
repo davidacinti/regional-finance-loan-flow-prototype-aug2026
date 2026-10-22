@@ -9,7 +9,10 @@ import { readFileSync, writeFileSync } from 'node:fs';
 
 const base = readFileSync('assets/prequal/landing-a.html', 'utf8');
 const NUM = '***-***-7890';
-const link = (cls = '') => `<button type="button" class="pp-link${cls}" data-notmine>This isn’t my number</button>`;
+// One small line: the masked number we'll text, with "Edit" to give a different number.
+const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}</b> <button type="button" class="pp-link" data-notmine>Edit</button></p>`;
+// Prototype only: how to see the no-match outcome. Hidden in the board renders.
+const HINT = '<p class="demo-hint">Prototype: SSN last 4 <b>0000</b> shows the no-match screen. Anything else matches.</p>';
 
 // The block that replaces "we'll text the number on file": the same for "This isn't my number" and for Credit Karma (no number
 // on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
@@ -21,6 +24,7 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
+${HINT}
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
@@ -30,7 +34,7 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 
 const OPTIONS = [
   { file: 'design-1-today.html', title: 'Design 1 · Today',
-    place: (h) => h.replace('<div class="lf2-next lf2-know">', `<section class="lf2-ph pp-file" id="ppFile"><span class="lf2-ph-label">We’ll text your code to</span><div class="pp-num">${NUM}</div>${link()}</section>\n${check}\n<div class="lf2-next lf2-know">`) },
+    place: (h) => h.replace('<div class="lf2-next lf2-know">', `${line}\n${check}\n<div class="lf2-next lf2-know">`) },
 ];
 
 const js = `<script>(function(){
@@ -45,12 +49,16 @@ Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEvent
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';;s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');K.scrollIntoView({block:'center'})})});
 c.addEventListener('change',s);
+// We look the details up when they continue: a match goes on to the code (pq.js sends the new number); no match (prototype:
+// SSN last 4 0000) shows "Sorry, we don't have an offer for this information" here instead. Capture runs before pq.js.
+document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar .rf-btn')||b.disabled||K.hidden)return;
+ if(d(document.getElementById('ppSsn').value,4)!=='0000')return;e.stopImmediatePropagation();e.preventDefault();show('nomatch');M.scrollIntoView({block:'center'})},true);
 var m=location.search.match(/[?&]state=(notmine|nophone|nomatch)\\b/);show(m?m[1]:'file');
 })();</script>`;
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=2"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=3"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

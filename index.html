@@ -392,6 +392,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   // The funnel's confirm-phone screen plus: the chosen offer under an "outstanding odds" badge, a masked number,
   // the consent box, and "This isn't my number" → date of birth + SSN last 4 + new number before any code.
   let opt3New = false, opt3NoPhone = false, opt3NoMatch = false;
+  // Prototype annotation under the new-number fields (not part of the design; hidden in the board renders).
+  const DEMO_HINT = '<p class="demo-hint">Prototype: SSN last 4 <b>0000</b> shows the no-match screen. Anything else matches.</p>';
   function option3(){
     const body = app.querySelector('.body'); if (!body) return;
     const h1 = body.querySelector('h1');
@@ -410,8 +412,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     h2.insertAdjacentHTML('beforebegin', '<div class="pq5-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2><p class="pq5-why">Provide this information to finalize your loan.</p>' +
       '<div class="v4-about-field"><label for="pq5Phone">Mobile number</label><input class="form-control form-control-lg" id="pq5Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
       '<div class="v4-about-field"><label for="pq5Dob">Date of birth</label><input class="form-control form-control-lg" id="pq5Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="pq5Ssn">SSN last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div></div>');
-    const send = body.querySelector('.btn-main'), alt = body.querySelector('.btn-alt');
+      '<div class="v4-about-field"><label for="pq5Ssn">SSN last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' + DEMO_HINT + '</div>' +
+      // The number we'll text: one small line with "Edit" (replaces the heading, the number box and the helper).
+      '<p class="pq5-line">We’ll text your code to <b>***-***-7890</b> <button type="button" class="pq5-edit">Edit</button></p>');
+    [h2, box, help].forEach(e => e.remove());
+    const send = body.querySelector('.btn-main'), alt = body.querySelector('.btn-alt'), line = body.querySelector('.pq5-line');
+    alt.remove();
     send.insertAdjacentHTML('beforebegin', '<div class="legal-check pq5-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div>');
     const proof = body.querySelector('.v4-social-proof h2'); if (proof) proof.textContent = 'What customers say about Regional Finance';
     const consent = body.querySelector('.pq5-consent'), box2 = consent.querySelector('.boxcheck'), form = body.querySelector('.pq5-new');
@@ -421,23 +427,29 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const need = { pq5Dob: 8, pq5Ssn: 4, pq5Phone: 10 };
     const ok = () => box2.classList.contains('checked') && (!opt3New || Object.keys(need).every(k => digits(body.querySelector('#' + k).value, 20).length === need[k]));
     const sync = () => { send.disabled = !ok(); };
-    const show = () => { form.hidden = !opt3New; [h2, box, help].forEach(e => e.hidden = opt3New); alt.hidden = opt3New; /* no way back to the number on file */ sync(); };
-    // The details didn't match after 3 tries: no code, no fields; the way forward is a call.
-    if (opt3NoMatch) { [h2, box, help, form, consent, send, alt].forEach(e => e.hidden = true); send.insertAdjacentHTML('beforebegin', '<div class="pq5-nomatch" role="alert"><h2 class="fs-6 fw-bold">Sorry, we don’t have an offer for this information</h2><p>If you’d like, you can submit a new application.</p><button type="button" class="btn-alt" data-start="unknown">Submit a new application</button></div>'); app.querySelector('.pq5-nomatch [data-start]').onclick = () => start('unknown'); return; }
-    // Credit Karma sends no phone number: always the details screen, worded for a first number, nothing to go back to.
-    // Credit Karma: no number on file, so the block shows from the start and there's nothing to go back to.
-    if (opt3NoPhone) { opt3New = true; alt.hidden = true; }
+    // "Edit" opens the new-number block; there's no way back to the number on file.
+    const show = () => { form.hidden = !opt3New; line.hidden = opt3New; sync(); };
+    // No match: no offer for this information; they can submit a new application.
+    if (opt3NoMatch) { [line, form, consent, send].forEach(e => e.hidden = true); send.insertAdjacentHTML('beforebegin', '<div class="pq5-nomatch" role="alert"><h2 class="fs-6 fw-bold">Sorry, we don’t have an offer for this information</h2><p>If you’d like, you can submit a new application.</p><button type="button" class="btn-alt" data-start="unknown">Submit a new application</button></div>'); app.querySelector('.pq5-nomatch [data-start]').onclick = () => start('unknown'); return; }
+    // Credit Karma: no number on file, so the block shows from the start.
+    if (opt3NoPhone) opt3New = true;
     Object.keys(fmt).forEach(k => { const i = body.querySelector('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
     consent.onclick = () => { box2.classList.toggle('checked'); sync(); };
-    alt.removeAttribute('data-start'); alt.onclick = () => { opt3New = !opt3New; show(); };
-    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (opt3New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
+    line.querySelector('.pq5-edit').onclick = () => { opt3New = true; show(); body.querySelector('#pq5Phone').focus({ preventScroll: true }); };
+    // We look the details up: a match updates the number and sends the code to it; no match (prototype: SSN last 4 0000) → sorry.
+    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return;
+      if (opt3New && digits(body.querySelector('#pq5Ssn').value, 4) === '0000') { opt3NoMatch = true; render(false); return; }
+      if (opt3New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
     show();
   }
   function startOption3(state){ landDesign = '2'; baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #DEDEDE;border-radius:18px;background:#F7F7F7;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#333}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}</style>');
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #DEDEDE;border-radius:18px;background:#F7F7F7;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#333}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}' +
+    '.phone.design-v4 .pq5-line{margin:0 0 16px;font-size:14px;line-height:1.5;color:#595959;text-align:left}.phone.design-v4 .pq5-line b{color:#363636;letter-spacing:.04em;white-space:nowrap}' +
+    '.phone.design-v4 .pq5-edit{margin:0 0 0 4px;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}' +
+    '.demo-hint{margin:2px 0 14px;padding:6px 10px;border:1px dashed #B7791F;border-radius:10px;background:#FFF6DB;color:#5C3D00;font-size:12px;line-height:1.4;text-align:left}</style>');
   // DESIGN 3 · Offer page (landing designs for the team; not in the scenario builder). Open with ?design=3
   // (&state=notmine | nophone (Credit Karma) | nomatch). The funnel's Pre-Approval Offer page, read-only (they change the offer
-  // later on the real offer page), with "We'll text your code to ***-***-7890" + "This isn't my number" under the offer.
+  // later on the real offer page), with one small line under the offer: "We’ll text your code to ***-***-7890 Edit".
   let d3State = '';
   function design3(){
     const body = app.querySelector('.body'); if (!body) return;
@@ -446,11 +458,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const card = body.querySelector('.offer-card');
     card.innerHTML = '<div class="offer-row"><span>Loan Proceeds<sup>1</sup></span><b>' + money(S.amount) + '</b></div><div class="offer-row"><span>Term</span><b>' + S.term + ' Years</b></div>' +
       '<div class="offer-row"><span>Origination Fee</span><b>' + money(S.amount * 0.03) + '</b></div><div class="offer-row"><span>Annual Percentage Rate<sup>2</sup></span><b>' + aprFor(S.term).toFixed(2) + '%</b></div>';
-    card.insertAdjacentHTML('afterend', '<section class="d3-phone"><div class="d3-file"><h2 class="fs-6 fw-bold">We’ll text your code to</h2><div class="fake-input v4-phone">***-***-7890</div><button type="button" class="d3-link" id="d3NotMine">This isn’t my number</button></div>' +
+    card.insertAdjacentHTML('afterend', '<section class="d3-phone"><p class="pq5-line d3-file">We’ll text your code to <b>***-***-7890</b> <button type="button" class="pq5-edit" id="d3NotMine">Edit</button></p>' +
       '<div class="pq5-new d3-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2><p class="pq5-why">Provide this information to finalize your loan.</p>' +
       '<div class="v4-about-field"><label for="d3Phone">Mobile number</label><input class="form-control form-control-lg" id="d3Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
       '<div class="v4-about-field"><label for="d3Dob">Date of birth</label><input class="form-control form-control-lg" id="d3Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="d3Ssn">SSN last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
+      '<div class="v4-about-field"><label for="d3Ssn">SSN last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' + DEMO_HINT +
       '</div>' +
       '<div class="pq5-nomatch d3-nomatch" role="alert" hidden><h2 class="fs-6 fw-bold">Sorry, we don’t have an offer for this information</h2><p>If you’d like, you can submit a new application.</p><button type="button" class="btn-alt" data-start="unknown">Submit a new application</button></div>' +
       '<div class="legal-check d3-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div></section>');
@@ -465,8 +477,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const show = () => { file.hidden = d3State !== ''; form.hidden = !usingNew(); nomatch.hidden = d3State !== 'nomatch'; consent.hidden = d3State === 'nomatch'; sync(); };
     Object.keys(fmt).forEach(k => { const i = q('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
     consent.onclick = () => { tick.classList.toggle('checked'); sync(); };
-    q('#d3NotMine').onclick = () => { d3State = 'notmine'; show(); q('#d3Dob').focus({ preventScroll: true }); };
-    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (usingNew()) S.customer.phone = q('#d3Phone').value; go('sms'); };
+    q('#d3NotMine').onclick = () => { d3State = 'notmine'; show(); q('#d3Phone').focus({ preventScroll: true }); };
+    // We look the details up: a match updates the number and sends the code to it; no match (prototype: SSN last 4 0000) → sorry.
+    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return;
+      if (usingNew() && digits(q('#d3Ssn').value, 4) === '0000') { d3State = 'nomatch'; show(); nomatch.scrollIntoView({ block: 'center' }); return; }
+      if (usingNew()) S.customer.phone = q('#d3Phone').value; go('sms'); };
     q('.d3-nomatch [data-start]').onclick = () => start('unknown');
     // The pinned monthly-payment bar is fixed: room under the footer so its last lines aren't hidden behind it.
     app.insertAdjacentHTML('beforeend', '<div class="d3-spacer" aria-hidden="true" style="height:' + send.closest('.sticky-offer').offsetHeight + 'px"></div>');

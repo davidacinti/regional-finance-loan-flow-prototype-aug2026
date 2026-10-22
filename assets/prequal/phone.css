@@ -24,5 +24,11 @@
 .pp-nomatch{padding:14px 16px;border:1px solid #DEDEDE;border-radius:17px;background:#F7F7F7}
 .pp-nomatch .pp-title{color:#363636!important}
 .pp-call{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border:2px solid #2A71D4!important;border-radius:9999px!important;background:#fff;color:#2A71D4!important;font-weight:700}
+/* The number we'll text, as one small line with "Edit". */
+.pp-line{margin:0;font-size:14px;line-height:1.5;color:#595959}
+.pp-line b{color:#363636;letter-spacing:.04em;white-space:nowrap}
+.pp-line .pp-link{margin:0 0 0 4px;font-size:14px}
+/* Prototype annotation (not part of the design): amber, dashed, like the affiliate "Out of scope" tag. */
+.demo-hint{margin:2px 0 0;padding:6px 10px;border:1px dashed #B7791F;border-radius:10px;background:#FFF6DB;color:#5C3D00;font-size:12px;line-height:1.4}
 .pp-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
 .pp-row .lf2-ph-input{padding:15px 14px}
