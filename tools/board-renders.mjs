@@ -15,12 +15,14 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
-  // Landing options for the team: A (the prototype, ?option=a) and B (option-b-ticket.html), each for
-  // most partners (phone on file) and for Credit Karma (no phone number: state=ck).
-  { file: 'option-a-phone.png', app: '?option=a' },
-  { file: 'option-a-ck.png', app: '?option=a&state=ck' },
-  { file: 'option-b-phone.png', page: 'option-b-ticket.html' },
-  { file: 'option-b-ck.png', page: 'option-b-ticket.html', q: '&state=ck' },
+  // Where to confirm the phone (tools/phone-options.mjs): the first screen of each option, then the situations as
+  // just their input block (same design for every option).
+  { file: 'phone-1-below.png', page: 'phone-1-below.html', first: true },
+  { file: 'phone-2-bar.png', page: 'phone-2-bar.html', first: true },
+  { file: 'phone-3-card.png', page: 'phone-3-card.html', first: true },
+  { file: 'phone-sit-notmine.png', page: 'phone-1-below.html', q: '&state=notmine', el: '#ppCheck' },
+  { file: 'phone-sit-nophone.png', page: 'phone-1-below.html', q: '&state=nophone', el: '#ppCheck' },
+  { file: 'phone-sit-nomatch.png', page: 'phone-1-below.html', q: '&state=nomatch', el: '#ppNoMatch' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -37,6 +39,13 @@ for (const s of SHOTS) {
   if (s.open) await tab.click('.lf2-toggle');
   if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));
+  // First screen: what a customer sees before scrolling (pinned bar included), @2x.
+  if (s.first) { await tab.screenshot({ path: 'assets/board/' + s.file }); console.log(s.file, '390x844 @2x'); continue; }
+  // Just one block (an input state), with a little white around it, @2x.
+  if (s.el) {
+    const box = await tab.evaluate((sel) => { document.querySelector('.lf2-paybar').style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
+    await tab.screenshot({ path: 'assets/board/' + s.file, clip: box, captureBeyondViewport: true }); console.log(s.file, Math.round(box.width) + 'x' + Math.round(box.height) + ' @2x'); continue;
+  }
   if (s.clipTo) {
     const bottom = await tab.evaluate((sel) => { document.querySelector('.lf2-paybar').style.display = 'none'; return Math.ceil(document.querySelector(sel).getBoundingClientRect().bottom + 24); }, s.clipTo);
     await tab.setViewport({ width: 390, height: bottom, deviceScaleFactor: 2 }); await new Promise(r => setTimeout(r, 400));
