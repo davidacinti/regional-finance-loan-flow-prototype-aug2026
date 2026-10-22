@@ -392,8 +392,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   // The funnel's confirm-phone screen plus: the chosen offer under an "outstanding odds" badge, a masked number,
   // the consent box, and "This isn't my number" → date of birth + SSN last 4 + new number before any code.
   let opt3New = false, opt3NoPhone = false, opt3NoMatch = false;
-  // Prototype annotation under the new-number fields (not part of the design; hidden in the board renders).
-  const DEMO_HINT = '<p class="demo-hint">Prototype: SSN last 4 <b>0000</b> shows the no-match screen. Anything else matches.</p>';
   function option3(){
     const body = app.querySelector('.body'); if (!body) return;
     const h1 = body.querySelector('h1');
@@ -412,7 +410,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     h2.insertAdjacentHTML('beforebegin', '<div class="pq5-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2><p class="pq5-why">Provide this information to finalize your loan.</p>' +
       '<div class="v4-about-field"><label for="pq5Phone">Mobile number</label><input class="form-control form-control-lg" id="pq5Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
       '<div class="v4-about-field"><label for="pq5Dob">Date of birth</label><input class="form-control form-control-lg" id="pq5Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="pq5Ssn">SSN last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' + DEMO_HINT + '</div>' +
+      '<div class="v4-about-field"><label for="pq5Ssn">SSN last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div></div>' +
       // The number we'll text: one small line with "Edit" (replaces the heading, the number box and the helper).
       '<p class="pq5-line">We’ll text your code to <b>***-***-7890</b> <button type="button" class="pq5-edit">Edit</button></p>');
     [h2, box, help].forEach(e => e.remove());
@@ -445,8 +443,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   function startOption3(state){ landDesign = '2'; baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #DEDEDE;border-radius:18px;background:#F7F7F7;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#333}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}' +
     '.phone.design-v4 .pq5-line{margin:0 0 16px;font-size:14px;line-height:1.5;color:#595959;text-align:left}.phone.design-v4 .pq5-line b{color:#363636;letter-spacing:.04em;white-space:nowrap}' +
-    '.phone.design-v4 .pq5-edit{margin:0 0 0 4px;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}' +
-    '.demo-hint{margin:2px 0 14px;padding:6px 10px;border:1px dashed #B7791F;border-radius:10px;background:#FFF6DB;color:#5C3D00;font-size:12px;line-height:1.4;text-align:left}</style>');
+    '.phone.design-v4 .pq5-edit{margin:0 0 0 4px;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}</style>');
   // DESIGN 3 · Offer page (landing designs for the team; not in the scenario builder). Open with ?design=3
   // (&state=notmine | nophone (Credit Karma) | nomatch). The funnel's Pre-Approval Offer page, read-only (they change the offer
   // later on the real offer page), with one small line under the offer: "We’ll text your code to ***-***-7890 Edit".
@@ -462,7 +459,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       '<div class="pq5-new d3-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2><p class="pq5-why">Provide this information to finalize your loan.</p>' +
       '<div class="v4-about-field"><label for="d3Phone">Mobile number</label><input class="form-control form-control-lg" id="d3Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
       '<div class="v4-about-field"><label for="d3Dob">Date of birth</label><input class="form-control form-control-lg" id="d3Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="d3Ssn">SSN last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' + DEMO_HINT +
+      '<div class="v4-about-field"><label for="d3Ssn">SSN last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
       '</div>' +
       '<div class="pq5-nomatch d3-nomatch" role="alert" hidden><h2 class="fs-6 fw-bold">Sorry, we don’t have an offer for this information</h2><p>If you’d like, you can submit a new application.</p><button type="button" class="btn-alt" data-start="unknown">Submit a new application</button></div>' +
       '<div class="legal-check d3-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div></section>');

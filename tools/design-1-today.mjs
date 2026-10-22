@@ -11,8 +11,6 @@ const base = readFileSync('assets/prequal/landing-a.html', 'utf8');
 const NUM = '***-***-7890';
 // One small line: the masked number we'll text, with "Edit" to give a different number.
 const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}</b> <button type="button" class="pp-link" data-notmine>Edit</button></p>`;
-// Prototype only: how to see the no-match outcome. Hidden in the board renders.
-const HINT = '<p class="demo-hint">Prototype: SSN last 4 <b>0000</b> shows the no-match screen. Anything else matches.</p>';
 
 // The block that replaces "we'll text the number on file": the same for "This isn't my number" and for Credit Karma (no number
 // on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
@@ -24,7 +22,6 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-${HINT}
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
@@ -58,7 +55,7 @@ var m=location.search.match(/[?&]state=(notmine|nophone|nomatch)\\b/);show(m?m[1
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=3"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=4"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

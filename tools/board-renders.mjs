@@ -17,7 +17,7 @@ const SHOTS = [
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
   // One example of the "This isn't my number" / no number on file (Credit Karma) scenario, under the designs:
   // the input, then the lookup: match → the real code screen with the new number; no match → no offer, new application.
-  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck', hide: '.demo-hint' },
+  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
   { file: 'scenario-match.png', app: '?scenario=1', run: "start('prequal'); S.customer.phone='(864) 555-1234'; S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
   { file: 'scenario-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
   // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
