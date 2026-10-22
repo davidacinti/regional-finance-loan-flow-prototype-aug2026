@@ -2,7 +2,7 @@
 // Today's landing design (assets/prequal/landing-a.html) unchanged, plus "We'll text your code to ***-***-7890" below the offer
 // card (same spot as the Credit Karma mobile field). Writes assets/prequal/design-1-today.html.
 // (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Offer page: index.html ?design=3.)
-// "This isn't my number" (and Credit Karma, which sends no number) shows: mobile number, then date of birth + SSN last 4.
+// "This isn't my number" (and Credit Karma, which sends no number) shows: mobile number, date of birth + SSN last 4. No way back to the number on file.
 // Situations (?state=): notmine, nophone (Credit Karma), nomatch (no match → no offer for this information; submit a new application).
 //   node tools/design-1-today.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -15,13 +15,12 @@ const link = (cls = '') => `<button type="button" class="pp-link${cls}" data-not
 // on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
 <h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
+<p class="pp-sub">Provide this information to finalize your loan.</p>
 <div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<p class="pp-sub">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-<button type="button" class="pp-link" id="ppBack">Use ${NUM} instead</button>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
@@ -43,11 +42,8 @@ var need={ppDob:8,ppSsn:4,ppPhone:10};
 function ok(){if(!M.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
-function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';
- // Credit Karma: no number on file, so there is nothing to go back to.
- document.getElementById('ppBack').hidden=st==='nophone';s()}
+function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';;s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');K.scrollIntoView({block:'center'})})});
-document.getElementById('ppBack').addEventListener('click',function(){show('file')});
 c.addEventListener('change',s);
 var m=location.search.match(/[?&]state=(notmine|nophone|nomatch)\\b/);show(m?m[1]:'file');
 })();</script>`;

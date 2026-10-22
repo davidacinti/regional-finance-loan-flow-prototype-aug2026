@@ -2,7 +2,7 @@
 // Today's landing design with the mobile number field at the top. The customer types their number (autofill makes it a tap);
 // we compare it with the number on file without saying so:
 //   same number      → Continue → code. Nothing else shows.
-//   different / none → date of birth + SSN last 4 slide in under it ("to match this number to your offer"), then the code.
+//   different / none → date of birth + SSN last 4 slide in under it ("Provide this information to finalize your loan"), then the code.
 //                      Credit Karma sends no number, so it always takes this path; same screen as everyone else.
 //   details wrong 3× → "Sorry, we don't have an offer for this information" + submit a new application. Never "call us".
 // Demo: the number on file is (123) 456-7890. ?state=match | new | nomatch prefill a case for the board.
@@ -17,7 +17,7 @@ const field = `<section class="lf2-ph pf" id="pf" aria-labelledby="pfLabel">
 <input class="lf2-ph-input" id="pfPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14">
 <p class="lf2-ph-help" id="pfHelp">We’ll text you a code to continue.</p>
 <div class="pf-more" id="pfMore" hidden>
-<p class="pf-note">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>
+<p class="pf-note">Provide this information to finalize your loan.</p>
 <div class="pf-row">
 <div><label class="lf2-ph-label" for="pfDob">Date of birth</label><input class="lf2-ph-input" id="pfDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div><label class="lf2-ph-label" for="pfSsn">SSN last 4</label><input class="lf2-ph-input" id="pfSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
