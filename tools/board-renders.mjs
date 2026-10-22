@@ -28,8 +28,8 @@ const SHOTS = [
   // Three landing designs (1 Today, 2 Get started and 3 Offer page in the prototype): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
-  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-main' },
-  { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file' },
+  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-main', hide: '.pq-designs' },
+  { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file', hide: '.pq-designs' },
   // The same three designs as full-page mockups (top to footer, pinned bar at the bottom), without the prototype's design toggle.
   { file: 'design-1-full.png', page: 'design-1-today.html' },
   { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
