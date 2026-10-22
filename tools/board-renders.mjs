@@ -15,6 +15,11 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
+  // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
+  { file: 'phone-first-landing.png', page: 'phone-first.html', first: true },
+  { file: 'phone-first-match.png', page: 'phone-first.html', q: '&state=match', upTo: '#pf' },
+  { file: 'phone-first-new.png', page: 'phone-first.html', q: '&state=new', upTo: '#pf' },
+  { file: 'phone-first-nomatch.png', page: 'phone-first.html', q: '&state=nomatch', upTo: '#pf' },
   // Three landing designs (1 Today, 2 Get started in the prototype, 3 Ticket): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },

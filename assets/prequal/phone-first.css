@@ -1,0 +1,12 @@
+/* Prequal landing · phone first (tools/phone-first.mjs). The field pattern is the landing's (.lf2-ph in pq-offer.css);
+   here it sits at the top of the page, in a white card like the offer card. */
+.lf2-ph.pf{background:#fff;border:1px solid #CDCDCD;border-radius:20px;padding:16px 16px 14px}
+.pf [hidden],.pf[hidden]{display:none!important}
+.pf-more{margin-top:12px;padding-top:12px;border-top:1px solid #EEE;animation:pf-in .25s ease}
+@keyframes pf-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.pf-note{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:#595959}
+.pf-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.pf-row .lf2-ph-input{padding:15px 14px}
+.pf-nomatch{display:flex;flex-direction:column;gap:4px;margin-top:12px;padding:12px 14px;border:1px solid #D32F2F;border-radius:14px;background:#FFF6F6;font-size:13.5px;line-height:1.45;color:#595959}
+.pf-nomatch b{color:#B42318;font-size:15px}
+.pf-call{align-self:flex-start;margin-top:6px;padding:8px 18px;border:2px solid #2A71D4;border-radius:9999px;color:#2A71D4;font-weight:700;text-decoration:none}
