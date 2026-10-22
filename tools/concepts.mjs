@@ -84,6 +84,34 @@ const CONCEPTS = [
   },
 ];
 
+// Concept C, trimmed (recommended direction): ticket with 2x2 terms, one-row steps, Trustpilot in the hero, no trust tiles.
+// The no-phone version (partners with no usable phone, e.g. Credit Karma) adds only mobile number + date of birth.
+const cHero = `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<span class="cx-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Pre-qualified</span>
+<h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
+<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. <span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trustpilot</span></p>
+</div></div></section>`;
+const cTicket = `<div class="cx-ticket"><div class="cx-ticket-top"><span class="cx-exp">Expires Nov 6</span><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-amt">$15,000</div><div class="cx-kind">Unsecured personal loan</div></div>
+<div class="cx-perf" aria-hidden="true"></div>
+<div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>`;
+const cSteps = (first) => `<div><h2 class="cx-next-h">What’s next</h2><ol class="cx-strip">
+<li><i>1</i><b>${first}</b></li><li><i>2</i><b>Link your bank</b></li><li><i>3</i><b>Sign and get your money<sup class="lf2-fn">2</sup></b></li></ol></div>`;
+CONCEPTS.push(
+  { file: 'concept-c2-trim.html', title: 'Concept C trimmed · offer ticket (phone on file)', button: 'Continue', cls: 'cx-c',
+    main: cHero + stack(cTicket + cSteps('Verify by text')), js: '' },
+  { file: 'concept-c2-trim-nophone.html', title: 'Concept C trimmed · no phone on file (mobile + birthday)', button: 'Continue', cls: 'cx-c',
+    main: cHero + stack(cTicket + `
+<section class="cx-card" aria-labelledby="cxIdTitle"><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
+<p class="cx-sub">We’ll text a 6-digit code to this number.</p>
+<div class="cx-row cx-stack1">
+<div class="cx-field"><label for="cxPhone">Mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
+</div>
+<p class="cx-help cx-lock">${lock}<span>We use these to match you to your offer.</span></p>
+</section>` + cSteps('Enter your text code')),
+    js: formJs([['cxPhone', 10, 'phone'], ['cxDob', 8, 'dob']]) },
+);
+
 for (const c of CONCEPTS) {
   let html = base.slice(0, mainStart) + `<main class="rf-main lf2${c.cls ? ' ' + c.cls : ''}">` + c.main + '</main>' + base.slice(mainEnd);
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${c.title}</title>`)

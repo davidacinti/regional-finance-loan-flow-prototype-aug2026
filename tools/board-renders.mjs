@@ -19,6 +19,8 @@ const SHOTS = [
   { file: 'concept-a-verify.png', page: 'concept-a-verify.html' },
   { file: 'concept-b-code.png', page: 'concept-b-code.html' },
   { file: 'concept-c-ticket.png', page: 'concept-c-ticket.html' },
+  { file: 'concept-c2-trim.png', page: 'concept-c2-trim.html' },
+  { file: 'concept-c2-trim-nophone.png', page: 'concept-c2-trim-nophone.html' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
