@@ -305,8 +305,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = S.pq ? channel : ''); document.querySelectorAll('.pq-group').forEach(g => g.classList.toggle('active', !!S.pq)); };
   const baseRender = render;
   render = function(shouldScroll = true){
-    // Option 5 (landing options for the team): the funnel's own Get Started screen, so it matches the rest of the flow.
-    if (S.page === 'pqOpt5') { S.page = 'confirmPhone'; baseRender(shouldScroll); S.page = 'pqOpt5'; phone.classList.remove('page-prequal'); option5(); return; }
+    // Option 3 (landing options for the team): the funnel's own Get Started screen, so it matches the rest of the flow.
+    if (S.page === 'pqOpt3') { S.page = 'confirmPhone'; baseRender(shouldScroll); S.page = 'pqOpt3'; phone.classList.remove('page-prequal'); option3(); return; }
     baseRender(shouldScroll);
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
@@ -358,13 +358,18 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     '.aff-tag{flex:none;padding:4px 9px;border-radius:9999px;background:#FFE9A8;border:1px dashed #B7791F;color:#5C3D00;font-size:11px;font-weight:700;white-space:nowrap}');
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100dvh - 18px)}.phone.page-prequal{min-height:0}html:has(.phone.page-prequal),html:has(.phone.page-prequal) body{overflow:hidden;height:100%}}</style>');
 
-  // OPTION 5 · Get started (landing options for the team; not in the scenario builder). Open with ?option=5 (&state=b).
+  // OPTION 3 · Get started (landing options for the team; not in the scenario builder). Open with ?option=3 (&state=b).
   // The funnel's confirm-phone screen plus: the chosen offer under an "outstanding odds" badge, a masked number,
   // the consent box, and "Have a new number? Update it" → date of birth + SSN last 4 + new number before any code.
-  let opt5New = false;
-  function option5(){
+  let opt3New = false;
+  function option3(){
     const body = app.querySelector('.body'); if (!body) return;
     const h1 = body.querySelector('h1');
+    // They already have an offer, so the copy says so (not "Explore loan options…" / "Checking your options…").
+    h1.innerHTML = 'You’re pre&#8209;qualified for <span class="blue">' + money(S.amount) + '</span>.<sup class="fs-6">1</sup>';
+    const checks = body.querySelectorAll('.v4-benefit span');
+    if (checks[0]) checks[0].innerHTML = 'Reviewing your offer won’t impact your credit score.<sup class="v4-footnote-mark">†</sup>';
+    if (checks[2]) checks[2].textContent = 'Simple, fast, and 100% online.';
     h1.insertAdjacentHTML('afterend', '<div class="pq5-odds"><i class="bi bi-patch-check-fill"></i>You have outstanding odds of approval</div>' +
       '<div class="offer-card pq5-offer"><div class="offer-row"><span>Your pre-qualified offer<sup>1</sup></span><b>' + money(S.amount) + '</b></div>' +
       '<div class="offer-row"><span>Monthly payment</span><b>' + monthly() + '</b></div><div class="offer-row"><span>Term</span><b>' + (S.term * 12) + ' months</b></div>' +
@@ -383,18 +388,18 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const fmt = { pq5Dob: v => { v = digits(v, 8); return v.length > 4 ? v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4) : v.length > 2 ? v.slice(0, 2) + '/' + v.slice(2) : v; },
       pq5Ssn: v => digits(v, 4), pq5Phone: v => { v = digits(v, 10); return v.length < 4 ? v : v.length < 7 ? '(' + v.slice(0, 3) + ') ' + v.slice(3) : '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6); } };
     const need = { pq5Dob: 8, pq5Ssn: 4, pq5Phone: 10 };
-    const ok = () => box2.classList.contains('checked') && (!opt5New || Object.keys(need).every(k => digits(body.querySelector('#' + k).value, 20).length === need[k]));
+    const ok = () => box2.classList.contains('checked') && (!opt3New || Object.keys(need).every(k => digits(body.querySelector('#' + k).value, 20).length === need[k]));
     const sync = () => { send.disabled = !ok(); };
-    const show = () => { form.hidden = !opt5New; [h2, box, help].forEach(e => e.hidden = opt5New); alt.textContent = opt5New ? 'Use ***-***-7890 instead' : 'Have a new number? Update it'; sync(); };
+    const show = () => { form.hidden = !opt3New; [h2, box, help].forEach(e => e.hidden = opt3New); alt.textContent = opt3New ? 'Use ***-***-7890 instead' : 'Have a new number? Update it'; sync(); };
     Object.keys(fmt).forEach(k => { const i = body.querySelector('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
     consent.onclick = () => { box2.classList.toggle('checked'); sync(); };
-    alt.removeAttribute('data-start'); alt.onclick = () => { opt5New = !opt5New; show(); };
-    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (opt5New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
+    alt.removeAttribute('data-start'); alt.onclick = () => { opt3New = !opt3New; show(); };
+    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (opt3New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
     show();
   }
-  function startOption5(useNew){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = 'direct'; S.hist = []; opt5New = !!useNew; go('pqOpt5', false); }
+  function startOption3(useNew){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = 'direct'; S.hist = []; opt3New = !!useNew; go('pqOpt3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}</style>');
-  if (/[?&]option=5\b/.test(location.search)) startOption5(/[?&]state=b\b/.test(location.search));
+  if (/[?&]option=3\b/.test(location.search)) startOption3(/[?&]state=b\b/.test(location.search));
   render(false);
 })();
 </script></body></html>

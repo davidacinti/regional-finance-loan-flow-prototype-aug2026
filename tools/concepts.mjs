@@ -1,5 +1,5 @@
 // Prequal landing OPTIONS for the team (Oct 2026). Not wired into the prototype's flows.
-// Four different designs, one security rule: we only text a code to a number we can tie to the customer.
+// Three different designs, one security rule: we only text a code to a number we can tie to the customer.
 //   a (default): the code goes to the phone on file; "Have a new number? Update it" switches the same page to
 //   b: date of birth + SSN last 4 (matched to the offer) + the new mobile number. No-phone partners (Credit Karma) open on b.
 //   PII ("Is this you?") is shown only after the code.
@@ -60,32 +60,16 @@ const OPTIONS = [
 <div class="cx-perf" aria-hidden="true"></div>
 <div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>` + verify + steps()) },
 
-  { file: 'option-2-classic.html', title: 'Option 2 · Classic', cls: '',
-    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<h1 class="lf2-h1">Hi Jordan, let's finish your loan.</h1>
-<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
-</div></div></section>` + stack(`<div class="lf2-offer"><div class="lf2-ribbon">You’re a strong fit for this offer</div><div class="lf2-offer-body">
-<div class="lf2-top"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="money-primary">$15,000</div><div class="lf2-type">Unsecured personal loan</div></div><span class="data-label">Expires Nov 6</span></div>
-<div class="lf2-stats"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 mo</b></div><div><span>APR</span><b>13.01%</b></div></div>
-</div></div>` + verify + borrow) },
-
-  { file: 'option-3-steps.html', title: 'Option 3 · Step-by-step', cls: 'opt-steps',
+  { file: 'option-2-steps.html', title: 'Option 2 · Step-by-step', cls: 'opt-steps',
     main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
 <div class="cx-prog" aria-label="Step 1 of 4"><div class="cx-prog-top"><span><b>Step 1 of 4</b> · Confirm it’s you</span><span>Then: offer, bank, sign</span></div><div class="cx-prog-bar"><i></i><i></i><i></i><i></i></div></div>
 <h1 class="lf2-h1">Hi Jordan, you’re pre‑qualified.</h1>
 <p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
 </div></div></section>` + stack(verify + `<div class="cx-sum"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="big">$15,000</div></div><div class="meta"><b>$505</b>/mo · 36 mo<br><b>13.01%</b> APR · $450 fee<br>Expires Nov 6</div></div>` + borrow) },
 
-  { file: 'option-4-minimal.html', title: 'Option 4 · Minimal', cls: 'opt-min',
-    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<h1 class="lf2-h1">Jordan, you’re pre‑qualified.</h1>
-<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
-</div></div></section>` + stack(`<div class="cx-hero-min"><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-big">$15,000</div>
-<div class="cx-pills"><span>$505/mo</span><span>36 months</span><span>13.01% APR</span></div><div class="cx-exp2">Unsecured personal loan · Expires Nov 6</div>
-<details class="cx-terms-toggle"><summary>See all terms</summary><dl><dt>Monthly payment</dt><dd>$505</dd><dt>Term</dt><dd>36 months</dd><dt>APR</dt><dd>13.01%</dd><dt>Origination fee</dt><dd>$450</dd></dl></details></div>` + verify + steps()) },
 ];
 
-// Option 5 · Get started lives in the prototype itself (index.html, ?option=5): it is the funnel's own Get Started screen.
+// Option 3 · Get started lives in the prototype itself (index.html, ?option=3): it is the funnel's own Get Started screen.
 
 for (const o of OPTIONS) {
   let html = base.slice(0, mainStart) + `<main class="rf-main lf2${o.cls ? ' ' + o.cls : ''}">` + o.main + '</main>' + base.slice(mainEnd);
