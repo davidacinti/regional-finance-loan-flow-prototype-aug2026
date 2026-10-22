@@ -20,7 +20,9 @@
 .pp-cardrow b{font-size:16px;letter-spacing:.05em;color:#363636}
 .pp-cardrow .pp-link{margin:0;font-size:13px;white-space:nowrap}
 
-/* The details didn't match: the way forward is a call. */
+/* The details didn't match: the way forward is a few quick questions (KBA), never a call. */
 .pp-nomatch{padding:14px 16px;border:1px solid #D32F2F;border-radius:17px;background:#FFF6F6}
 .pp-nomatch .pp-title{color:#B42318!important}
 .pp-call{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border:2px solid #2A71D4!important;border-radius:9999px!important;background:#fff;color:#2A71D4!important;font-weight:700}
+.pp-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
+.pp-row .lf2-ph-input{padding:15px 14px}

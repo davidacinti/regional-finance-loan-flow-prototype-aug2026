@@ -2,29 +2,31 @@
 // Today's landing design (assets/prequal/landing-a.html) unchanged, plus "We'll text your code to ***-***-7890" below the offer
 // card (same spot as the Credit Karma mobile field). Writes assets/prequal/design-1-today.html.
 // (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Offer page: index.html ?design=3.)
-// "This isn't my number" opens the same check in the page (date of birth + SSN last 4 + new number) before any code.
-// Situations (?state=): notmine (they tapped the link), nophone (Credit Karma: no number on file),
-// nomatch (the details didn't match after 3 tries).   node tools/phone-options.mjs
+// "This isn't my number" (and Credit Karma, which sends no number) shows: mobile number, then date of birth + SSN last 4.
+// Situations (?state=): notmine, nophone (Credit Karma), nomatch (details didn't match → a few quick questions, KBA).
+//   node tools/design-1-today.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const base = readFileSync('assets/prequal/landing-a.html', 'utf8');
 const NUM = '***-***-7890';
 const link = (cls = '') => `<button type="button" class="pp-link${cls}" data-notmine>This isn’t my number</button>`;
 
-// The check that replaces "we'll text the number on file" (the same block for every option and situation).
+// The block that replaces "we'll text the number on file": the same for "This isn't my number" and for Credit Karma (no number
+// on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
-<p class="pp-sub" id="ppWhy">For your security, we confirm a few details before we text a new number.</p>
+<h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<p class="pp-sub">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>
+<div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN · last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppPhone" id="ppPhoneLabel">New mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<p class="lf2-ph-help" id="ppHelp">We’ll text you a code to confirm it’s you.</p>
+<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+</div>
 <button type="button" class="pp-link" id="ppBack">Use ${NUM} instead</button>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
-<h2 class="pp-title">We couldn’t match those details</h2>
-<p class="pp-sub">For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p>
-<a class="btn rf-btn pp-call" href="#">Call us</a>
+<h2 class="pp-title">Those details don’t match</h2>
+<p class="pp-sub">Answer a few quick questions and we’ll text your code.</p>
+<a class="btn rf-btn pp-call" href="#">Answer questions</a>
 </section>`;
 
 const OPTIONS = [
@@ -42,9 +44,8 @@ function ok(){if(!M.hidden)return false;return K.hidden||Object.keys(need).every
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';
- var ck=st==='nophone';document.getElementById('ppBack').hidden=ck;
- document.getElementById('ppWhy').textContent=ck?'For your security, we confirm a few details before we text you a code.':'For your security, we confirm a few details before we text a new number.';
- document.getElementById('ppPhoneLabel').textContent=ck?'Mobile number':'New mobile number';s()}
+ // Credit Karma: no number on file, so there is nothing to go back to.
+ document.getElementById('ppBack').hidden=st==='nophone';s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');K.scrollIntoView({block:'center'})})});
 document.getElementById('ppBack').addEventListener('click',function(){show('file')});
 c.addEventListener('change',s);
@@ -53,7 +54,7 @@ var m=location.search.match(/[?&]state=(notmine|nophone|nomatch)\\b/);show(m?m[1
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=1"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=2"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

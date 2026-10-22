@@ -3,7 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="phone.css?v=1"><link rel="stylesheet" href="pq-offer.css?v=3"></head><body>
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="phone.css?v=2"><link rel="stylesheet" href="pq-offer.css?v=3"></head><body>
 <header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header><main class="rf-main lf2">
 <section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
 <h1 class="lf2-h1">Hi Jordan, let's finish your loan.</h1>
@@ -31,18 +31,19 @@
 
 <section class="lf2-ph pp-file" id="ppFile"><span class="lf2-ph-label">We’ll text your code to</span><div class="pp-num">***-***-7890</div><button type="button" class="pp-link" data-notmine>This isn’t my number</button></section>
 <section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
-<p class="pp-sub" id="ppWhy">For your security, we confirm a few details before we text a new number.</p>
+<h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<p class="pp-sub">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>
+<div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN · last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppPhone" id="ppPhoneLabel">New mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<p class="lf2-ph-help" id="ppHelp">We’ll text you a code to confirm it’s you.</p>
+<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+</div>
 <button type="button" class="pp-link" id="ppBack">Use ***-***-7890 instead</button>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
-<h2 class="pp-title">We couldn’t match those details</h2>
-<p class="pp-sub">For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p>
-<a class="btn rf-btn pp-call" href="#">Call us</a>
+<h2 class="pp-title">Those details don’t match</h2>
+<p class="pp-sub">Answer a few quick questions and we’ll text your code.</p>
+<a class="btn rf-btn pp-call" href="#">Answer questions</a>
 </section>
 <div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
 <li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
@@ -206,9 +207,8 @@ function ok(){if(!M.hidden)return false;return K.hidden||Object.keys(need).every
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';
- var ck=st==='nophone';document.getElementById('ppBack').hidden=ck;
- document.getElementById('ppWhy').textContent=ck?'For your security, we confirm a few details before we text you a code.':'For your security, we confirm a few details before we text a new number.';
- document.getElementById('ppPhoneLabel').textContent=ck?'Mobile number':'New mobile number';s()}
+ // Credit Karma: no number on file, so there is nothing to go back to.
+ document.getElementById('ppBack').hidden=st==='nophone';s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');K.scrollIntoView({block:'center'})})});
 document.getElementById('ppBack').addEventListener('click',function(){show('file')});
 c.addEventListener('change',s);

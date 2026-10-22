@@ -379,10 +379,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       '<div class="offer-row"><span>Annual Percentage Rate</span><b>' + aprFor(S.term).toFixed(2) + '%</b></div></div>');
     const h2 = [...body.querySelectorAll('h2')].find(h => /Confirm your phone/.test(h.textContent)), box = body.querySelector('.v4-phone'), help = body.querySelector('.v4-helper');
     box.textContent = '***-***-7890';
-    h2.insertAdjacentHTML('beforebegin', '<div class="pq5-new" hidden><h2 class="fs-6 fw-bold">Confirm it’s you</h2><p class="pq5-why">For your security, we confirm a few details before we text a new number.</p>' +
+    // Same block for "This isn't my number" and Credit Karma (no number on file): number first, then date of birth + SSN last 4.
+    h2.insertAdjacentHTML('beforebegin', '<div class="pq5-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2>' +
+      '<div class="v4-about-field"><label for="pq5Phone">Mobile number</label><input class="form-control form-control-lg" id="pq5Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
+      '<p class="pq5-why">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>' +
       '<div class="v4-about-field"><label for="pq5Dob">Date of birth</label><input class="form-control form-control-lg" id="pq5Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="pq5Ssn">SSN · last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
-      '<div class="v4-about-field"><label for="pq5Phone">New mobile number</label><input class="form-control form-control-lg" id="pq5Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div></div>');
+      '<div class="v4-about-field"><label for="pq5Ssn">SSN last 4</label><input class="form-control form-control-lg" id="pq5Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div></div>');
     const send = body.querySelector('.btn-main'), alt = body.querySelector('.btn-alt');
     send.insertAdjacentHTML('beforebegin', '<div class="legal-check pq5-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div>');
     const proof = body.querySelector('.v4-social-proof h2'); if (proof) proof.textContent = 'What customers say about Regional Finance';
@@ -395,9 +397,10 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const sync = () => { send.disabled = !ok(); };
     const show = () => { form.hidden = !opt3New; [h2, box, help].forEach(e => e.hidden = opt3New); alt.textContent = opt3New ? 'Use ***-***-7890 instead' : 'This isn’t my number'; sync(); };
     // The details didn't match after 3 tries: no code, no fields; the way forward is a call.
-    if (opt3NoMatch) { [h2, box, help, form, consent, send, alt].forEach(e => e.hidden = true); send.insertAdjacentHTML('beforebegin', '<div class="pq5-nomatch" role="alert"><h2 class="fs-6 fw-bold">We couldn’t match those details</h2><p>For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p><button type="button" class="btn-alt">Call us</button></div>'); return; }
+    if (opt3NoMatch) { [h2, box, help, form, consent, send, alt].forEach(e => e.hidden = true); send.insertAdjacentHTML('beforebegin', '<div class="pq5-nomatch" role="alert"><h2 class="fs-6 fw-bold">Those details don’t match</h2><p>Answer a few quick questions and we’ll text your code.</p><button type="button" class="btn-alt">Answer questions</button></div>'); return; }
     // Credit Karma sends no phone number: always the details screen, worded for a first number, nothing to go back to.
-    if (opt3NoPhone) { opt3New = true; alt.hidden = true; form.querySelector('.pq5-why').textContent = 'For your security, we confirm a few details before we text you a code.'; form.querySelector('label[for="pq5Phone"]').textContent = 'Mobile number'; }
+    // Credit Karma: no number on file, so the block shows from the start and there's nothing to go back to.
+    if (opt3NoPhone) { opt3New = true; alt.hidden = true; }
     Object.keys(fmt).forEach(k => { const i = body.querySelector('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
     consent.onclick = () => { box2.classList.toggle('checked'); sync(); };
     alt.removeAttribute('data-start'); alt.onclick = () => { opt3New = !opt3New; show(); };
@@ -418,12 +421,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     card.innerHTML = '<div class="offer-row"><span>Loan Proceeds<sup>1</sup></span><b>' + money(S.amount) + '</b></div><div class="offer-row"><span>Term</span><b>' + S.term + ' Years</b></div>' +
       '<div class="offer-row"><span>Origination Fee</span><b>' + money(S.amount * 0.03) + '</b></div><div class="offer-row"><span>Annual Percentage Rate<sup>2</sup></span><b>' + aprFor(S.term).toFixed(2) + '%</b></div>';
     card.insertAdjacentHTML('afterend', '<section class="d3-phone"><div class="d3-file"><h2 class="fs-6 fw-bold">We’ll text your code to</h2><div class="fake-input v4-phone">***-***-7890</div><button type="button" class="d3-link" id="d3NotMine">This isn’t my number</button></div>' +
-      '<div class="pq5-new d3-new" hidden><h2 class="fs-6 fw-bold">Confirm it’s you</h2><p class="pq5-why" id="d3Why">We’ll text a code to your new number.</p>' +
+      '<div class="pq5-new d3-new" hidden><h2 class="fs-6 fw-bold">Where should we text your code?</h2>' +
+      '<div class="v4-about-field"><label for="d3Phone">Mobile number</label><input class="form-control form-control-lg" id="d3Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
+      '<p class="pq5-why">Add your date of birth and the last 4 of your SSN to match this number to your offer.</p>' +
       '<div class="v4-about-field"><label for="d3Dob">Date of birth</label><input class="form-control form-control-lg" id="d3Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
-      '<div class="v4-about-field"><label for="d3Ssn">SSN · last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
-      '<div class="v4-about-field"><label for="d3Phone" id="d3PhoneLabel">New mobile number</label><input class="form-control form-control-lg" id="d3Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
+      '<div class="v4-about-field"><label for="d3Ssn">SSN last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
       '<button type="button" class="d3-link" id="d3Back">Use ***-***-7890 instead</button></div>' +
-      '<div class="pq5-nomatch d3-nomatch" role="alert" hidden><h2 class="fs-6 fw-bold">We couldn’t match those details</h2><p>Give us a call and we’ll help you finish your loan.</p><button type="button" class="btn-alt">Call us</button></div>' +
+      '<div class="pq5-nomatch d3-nomatch" role="alert" hidden><h2 class="fs-6 fw-bold">Those details don’t match</h2><p>Answer a few quick questions and we’ll text your code.</p><button type="button" class="btn-alt">Answer questions</button></div>' +
       '<div class="legal-check d3-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div></section>');
     const q = s => app.querySelector(s), file = q('.d3-file'), form = q('.d3-new'), nomatch = q('.d3-nomatch'), consent = q('.d3-consent'), tick = consent.querySelector('.boxcheck'), send = q('.sticky-offer .btn-main');
     const digits = (v, n) => v.replace(/\D/g, '').slice(0, n);
@@ -434,7 +438,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const ok = () => d3State !== 'nomatch' && tick.classList.contains('checked') && (!usingNew() || Object.keys(need).every(k => digits(q('#' + k).value, 20).length === need[k]));
     const sync = () => { send.disabled = !ok(); };
     const show = () => { file.hidden = d3State !== ''; form.hidden = !usingNew(); nomatch.hidden = d3State !== 'nomatch'; consent.hidden = d3State === 'nomatch';
-      const ck = d3State === 'nophone'; q('#d3Back').hidden = ck; q('#d3PhoneLabel').textContent = ck ? 'Mobile number' : 'New mobile number'; q('#d3Why').textContent = ck ? 'We’ll text a code to this number.' : 'We’ll text a code to your new number.'; sync(); };
+      q('#d3Back').hidden = d3State === 'nophone'; sync(); };
     Object.keys(fmt).forEach(k => { const i = q('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
     consent.onclick = () => { tick.classList.toggle('checked'); sync(); };
     q('#d3NotMine').onclick = () => { d3State = 'notmine'; show(); q('#d3Dob').focus({ preventScroll: true }); };
