@@ -30,6 +30,10 @@ const SHOTS = [
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
   { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-alt' },
   { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file' },
+  // The same three designs as full-page mockups (top to footer, pinned bar at the bottom), without the prototype's design toggle.
+  { file: 'design-1-full.png', page: 'design-1-today.html' },
+  { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
+  { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };

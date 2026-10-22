@@ -43,7 +43,7 @@
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
 <p class="pp-sub">If you’d like, you can submit a new application.</p>
-<a class="btn rf-btn pp-call" href="#">Submit a new application</a>
+<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
 </section>
 <div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
 <li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
@@ -197,7 +197,7 @@
 </div></footer>
 <style>.pq-legal-footer .legal{margin-top:0}.pq-legal-footer .legal a{color:inherit;text-decoration:underline}.pq-legal-footer .pq-proc{margin-top:12px}.pq-legal-footer .pq-gap{margin-top:12px}.pq-legal-footer .pq-links{display:flex;flex-wrap:wrap;column-gap:10px;row-gap:4px}.pq-legal-footer .pq-links a{text-decoration:none}</style>
 <div class="rf-paybar-space"></div>
-<script src="pq.js?v=5"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal"),m=document.getElementById("mobile");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}else if(m){m.focus();}});})();</script><script>(function(){
+<script src="pq.js?v=6"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal"),m=document.getElementById("mobile");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}else if(m){m.focus();}});})();</script><script>(function(){
 var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),F=document.getElementById('ppFile'),K=document.getElementById('ppCheck'),M=document.getElementById('ppNoMatch');
 var d=function(v,n){return v.replace(/\D/g,'').slice(0,n)};
 var fmt={ppPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},

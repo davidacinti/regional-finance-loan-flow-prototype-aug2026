@@ -276,6 +276,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (S.pq && S.page === 'review' && p === 'ready') p = 'offer';
     // No email code anywhere in the prototype: the offer goes straight to the bank link.
     if (p === 'save' || p === 'emailOtp') { S.email = true; p = 'bankIntro'; }
+    // The landing is whichever design the toggle on it last picked (1 Today, 2 Get started, 3 Offer page).
+    if (p === 'prequalLanding') p = landingPage();
     return baseGo(p, push);
   };
   // CHANNEL (scenario builder): where the known prequal customer starts. An affiliate's own page(s) come first
@@ -306,9 +308,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const baseRender = render;
   render = function(shouldScroll = true){
     // Option A (landing options for the team): the funnel's own Get Started screen, so it matches the rest of the flow.
-    if (S.page === 'pqOpt3') { S.page = 'confirmPhone'; baseRender(shouldScroll); S.page = 'pqOpt3'; phone.classList.remove('page-prequal'); option3(); return; }
+    if (S.page === 'pqOpt3') { S.page = 'confirmPhone'; baseRender(shouldScroll); S.page = 'pqOpt3'; phone.classList.remove('page-prequal'); option3(); designBar(); return; }
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
-    if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); return; }
+    if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
@@ -333,9 +335,32 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     }
     if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html' + FRESH + '"></iframe>'; sizeFrame(); return; }
     if (S.page !== 'prequalLanding') return;
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-' + (S.pq === 'b' ? 'b' : 'a') + '.html' + FRESH + '"></iframe>';
-    sizeFrame();
+    // Design 1 · Today: today's landing with the number we'll text. Credit Karma (no number on file) opens on the new-number block.
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/design-1-today.html' + FRESH + (S.pq === 'b' ? '&state=nophone' : '') + '"></iframe>';
+    designBar(); sizeFrame();
   };
+  // LANDING DESIGN TOGGLE (for the team): a bar above the landing switches between the three designs in place, same run,
+  // same channel. The pick is remembered, so the next run opens on it too.
+  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Today', 2: 'Get started', 3: 'Offer page' };
+  let landDesign = '1';
+  try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
+  function landingPage(){
+    // Credit Karma sends no number, so every design opens on the new-number block.
+    const ck = S.pq === 'b';
+    opt3New = opt3NoPhone = ck; opt3NoMatch = false; d3State = ck ? 'nophone' : '';
+    return landDesign === '2' ? 'pqOpt3' : landDesign === '3' ? 'pqDesign3' : 'prequalLanding';
+  }
+  function designBar(){
+    app.insertAdjacentHTML('afterbegin', '<div class="pq-designs" role="group" aria-label="Landing design"><span>Landing design</span>' +
+      Object.keys(LANDINGS).map(k => '<button type="button" data-land="' + k + '" aria-pressed="' + (k === landDesign) + '">' + k + ' · ' + LANDINGS[k] + '</button>').join('') + '</div>');
+    app.querySelectorAll('[data-land]').forEach(b => b.onclick = () => {
+      landDesign = b.dataset.land; try { localStorage.setItem(LD_KEY, landDesign); } catch (e) {}
+      go('prequalLanding', false);
+    });
+    sizeFrame();
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>.pq-designs{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#F1F3F4;border-bottom:1px solid #E1E3E6;font:600 12px/1.2 "Plus Jakarta Sans",sans-serif;color:#595959;overflow-x:auto;white-space:nowrap}@media(max-width:720px){.pq-designs{padding-right:68px}.pq-designs span{display:none}}.pq-designs span{flex:none;margin-right:2px}' +
+    '.pq-designs button{flex:none;padding:6px 11px;border:1px solid #CDCDCD;border-radius:9999px;background:#fff;color:#363636;font:inherit;cursor:pointer}.pq-designs button[aria-pressed="true"]{border-color:#2A71D4;background:#2A71D4;color:#fff}</style>');
   // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
   function sizeFrame(){ const f = app.querySelector('.pq-frame'); if (!f) return; if (!matchMedia('(max-width:720px)').matches) { f.style.height = ''; return; } const vh = (window.visualViewport ? visualViewport.height : innerHeight); f.style.height = Math.max(320, Math.round(vh - f.getBoundingClientRect().top - (window.scrollY || 0))) + 'px'; }
   addEventListener('resize', sizeFrame); if (window.visualViewport) visualViewport.addEventListener('resize', sizeFrame);
@@ -343,6 +368,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Regional's offer tapped on the affiliate's page: the affiliate's next screen, then Regional's landing.
     if (e.data && e.data.rfAff === 'next' && /^aff:\d+$/.test(S.page)) { const n = +S.page.slice(4) + 1, ch = CHANNELS[S.channel] || CHANNELS.moneylion; go(n < ch.pages.length ? 'aff:' + n : 'prequalLanding'); return; }
     if (e.data && e.data.rfPq === 'continue' && S.page === 'newLanding') { go('known1'); return; }
+    // Design 1, no match: "Submit a new application" starts the new-customer flow.
+    if (e.data && e.data.rfPq === 'newapp' && S.page === 'prequalLanding') { start('unknown'); return; }
     if (!e.data || e.data.rfPq !== 'continue' || S.page !== 'prequalLanding') return;
     if (e.data.phone) S.customer.phone = e.data.phone;
     // The offer chosen on the landing (amount, term, autopay) is the offer for the rest of the funnel.
@@ -445,10 +472,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     q('#d3Back').onclick = () => { d3State = ''; show(); };
     send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (usingNew()) S.customer.phone = q('#d3Phone').value; go('sms'); };
     q('.d3-nomatch [data-start]').onclick = () => start('unknown');
+    // The pinned monthly-payment bar is fixed: room under the footer so its last lines aren't hidden behind it.
+    app.insertAdjacentHTML('beforeend', '<div class="d3-spacer" aria-hidden="true" style="height:' + send.closest('.sticky-offer').offsetHeight + 'px"></div>');
     show();
   }
   function startDesign3(state){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:0 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:22px 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
   if (/[?&]design=2\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   if (/[?&]design=3\b/.test(location.search)) startDesign3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   render(false);

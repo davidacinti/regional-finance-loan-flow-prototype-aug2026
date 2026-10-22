@@ -26,7 +26,7 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
 <p class="pp-sub">If you’d like, you can submit a new application.</p>
-<a class="btn rf-btn pp-call" href="#">Submit a new application</a>
+<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
 </section>`;
 
 const OPTIONS = [
