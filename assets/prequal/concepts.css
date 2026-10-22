@@ -96,3 +96,4 @@
 .o5-primary:disabled{background:#BFD3F0;cursor:not-allowed}
 .o5-outline{border:2px solid #2A71D4;background:#fff;color:#2A71D4}
 .opt-o5 + .rf-section.rf-social{padding-top:8px!important}
+.cx-link[hidden]{display:none}

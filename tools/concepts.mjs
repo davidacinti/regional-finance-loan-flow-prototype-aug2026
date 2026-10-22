@@ -1,10 +1,11 @@
 // Prequal landing OPTIONS for the team (Oct 2026). Not wired into the prototype's flows.
-// Three different designs, one security rule: we only text a code to a number we can tie to the customer.
+// Two options for the team (A in the prototype, B here); one security rule: we only text a code to a number we can tie to the customer.
 //   a (default): the code goes to the phone on file; "Have a new number? Update it" switches the same page to
-//   b: date of birth + SSN last 4 (matched to the offer) + the new mobile number. No-phone partners (Credit Karma) open on b.
+//   b: date of birth + SSN last 4 (matched to the offer) + the new mobile number.
+//   ck: Credit Karma sends no phone number, so those customers always get b, worded for "no number on file".
 //   PII ("Is this you?") is shown only after the code.
 // Each page is the current landing (assets/prequal/landing-a.html: head, reviews, legal footer, consent bar) with its own
-// main content. Writes assets/prequal/option-*.html; add ?state=b to open on b.   node tools/concepts.mjs
+// main content. Writes assets/prequal/option-*.html; add ?state=b (new number) or ?state=ck (Credit Karma).   node tools/concepts.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const base = readFileSync('assets/prequal/landing-a.html', 'utf8');
@@ -20,11 +21,11 @@ const verify = `<section class="cx-card cx-a" aria-labelledby="cxSendTitle"><h2 
 <button type="button" class="cx-link" id="cxNotMine">Have a new number? Update it</button>
 </section>
 <section class="cx-card cx-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
-<p class="cx-sub">For your security, we confirm a few details before we text a new number.</p>
+<p class="cx-sub" id="cxWhy">For your security, we confirm a few details before we text a new number.</p>
 <div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-<div class="cx-field"><label for="cxPhone">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<p class="cx-help">${lock}<span>We’ll text a 6-digit code to the new number.</span></p>
+<div class="cx-field"><label for="cxPhone" id="cxPhoneLabel">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<p class="cx-help">${lock}<span id="cxHelp">We’ll text a 6-digit code to the new number.</span></p>
 <button type="button" class="cx-link" id="cxBack">Use ***-***-7890 instead</button>
 </section>`;
 const verifyJs = `<script>(function(){
@@ -41,6 +42,8 @@ document.getElementById('cxNotMine').addEventListener('click',function(){show(tr
 document.getElementById('cxBack').addEventListener('click',function(){show(false)});
 c.addEventListener('change',s);s();
 if(/[?&]state=b/.test(location.search))show(true);
+// Credit Karma: no phone number on file, so there is nothing to go back to.
+if(/[?&]state=ck/.test(location.search)){show(true);document.getElementById('cxBack').hidden=true;document.getElementById('cxWhy').textContent='For your security, we confirm a few details before we text you a code.';document.getElementById('cxPhoneLabel').textContent='Mobile number';document.getElementById('cxHelp').textContent='We’ll text a 6-digit code to this number.'}
 })();</script>`;
 const steps = (first = 'Verify by text') => `<div><h2 class="cx-next-h">What’s next</h2><ol class="cx-strip">
 <li><i>1</i><b>${first}</b></li><li><i>2</i><b>Link your bank</b></li><li><i>3</i><b>Sign and get your money<sup class="lf2-fn">2</sup></b></li></ol></div>`;
@@ -51,7 +54,7 @@ const borrow = `<div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
 </ul></div>`;
 
 const OPTIONS = [
-  { file: 'option-1-ticket.html', title: 'Option 1 · Ticket', cls: 'opt-ticket',
+  { file: 'option-b-ticket.html', title: 'Option B · Ticket', cls: 'opt-ticket',
     main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
 <span class="cx-chip">${check}Pre-qualified</span>
 <h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
@@ -60,16 +63,9 @@ const OPTIONS = [
 <div class="cx-perf" aria-hidden="true"></div>
 <div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>` + verify + steps()) },
 
-  { file: 'option-2-steps.html', title: 'Option 2 · Step-by-step', cls: 'opt-steps',
-    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<div class="cx-prog" aria-label="Step 1 of 4"><div class="cx-prog-top"><span><b>Step 1 of 4</b> · Confirm it’s you</span><span>Then: offer, bank, sign</span></div><div class="cx-prog-bar"><i></i><i></i><i></i><i></i></div></div>
-<h1 class="lf2-h1">Hi Jordan, you’re pre‑qualified.</h1>
-<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
-</div></div></section>` + stack(verify + `<div class="cx-sum"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="big">$15,000</div></div><div class="meta"><b>$505</b>/mo · 36 mo<br><b>13.01%</b> APR · $450 fee<br>Expires Nov 6</div></div>` + borrow) },
-
 ];
 
-// Option 3 · Get started lives in the prototype itself (index.html, ?option=3): it is the funnel's own Get Started screen.
+// Option A · Get started lives in the prototype itself (index.html, ?option=a): it is the funnel's own Get Started screen.
 
 for (const o of OPTIONS) {
   let html = base.slice(0, mainStart) + `<main class="rf-main lf2${o.cls ? ' ' + o.cls : ''}">` + o.main + '</main>' + base.slice(mainEnd);

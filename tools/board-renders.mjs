@@ -15,14 +15,12 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
-  // Landing options for the team (tools/concepts.mjs + the prototype for option 3), each in state a and b.
-  { file: 'option-1-ticket-a.png', page: 'option-1-ticket.html' },
-  { file: 'option-1-ticket-b.png', page: 'option-1-ticket.html', q: '&state=b' },
-  { file: 'option-2-steps-a.png', page: 'option-2-steps.html' },
-  { file: 'option-2-steps-b.png', page: 'option-2-steps.html', q: '&state=b' },
-  // Option 3 is rendered from the prototype app itself (the funnel's Get Started screen).
-  { file: 'option-3-getstarted-a.png', app: '?option=3' },
-  { file: 'option-3-getstarted-b.png', app: '?option=3&state=b' },
+  // Landing options for the team: A (the prototype, ?option=a) and B (option-b-ticket.html), each for
+  // most partners (phone on file) and for Credit Karma (no phone number: state=ck).
+  { file: 'option-a-phone.png', app: '?option=a' },
+  { file: 'option-a-ck.png', app: '?option=a&state=ck' },
+  { file: 'option-b-phone.png', page: 'option-b-ticket.html' },
+  { file: 'option-b-ck.png', page: 'option-b-ticket.html', q: '&state=ck' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
