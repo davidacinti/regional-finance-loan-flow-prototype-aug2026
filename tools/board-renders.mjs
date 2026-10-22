@@ -15,6 +15,10 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
+  // Brainstorm concepts (tools/concepts.mjs); not in the prototype's flows.
+  { file: 'concept-a-verify.png', page: 'concept-a-verify.html' },
+  { file: 'concept-b-code.png', page: 'concept-b-code.html' },
+  { file: 'concept-c-ticket.png', page: 'concept-c-ticket.html' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };

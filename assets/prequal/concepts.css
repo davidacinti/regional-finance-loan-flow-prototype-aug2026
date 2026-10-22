@@ -1,0 +1,54 @@
+/* Prequal landing CONCEPTS for the team's brainstorm (Oct 2026). Not wired into the prototype's flows.
+   Built on the same design system as the landing: Plus Jakarta Sans, text #363636/#595959, blue #2A71D4, border #CDCDCD,
+   inputs 58px r17 (the funnel's field pattern), cards r20. */
+.cx-card{background:#fff;border:1px solid #CDCDCD;border-radius:20px;padding:16px 16px 14px}
+.cx-h2{margin:0;font:800 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.cx-sub{margin:4px 0 12px;font-size:13.5px;line-height:1.45;color:#595959}
+.cx-field{margin:0 0 12px}
+.cx-field label,.cx-legend{display:block;margin:0 0 6px;font:600 15px/1.5 'Plus Jakarta Sans',sans-serif;color:#333}
+.cx-input{display:block;width:100%;height:58px;padding:15px 18px;border:1px solid #D3D3D3!important;border-radius:17px!important;background:#fff;font:400 16px/1.5 'Plus Jakarta Sans',sans-serif;color:#212529;letter-spacing:.02em}
+.cx-input::placeholder{color:#6C757D;letter-spacing:0}
+.cx-input:focus{border-color:#86B7FE!important;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)!important;outline:0}
+.cx-row{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}
+.cx-help{margin:0;font-size:12.5px;line-height:1.45;color:#595959}
+.cx-lock{display:flex;gap:8px;align-items:flex-start}
+.cx-lock svg{flex:none;width:16px;height:16px;margin-top:1px;color:#177245}
+
+/* Concept B: where to send the code. */
+.cx-choices{display:grid;gap:8px;margin:0 0 10px;padding:0;border:0}
+.cx-choice{display:flex;align-items:center;gap:12px;min-height:58px;padding:12px 16px;border:1px solid #D3D3D3;border-radius:17px;background:#fff;cursor:pointer}
+.cx-choice input{flex:none;width:20px;height:20px;margin:0;accent-color:#2A71D4}
+.cx-choice b{display:block;font-size:15px;color:#363636}
+.cx-choice small{display:block;font-size:13px;color:#595959}
+.cx-choice:has(input:checked){border-color:#2A71D4;box-shadow:0 0 0 1px #2A71D4;background:#F5F9FF}
+
+/* Concept C: checkout-style ticket + what's next. */
+.cx-c .lf2-hero{background:#fff;padding:18px 0 8px}
+.cx-c .lf2-stack{margin-top:0}
+.cx-chip{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:5px 10px;border-radius:9999px;background:#EAF7EF;color:#177245;font:700 12.5px/1.2 'Plus Jakarta Sans',sans-serif}
+.cx-chip svg{width:14px;height:14px}
+.cx-ticket{border-radius:20px;overflow:hidden;border:1px solid #CDCDCD;background:#fff}
+.cx-ticket-top{position:relative;padding:18px 18px 20px;background:linear-gradient(135deg,#0D2240 0%,#1E4F95 100%);color:#fff}
+.cx-ticket-top .data-label{color:rgba(255,255,255,.8)!important;font-size:13px}
+.cx-ticket-top .cx-amt{margin:2px 0 2px;font:800 40px/1.05 'Plus Jakarta Sans',sans-serif;letter-spacing:-.5px;color:#fff}
+.cx-ticket-top .cx-kind{font-size:14px;color:rgba(255,255,255,.85)}
+.cx-ticket-top .cx-exp{position:absolute;top:16px;right:16px;padding:3px 9px;border-radius:9999px;background:rgba(255,255,255,.14);font-size:12px;font-weight:600}
+.cx-perf{position:relative;height:0;border-top:2px dashed #CDCDCD;margin:0 16px}
+.cx-perf::before,.cx-perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #CDCDCD}
+.cx-perf::before{left:-27px}.cx-perf::after{right:-27px}
+.cx-ticket-rows{padding:6px 18px 10px}
+.cx-ticket-rows div{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #EEE;font-size:14.5px;color:#595959}
+.cx-ticket-rows div:last-child{border-bottom:0}
+.cx-ticket-rows b{color:#363636;font-weight:800}
+.cx-next h2{margin:6px 0 12px;font:800 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.cx-steps{list-style:none;margin:0;padding:0}
+.cx-steps li{position:relative;display:flex;gap:14px;padding:0 0 18px}
+.cx-steps li:not(:last-child)::before{content:"";position:absolute;left:15px;top:34px;bottom:2px;width:2px;background:#DCE6F5}
+.cx-steps i{flex:none;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:800 14px/1 'Plus Jakarta Sans',sans-serif;font-style:normal;background:#EAF1FB;color:#2A71D4}
+.cx-steps li:first-child i{background:#2A71D4;color:#fff}
+.cx-steps b{display:block;font-size:15px;color:#363636}
+.cx-steps span{font-size:13.5px;line-height:1.45;color:#595959}
+.cx-trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cx-trust div{padding:12px 8px;border-radius:16px;background:#F5F7FA;text-align:center;font-size:12px;line-height:1.35;color:#595959}
+.cx-trust b{display:block;font-size:16px;color:#363636}
+.cx-trust .tp{color:#00B67A}
