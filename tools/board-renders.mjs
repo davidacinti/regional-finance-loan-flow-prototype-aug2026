@@ -15,14 +15,15 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
-  // Brainstorm concepts (tools/concepts.mjs); not in the prototype's flows.
-  { file: 'concept-a-verify.png', page: 'concept-a-verify.html' },
-  { file: 'concept-b-code.png', page: 'concept-b-code.html' },
-  { file: 'concept-c-ticket.png', page: 'concept-c-ticket.html' },
-  { file: 'concept-c2-trim.png', page: 'concept-c2-trim.html' },
-  { file: 'concept-c2-trim-nophone.png', page: 'concept-c2-trim-nophone.html' },
-  { file: 'concept-d-a.png', page: 'concept-d-notmine.html' },
-  { file: 'concept-d-b.png', page: 'concept-d-notmine.html', q: '&state=b' },
+  // Landing options for the team (tools/concepts.mjs): each in state a (phone on file) and b ("This isn't my number").
+  { file: 'option-1-ticket-a.png', page: 'option-1-ticket.html' },
+  { file: 'option-1-ticket-b.png', page: 'option-1-ticket.html', q: '&state=b' },
+  { file: 'option-2-classic-a.png', page: 'option-2-classic.html' },
+  { file: 'option-2-classic-b.png', page: 'option-2-classic.html', q: '&state=b' },
+  { file: 'option-3-steps-a.png', page: 'option-3-steps.html' },
+  { file: 'option-3-steps-b.png', page: 'option-3-steps.html', q: '&state=b' },
+  { file: 'option-4-minimal-a.png', page: 'option-4-minimal.html' },
+  { file: 'option-4-minimal-b.png', page: 'option-4-minimal.html', q: '&state=b' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };

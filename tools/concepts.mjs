@@ -1,139 +1,34 @@
-// Prequal landing CONCEPTS for the team's brainstorm (Oct 2026). Not wired into the prototype's flows.
-// Each concept is the current landing (assets/prequal/landing-a.html: head, reviews, legal footer, consent bar) with its own
-// main content and button. Writes assets/prequal/concept-*.html.   node tools/concepts.mjs
+// Prequal landing OPTIONS for the team (Oct 2026). Not wired into the prototype's flows.
+// Four different designs, one security rule: we only text a code to a number we can tie to the customer.
+//   a (default): the code goes to the phone on file; "This isn't my number" switches the same page to
+//   b: date of birth + SSN last 4 (matched to the offer) + the new mobile number. No-phone partners (Credit Karma) open on b.
+//   PII ("Is this you?") is shown only after the code.
+// Each page is the current landing (assets/prequal/landing-a.html: head, reviews, legal footer, consent bar) with its own
+// main content. Writes assets/prequal/option-*.html; add ?state=b to open on b.   node tools/concepts.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const base = readFileSync('assets/prequal/landing-a.html', 'utf8');
 const mainStart = base.indexOf('<main'), mainEnd = base.indexOf('</main>') + 7;
-
-const lock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
-const hero = (lead = 'Simple, fast, and 100% online.') => `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<h1 class="lf2-h1">Hi Jordan, let's finish your loan.</h1>
-<p class="lf2-lead lf2-trust">${lead} <span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trustpilot</span></p>
-</div></div></section>`;
-const offer = `<div class="lf2-offer"><div class="lf2-ribbon">You’re a strong fit for this offer</div><div class="lf2-offer-body">
-<div class="lf2-top"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="money-primary">$15,000</div><div class="lf2-type">Unsecured personal loan</div></div><span class="data-label">Expires Nov 6</span></div>
-<div class="lf2-stats"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 mo</b></div><div><span>APR</span><b>13.01%</b></div></div>
-</div></div>`;
-const borrow = `<div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
-<li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
-<li><img src="rf-check-seal.svg" alt=""><div><b>Money as soon as today<sup class="lf2-fn">2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
-<li><img src="rf-check-seal.svg" alt=""><div><b>A payment you’re comfortable with</b><span>Go longer for a lower monthly payment, or shorter to pay it off sooner.</span></div></li>
-</ul></div>`;
 const stack = (inner) => `<div class="rf-shell"><div class="rf-task lf2-stack">${inner}</div></div>`;
+const lock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const check = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>';
+const tp = '<span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trustpilot</span>';
 
-// Shared input formatting + "Continue only when everything is filled in" (runs after the page's own consent script).
-const formJs = (fields, extra = '') => `<script>(function(){
-var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn');
-var d=function(v,n){return v.replace(/\\D/g,'').slice(0,n)};
-var fmt={phone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
- dob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},ssn4:function(v){return d(v,4)}};
-var need=${JSON.stringify(fields)};
-function ok(){return need.every(function(f){var i=document.getElementById(f[0]);return i&&d(i.value,20).length===f[1]})${extra}}
-function s(){b.disabled=!(c.checked&&ok())}
-need.forEach(function(f){var i=document.getElementById(f[0]);i.addEventListener('input',function(){i.value=fmt[f[2]](i.value);s()})});
-c.addEventListener('change',s);document.querySelectorAll('input[name="cxSend"]').forEach(function(r){r.addEventListener('change',s)});s();
-})();</script>`;
-
-const CONCEPTS = [
-  {
-    file: 'concept-a-verify.html', title: 'Concept A · Confirm it’s you (phone, birthday, SSN last 4)', button: 'Continue',
-    main: hero() + stack(offer + `
-<section class="cx-card" aria-labelledby="cxIdTitle"><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
-<p class="cx-sub">Next, we’ll text a 6-digit code to your mobile number.</p>
-<div class="cx-field"><label for="cxPhone">Mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<div class="cx-row">
-<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-</div>
-<p class="cx-help cx-lock">${lock}<span>We use these to find your offer and protect your account.</span></p>
-</section>` + borrow),
-    js: formJs([['cxPhone', 10, 'phone'], ['cxDob', 8, 'dob'], ['cxSsn', 4, 'ssn4']]),
-  },
-  {
-    file: 'concept-b-code.html', title: 'Concept B · Birthday + choose where to get the code', button: 'Send my code',
-    main: hero() + stack(offer + `
-<section class="cx-card" aria-labelledby="cxCodeTitle"><h2 class="cx-h2" id="cxCodeTitle">Let’s make sure it’s you</h2>
-<p class="cx-sub">Confirm your date of birth, then we’ll send you a 6-digit code.</p>
-<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<fieldset class="cx-choices"><legend class="cx-legend">Where should we send your code?</legend>
-<label class="cx-choice"><input type="radio" name="cxSend" value="sms" checked><span><b>Text me</b><small>***-***-7890</small></span></label>
-<label class="cx-choice"><input type="radio" name="cxSend" value="email"><span><b>Email me</b><small>t•••••r@gmail.com</small></span></label>
-</fieldset>
-<p class="cx-help cx-lock">${lock}<span>We only use this to confirm it’s you.</span></p>
-</section>` + borrow),
-    js: formJs([['cxDob', 8, 'dob']]),
-  },
-  {
-    file: 'concept-c-ticket.html', title: 'Concept C · New design: offer ticket + what’s next', button: 'Continue', cls: 'cx-c',
-    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<span class="cx-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Pre-qualified</span>
-<h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
-<p class="lf2-lead">Simple, fast, and 100% online.</p>
-</div></div></section>` + stack(`
-<div class="cx-ticket"><div class="cx-ticket-top"><span class="cx-exp">Expires Nov 6</span><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-amt">$15,000</div><div class="cx-kind">Unsecured personal loan</div></div>
-<div class="cx-perf" aria-hidden="true"></div>
-<div class="cx-ticket-rows"><div><span>Monthly payment</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>
-<div class="cx-next"><h2>What’s next</h2><ol class="cx-steps">
-<li><i>1</i><div><b>Confirm it’s you</b><span>We text a 6-digit code to the phone on file.</span></div></li>
-<li><i>2</i><div><b>Link your bank</b><span>It confirms your income and where to send your money.</span></div></li>
-<li><i>3</i><div><b>Sign and get your money</b><span>As soon as today with an eligible bank account.<sup class="lf2-fn">2</sup></span></div></li>
-</ol></div>
-<div class="cx-trust"><div><b class="tp">★ 4.5</b>on Trustpilot</div><div><b>2M+</b>customers helped</div><div><b>100%</b>online</div></div>`),
-    js: '',
-  },
-];
-
-// Concept C, trimmed (recommended direction): ticket with 2x2 terms, one-row steps, Trustpilot in the hero, no trust tiles.
-// The no-phone version (partners with no usable phone, e.g. Credit Karma) adds only mobile number + date of birth.
-const cHero = `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<span class="cx-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Pre-qualified</span>
-<h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
-<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. <span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trustpilot</span></p>
-</div></div></section>`;
-const cTicket = `<div class="cx-ticket"><div class="cx-ticket-top"><span class="cx-exp">Expires Nov 6</span><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-amt">$15,000</div><div class="cx-kind">Unsecured personal loan</div></div>
-<div class="cx-perf" aria-hidden="true"></div>
-<div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>`;
-const cSteps = (first) => `<div><h2 class="cx-next-h">What’s next</h2><ol class="cx-strip">
-<li><i>1</i><b>${first}</b></li><li><i>2</i><b>Link your bank</b></li><li><i>3</i><b>Sign and get your money<sup class="lf2-fn">2</sup></b></li></ol></div>`;
-CONCEPTS.push(
-  { file: 'concept-c2-trim.html', title: 'Concept C trimmed · offer ticket (phone on file)', button: 'Continue', cls: 'cx-c',
-    main: cHero + stack(cTicket + cSteps('Verify by text')), js: '' },
-  { file: 'concept-c2-trim-nophone.html', title: 'Concept C trimmed · no phone on file (mobile + birthday)', button: 'Continue', cls: 'cx-c',
-    main: cHero + stack(cTicket + `
-<section class="cx-card" aria-labelledby="cxIdTitle"><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
-<p class="cx-sub">We’ll text a 6-digit code to this number.</p>
-<div class="cx-row cx-stack1">
-<div class="cx-field"><label for="cxPhone">Mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-</div>
-<p class="cx-help cx-lock">${lock}<span>We use these to match you to your offer.</span></p>
-</section>` + cSteps('Enter your text code')),
-    js: formJs([['cxPhone', 10, 'phone'], ['cxDob', 8, 'dob']]) },
-);
-
-// Concept D (security): phone on file by default (a). "This isn't my number" switches the same page to (b): a PII check
-// (date of birth + SSN last 4, matched to the offer) plus the new mobile number. Only then do we text a code, and PII
-// ("Is this you?") is shown only after the code. Stops someone from swapping the phone to receive the code and see PII.
-CONCEPTS.push({
-  file: 'concept-d-notmine.html', title: 'Concept D · Phone on file, with “This isn’t my number” (PII check + new number)', button: 'Continue', cls: 'cx-c',
-  main: cHero + stack(cTicket + `
-<section class="cx-card cx-d-a" aria-labelledby="cxSendTitle"><h2 class="cx-h2" id="cxSendTitle">We’ll text your code to</h2>
+// The shared verification card (both states) and its behavior.
+const verify = `<section class="cx-card cx-a" aria-labelledby="cxSendTitle"><h2 class="cx-h2" id="cxSendTitle">We’ll text your code to</h2>
 <p class="cx-phone">***-***-7890</p>
 <button type="button" class="cx-link" id="cxNotMine">This isn’t my number</button>
 </section>
-<section class="cx-card cx-d-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
-<p class="cx-sub">For your security, we check these against your offer before we text a new number.</p>
-<div class="cx-row cx-stack1">
+<section class="cx-card cx-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
+<p class="cx-sub">For your security, we confirm a few details before we text a new number.</p>
 <div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 <div class="cx-field"><label for="cxPhone">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-</div>
-<p class="cx-help cx-lock">${lock}<span>We’ll text a 6-digit code to the new number.</span></p>
+<p class="cx-help">${lock}<span>We’ll text a 6-digit code to the new number.</span></p>
 <button type="button" class="cx-link" id="cxBack">Use ***-***-7890 instead</button>
-</section>` + cSteps('Verify by text')),
-  js: `<script>(function(){
-var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),A=document.querySelector('.cx-d-a'),B=document.querySelector('.cx-d-b');
+</section>`;
+const verifyJs = `<script>(function(){
+var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),A=document.querySelector('.cx-a'),B=document.querySelector('.cx-b');
 var d=function(v,n){return v.replace(/\\D/g,'').slice(0,n)};
 var fmt={cxPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
  cxDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},cxSsn:function(v){return d(v,4)}};
@@ -141,20 +36,60 @@ var need={cxDob:8,cxSsn:4,cxPhone:10};
 function ok(){return B.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
-function show(useNew){A.hidden=useNew;B.hidden=!useNew;s();(useNew?document.getElementById('cxDob'):document.getElementById('cxNotMine')).focus({preventScroll:true})}
-document.getElementById('cxNotMine').addEventListener('click',function(){show(true)});
+function show(useNew){A.hidden=useNew;B.hidden=!useNew;s()}
+document.getElementById('cxNotMine').addEventListener('click',function(){show(true);document.getElementById('cxDob').focus({preventScroll:true})});
 document.getElementById('cxBack').addEventListener('click',function(){show(false)});
 c.addEventListener('change',s);s();
 if(/[?&]state=b/.test(location.search))show(true);
-})();</script>`,
-});
+})();</script>`;
+const steps = (first = 'Verify by text') => `<div><h2 class="cx-next-h">What’s next</h2><ol class="cx-strip">
+<li><i>1</i><b>${first}</b></li><li><i>2</i><b>Link your bank</b></li><li><i>3</i><b>Sign and get your money<sup class="lf2-fn">2</sup></b></li></ol></div>`;
+const borrow = `<div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
+<li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
+<li><img src="rf-check-seal.svg" alt=""><div><b>Money as soon as today<sup class="lf2-fn">2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
+<li><img src="rf-check-seal.svg" alt=""><div><b>A payment you’re comfortable with</b><span>Go longer for a lower monthly payment, or shorter to pay it off sooner.</span></div></li>
+</ul></div>`;
 
-for (const c of CONCEPTS) {
-  let html = base.slice(0, mainStart) + `<main class="rf-main lf2${c.cls ? ' ' + c.cls : ''}">` + c.main + '</main>' + base.slice(mainEnd);
-  html = html.replace(/<title>[^<]*<\/title>/, `<title>${c.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="concepts.css?v=1"><link rel="stylesheet" href="pq-offer.css')
-    .replace('<button type="button" class="btn rf-btn rf-btn-primary">Continue</button>', `<button type="button" class="btn rf-btn rf-btn-primary">${c.button}</button>`)
-    .replace('</body>', c.js + '</body>');
-  writeFileSync('assets/prequal/' + c.file, html);
-  console.log(c.file);
+const OPTIONS = [
+  { file: 'option-1-ticket.html', title: 'Option 1 · Ticket', cls: 'opt-ticket',
+    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<span class="cx-chip">${check}Pre-qualified</span>
+<h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
+<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
+</div></div></section>` + stack(`<div class="cx-ticket"><div class="cx-ticket-top"><span class="cx-exp">Expires Nov 6</span><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-amt">$15,000</div><div class="cx-kind">Unsecured personal loan</div></div>
+<div class="cx-perf" aria-hidden="true"></div>
+<div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div>` + verify + steps()) },
+
+  { file: 'option-2-classic.html', title: 'Option 2 · Classic', cls: '',
+    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<h1 class="lf2-h1">Hi Jordan, let's finish your loan.</h1>
+<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
+</div></div></section>` + stack(`<div class="lf2-offer"><div class="lf2-ribbon">You’re a strong fit for this offer</div><div class="lf2-offer-body">
+<div class="lf2-top"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="money-primary">$15,000</div><div class="lf2-type">Unsecured personal loan</div></div><span class="data-label">Expires Nov 6</span></div>
+<div class="lf2-stats"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 mo</b></div><div><span>APR</span><b>13.01%</b></div></div>
+</div></div>` + verify + borrow) },
+
+  { file: 'option-3-steps.html', title: 'Option 3 · Step-by-step', cls: 'opt-steps',
+    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<div class="cx-prog" aria-label="Step 1 of 4"><div class="cx-prog-top"><span><b>Step 1 of 4</b> · Confirm it’s you</span><span>Then: offer, bank, sign</span></div><div class="cx-prog-bar"><i></i><i></i><i></i><i></i></div></div>
+<h1 class="lf2-h1">Hi Jordan, you’re pre‑qualified.</h1>
+<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
+</div></div></section>` + stack(verify + `<div class="cx-sum"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="big">$15,000</div></div><div class="meta"><b>$505</b>/mo · 36 mo<br><b>13.01%</b> APR · $450 fee<br>Expires Nov 6</div></div>` + borrow) },
+
+  { file: 'option-4-minimal.html', title: 'Option 4 · Minimal', cls: 'opt-min',
+    main: `<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<h1 class="lf2-h1">Jordan, you’re pre‑qualified.</h1>
+<p class="lf2-lead lf2-trust">Simple, fast, and 100% online. ${tp}</p>
+</div></div></section>` + stack(`<div class="cx-hero-min"><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-big">$15,000</div>
+<div class="cx-pills"><span>$505/mo</span><span>36 months</span><span>13.01% APR</span></div><div class="cx-exp2">Unsecured personal loan · Expires Nov 6</div>
+<details class="cx-terms-toggle"><summary>See all terms</summary><dl><dt>Monthly payment</dt><dd>$505</dd><dt>Term</dt><dd>36 months</dd><dt>APR</dt><dd>13.01%</dd><dt>Origination fee</dt><dd>$450</dd></dl></details></div>` + verify + steps()) },
+];
+
+for (const o of OPTIONS) {
+  let html = base.slice(0, mainStart) + `<main class="rf-main lf2${o.cls ? ' ' + o.cls : ''}">` + o.main + '</main>' + base.slice(mainEnd);
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="concepts.css?v=2"><link rel="stylesheet" href="pq-offer.css')
+    .replace('</body>', verifyJs + '</body>');
+  writeFileSync('assets/prequal/' + o.file, html);
+  console.log(o.file);
 }
