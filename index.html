@@ -358,11 +358,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     '.aff-tag{flex:none;padding:4px 9px;border-radius:9999px;background:#FFE9A8;border:1px dashed #B7791F;color:#5C3D00;font-size:11px;font-weight:700;white-space:nowrap}');
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.page-prequal .rf-head{display:none}.pq-frame{display:block;width:100%;height:834px;border:0}@media(max-width:720px){.pq-frame{height:calc(100dvh - 18px)}.phone.page-prequal{min-height:0}html:has(.phone.page-prequal),html:has(.phone.page-prequal) body{overflow:hidden;height:100%}}</style>');
 
-  // OPTION A · Get started (landing options for the team; not in the scenario builder). Open with ?option=a
-  // (&state=b: new number; &state=ck: Credit Karma, no phone number on file).
+  // DESIGN 2 · Get started (landing designs for the team; not in the scenario builder). Open with ?design=2
+  // (&state=notmine | nophone (Credit Karma) | nomatch).
   // The funnel's confirm-phone screen plus: the chosen offer under an "outstanding odds" badge, a masked number,
-  // the consent box, and "Have a new number? Update it" → date of birth + SSN last 4 + new number before any code.
-  let opt3New = false, opt3NoPhone = false;
+  // the consent box, and "This isn't my number" → date of birth + SSN last 4 + new number before any code.
+  let opt3New = false, opt3NoPhone = false, opt3NoMatch = false;
   function option3(){
     const body = app.querySelector('.body'); if (!body) return;
     const h1 = body.querySelector('h1');
@@ -391,7 +391,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const need = { pq5Dob: 8, pq5Ssn: 4, pq5Phone: 10 };
     const ok = () => box2.classList.contains('checked') && (!opt3New || Object.keys(need).every(k => digits(body.querySelector('#' + k).value, 20).length === need[k]));
     const sync = () => { send.disabled = !ok(); };
-    const show = () => { form.hidden = !opt3New; [h2, box, help].forEach(e => e.hidden = opt3New); alt.textContent = opt3New ? 'Use ***-***-7890 instead' : 'Have a new number? Update it'; sync(); };
+    const show = () => { form.hidden = !opt3New; [h2, box, help].forEach(e => e.hidden = opt3New); alt.textContent = opt3New ? 'Use ***-***-7890 instead' : 'This isn’t my number'; sync(); };
+    // The details didn't match after 3 tries: no code, no fields; the way forward is a call.
+    if (opt3NoMatch) { [h2, box, help, form, consent, send, alt].forEach(e => e.hidden = true); send.insertAdjacentHTML('beforebegin', '<div class="pq5-nomatch" role="alert"><h2 class="fs-6 fw-bold">We couldn’t match those details</h2><p>For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p><button type="button" class="btn-alt">Call us</button></div>'); return; }
     // Credit Karma sends no phone number: always the details screen, worded for a first number, nothing to go back to.
     if (opt3NoPhone) { opt3New = true; alt.hidden = true; form.querySelector('.pq5-why').textContent = 'For your security, we confirm a few details before we text you a code.'; form.querySelector('label[for="pq5Phone"]').textContent = 'Mobile number'; }
     Object.keys(fmt).forEach(k => { const i = body.querySelector('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
@@ -400,9 +402,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (opt3New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
     show();
   }
-  function startOption3(state){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'ck' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'b' || state === 'ck'; opt3NoPhone = state === 'ck'; go('pqOpt3', false); }
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}</style>');
-  if (/[?&]option=a\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(b|ck)\b/) || [])[1]);
+  function startOption3(state){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #D32F2F;border-radius:18px;background:#FFF6F6;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#B42318}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}</style>');
+  if (/[?&]design=2\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   render(false);
 })();
 </script></body></html>

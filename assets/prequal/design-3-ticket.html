@@ -1,55 +1,31 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Phone · 1 below the offer</title>
+<title>Design 3 · Ticket</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="phone.css?v=1"><link rel="stylesheet" href="pq-offer.css?v=3"></head><body>
-<header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header><main class="rf-main lf2">
-<section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
-<h1 class="lf2-h1">Hi Jordan, let's finish your loan.</h1>
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="concepts.css?v=2"><link rel="stylesheet" href="pq-offer.css?v=3"></head><body>
+<header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header><main class="rf-main lf2 opt-ticket"><section class="lf2-hero"><div class="rf-shell"><div class="rf-task">
+<span class="cx-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>Pre-qualified</span>
+<h1 class="lf2-h1">Jordan, your loan offer is waiting.</h1>
 <p class="lf2-lead lf2-trust">Simple, fast, and 100% online. <span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trustpilot</span></p>
-</div></div></section>
-<div class="rf-shell"><div class="rf-task lf2-stack">
-<div class="lf2-offer"><div class="lf2-ribbon">You’re a strong fit for this offer</div><div class="lf2-offer-body">
-<div class="lf2-top"><div><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="money-primary" data-pq="amount">$15,000</div><div class="lf2-type">Unsecured personal loan</div></div><span class="data-label">Expires Nov 6</span></div>
-<div class="lf2-stats"><div><span>Monthly</span><b data-pq="monthly">$505</b></div><div><span>Term</span><b data-pq="term">36 mo</b></div><div><span>APR</span><b data-pq="apr">13.01%</b></div></div>
-<!-- PARKED (Nov 2026): offer changes happen on the existing Pre-Approval Offer page, so the landing has no editor.
-     To bring "Customize your offer" back, move this template's contents out of the template (pq.js and pq-offer.css still support it). -->
-<template id="pq-editor-later"><div class="lf2-more"><button type="button" class="rf-link lf2-toggle" aria-expanded="false" aria-controls="pqEdit"><span>Customize your offer</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
-<div class="lf2-edit" id="pqEdit" hidden><p class="lf2-edit-note">You can change this before you finalize your loan.</p>
-<div class="lf2-erow"><span>Loan amount<sup class="lf2-fn">1</sup></span><b data-pq="amount">$15,000</b></div>
-<div class="lf2-amt"><button type="button" class="lf2-step" data-step="-1000" aria-label="Decrease the amount by $1,000">&minus;</button><input type="range" id="pqAmount" min="1000" max="15000" step="1000" value="15000" aria-label="Loan amount"><button type="button" class="lf2-step" data-step="1000" aria-label="Increase the amount by $1,000">+</button></div>
-<div class="lf2-range"><span>$1,000</span><span>$15,000</span></div>
-<div class="lf2-erow lf2-erow-term"><span id="pqTermLabel">Term</span></div>
-<div class="lf2-terms3" role="radiogroup" aria-labelledby="pqTermLabel"><button type="button" role="radio" aria-checked="true" data-term="3"><b>3 years</b><small data-pq-apr="3">13.01% APR</small></button><button type="button" role="radio" aria-checked="false" data-term="4"><b>4 years</b><small data-pq-apr="4">13.49% APR</small></button><button type="button" role="radio" aria-checked="false" data-term="5"><b>5 years</b><small data-pq-apr="5">13.99% APR</small></button></div>
-<div class="lf2-erow"><span>Origination fee</span><b data-pq="fee">$450</b></div>
-<div class="lf2-erow"><span>Annual percentage rate</span><b data-pq="apr">13.01%</b></div>
-<div class="lf2-erow lf2-auto"><div><span id="pqAutoLabel">Autopay</span><small>Take 0.25% off your APR when your payment is made automatically.</small></div><button type="button" class="lf2-switch" role="switch" aria-checked="false" aria-labelledby="pqAutoLabel"></button></div>
-</div></template>
-
-</div></div>
-
-<section class="lf2-ph pp-file" id="ppFile"><span class="lf2-ph-label">We’ll text your code to</span><div class="pp-num">***-***-7890</div><button type="button" class="pp-link" data-notmine>This isn’t my number</button></section>
-<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
-<p class="pp-sub" id="ppWhy">For your security, we confirm a few details before we text a new number.</p>
-<div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN · last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
-<div class="pp-field"><label class="lf2-ph-label" for="ppPhone" id="ppPhoneLabel">New mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
-<p class="lf2-ph-help" id="ppHelp">We’ll text you a code to confirm it’s you.</p>
-<button type="button" class="pp-link" id="ppBack">Use ***-***-7890 instead</button>
+</div></div></section><div class="rf-shell"><div class="rf-task lf2-stack"><div class="cx-ticket"><div class="cx-ticket-top"><span class="cx-exp">Expires Nov 6</span><span class="data-label">Your pre-qualified offer<sup class="lf2-fn">1</sup></span><div class="cx-amt">$15,000</div><div class="cx-kind">Unsecured personal loan</div></div>
+<div class="cx-perf" aria-hidden="true"></div>
+<div class="cx-terms"><div><span>Monthly</span><b>$505</b></div><div><span>Term</span><b>36 months</b></div><div><span>APR</span><b>13.01%</b></div><div><span>Origination fee</span><b>$450</b></div></div></div><section class="cx-card cx-a" aria-labelledby="cxSendTitle"><h2 class="cx-h2" id="cxSendTitle">We’ll text your code to</h2>
+<p class="cx-phone">***-***-7890</p>
+<button type="button" class="cx-link" id="cxNotMine">This isn’t my number</button>
 </section>
-<section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
-<h2 class="pp-title">We couldn’t match those details</h2>
-<p class="pp-sub">For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p>
-<a class="btn rf-btn pp-call" href="#">Call us</a>
+<section class="cx-card cx-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
+<p class="cx-sub" id="cxWhy">For your security, we confirm a few details before we text a new number.</p>
+<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
+<div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+<div class="cx-field"><label for="cxPhone" id="cxPhoneLabel">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<p class="cx-help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span id="cxHelp">We’ll text a 6-digit code to the new number.</span></p>
+<button type="button" class="cx-link" id="cxBack">Use ***-***-7890 instead</button>
 </section>
-<div class="lf2-next lf2-know"><h2>Borrow your way</h2><ul>
-<li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
-<li><img src="rf-check-seal.svg" alt=""><div><b>Money as soon as today<sup class="lf2-fn">2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
-<li><img src="rf-check-seal.svg" alt=""><div><b>A payment you’re comfortable with</b><span>Go longer for a lower monthly payment, or shorter to pay it off sooner.</span></div></li>
-</ul></div>
-</div></div></main><div class="rf-paybar lf2-paybar" role="region" aria-label="Your selected offer"><div class="in">
+<section class="cx-card cx-nomatch" id="cxNoMatch" hidden role="alert"><h2 class="cx-h2">We couldn’t match those details</h2>
+<p class="cx-sub">For your security, we can’t text a new number online. Give us a call and we’ll help you finish your loan.</p>
+<a class="cx-call" href="#">Call us</a></section><div><h2 class="cx-next-h">What’s next</h2><ol class="cx-strip">
+<li><i>1</i><b>Verify by text</b></li><li><i>2</i><b>Link your bank</b></li><li><i>3</i><b>Sign and get your money<sup class="lf2-fn">2</sup></b></li></ol></div></div></div></main><div class="rf-paybar lf2-paybar" role="region" aria-label="Your selected offer"><div class="in">
 <div class="form-check rf-form-check lf2-consent"><input class="form-check-input" type="checkbox" id="legal"><label class="form-check-label" for="legal">I have read and agree to the <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a>, <a href="#">ESIGN Act Consent</a>, <a href="#">Consent to Receive Calls and Text Messages</a> and <a href="#">Consent to Receive Commercial Emails</a>.</label></div>
 <div class="row1"><div><div class="lf2-pay"><b data-pq="monthly">$505</b>/month</div><div class="fine lf2-credit-note"><img src="rf-check-seal.svg" alt="">Over 2 million customers helped</div></div><button type="button" class="btn rf-btn rf-btn-primary">Continue</button></div>
 </div></div><section class="rf-section rf-social" aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
@@ -197,20 +173,20 @@
 <style>.pq-legal-footer .legal{margin-top:0}.pq-legal-footer .legal a{color:inherit;text-decoration:underline}.pq-legal-footer .pq-proc{margin-top:12px}.pq-legal-footer .pq-gap{margin-top:12px}.pq-legal-footer .pq-links{display:flex;flex-wrap:wrap;column-gap:10px;row-gap:4px}.pq-legal-footer .pq-links a{text-decoration:none}</style>
 <div class="rf-paybar-space"></div>
 <script src="pq.js?v=5"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal"),m=document.getElementById("mobile");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}else if(m){m.focus();}});})();</script><script>(function(){
-var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),F=document.getElementById('ppFile'),K=document.getElementById('ppCheck'),M=document.getElementById('ppNoMatch');
+var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),A=document.querySelector('.cx-a'),B=document.querySelector('.cx-b');
 var d=function(v,n){return v.replace(/\D/g,'').slice(0,n)};
-var fmt={ppPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
- ppDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},ppSsn:function(v){return d(v,4)}};
-var need={ppDob:8,ppSsn:4,ppPhone:10};
-function ok(){if(!M.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
+var fmt={cxPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
+ cxDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},cxSsn:function(v){return d(v,4)}};
+var need={cxDob:8,cxSsn:4,cxPhone:10};
+function ok(){if(!document.getElementById('cxNoMatch').hidden)return false;return B.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
-function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';
- var ck=st==='nophone';document.getElementById('ppBack').hidden=ck;
- document.getElementById('ppWhy').textContent=ck?'For your security, we confirm a few details before we text you a code.':'For your security, we confirm a few details before we text a new number.';
- document.getElementById('ppPhoneLabel').textContent=ck?'Mobile number':'New mobile number';s()}
-document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');K.scrollIntoView({block:'center'})})});
-document.getElementById('ppBack').addEventListener('click',function(){show('file')});
-c.addEventListener('change',s);
-var m=location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/);show(m?m[1]:'file');
+function show(useNew){A.hidden=useNew;B.hidden=!useNew;s()}
+document.getElementById('cxNotMine').addEventListener('click',function(){show(true);document.getElementById('cxDob').focus({preventScroll:true})});
+document.getElementById('cxBack').addEventListener('click',function(){show(false)});
+c.addEventListener('change',s);s();
+if(/[?&]state=notmine/.test(location.search))show(true);
+// Credit Karma: no phone number on file, so there is nothing to go back to.
+if(/[?&]state=nomatch/.test(location.search)){A.hidden=true;B.hidden=true;document.getElementById('cxNoMatch').hidden=false;s()}
+if(/[?&]state=nophone/.test(location.search)){show(true);document.getElementById('cxBack').hidden=true;document.getElementById('cxWhy').textContent='For your security, we confirm a few details before we text you a code.';document.getElementById('cxPhoneLabel').textContent='Mobile number';document.getElementById('cxHelp').textContent='We’ll text a 6-digit code to this number.'}
 })();</script></body></html>

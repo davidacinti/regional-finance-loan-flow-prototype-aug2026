@@ -1,0 +1,104 @@
+/* Prequal landing OPTIONS for the team (Oct 2026). Not wired into the prototype's flows (tools/concepts.mjs).
+   Same design system as the landing: Plus Jakarta Sans, text #363636/#595959, blue #2A71D4, border #CDCDCD,
+   inputs 58px r17 (the funnel's field pattern), cards r20. Every option shares the verification card below. */
+
+/* Shared: verification card. State a = phone on file; state b = "Have a new number? Update it" (PII check + new number). */
+.cx-card{background:#fff;border:1px solid #CDCDCD;border-radius:20px;padding:16px 16px 14px}
+.cx-card[hidden]{display:none}
+.cx-h2{margin:0;font:800 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.cx-sub{margin:4px 0 12px;font-size:13.5px;line-height:1.45;color:#595959}
+.cx-phone{margin:2px 0 6px;font:800 22px/1.3 'Plus Jakarta Sans',sans-serif;letter-spacing:.04em;color:#363636}
+.cx-link{display:inline-block;margin-top:4px;padding:0;border:0;background:none;color:#2A71D4;font:700 15px/1.4 'Plus Jakarta Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.cx-b .cx-link{margin-top:10px}
+.cx-field{margin:0 0 12px}
+.cx-field label{display:block;margin:0 0 6px;font:600 15px/1.5 'Plus Jakarta Sans',sans-serif;color:#333}
+.cx-input{display:block;width:100%;height:58px;padding:15px 18px;border:1px solid #D3D3D3!important;border-radius:17px!important;background:#fff;font:400 16px/1.5 'Plus Jakarta Sans',sans-serif;color:#212529;letter-spacing:.02em}
+.cx-input::placeholder{color:#6C757D;letter-spacing:0}
+.cx-input:focus{border-color:#86B7FE!important;box-shadow:0 0 0 .25rem rgba(13,110,253,.25)!important;outline:0}
+.cx-help{display:flex;gap:8px;align-items:flex-start;margin:0;font-size:12.5px;line-height:1.45;color:#595959}
+.cx-help svg{flex:none;width:16px;height:16px;margin-top:1px;color:#177245}
+.cx-chip{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:5px 10px;border-radius:9999px;background:#EAF7EF;color:#177245;font:700 12.5px/1.2 'Plus Jakarta Sans',sans-serif}
+.cx-chip svg{width:14px;height:14px}
+
+/* Shared: one-row "What's next". */
+.cx-next-h{margin:2px 0 8px;font:800 16px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.cx-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0;padding:0;list-style:none}
+.cx-strip li{padding:10px 8px 11px;border-radius:14px;background:#F5F7FA;text-align:center}
+.cx-strip i{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin-bottom:4px;border-radius:50%;background:#EAF1FB;color:#2A71D4;font:800 12px/1 'Plus Jakarta Sans',sans-serif;font-style:normal}
+.cx-strip li:first-child i{background:#2A71D4;color:#fff}
+.cx-strip b{display:block;font-size:12.5px;line-height:1.3;color:#363636}
+
+/* Option 1 · Ticket. */
+.opt-ticket .lf2-hero,.opt-steps .lf2-hero,.opt-min .lf2-hero{background:#fff;padding:18px 0 8px}
+.opt-ticket .lf2-stack,.opt-steps .lf2-stack,.opt-min .lf2-stack{margin-top:0}
+.cx-ticket{border-radius:20px;overflow:hidden;border:1px solid #CDCDCD;background:#fff}
+.cx-ticket-top{position:relative;padding:18px 18px 20px;background:linear-gradient(135deg,#0D2240 0%,#1E4F95 100%);color:#fff}
+.cx-ticket-top .data-label{color:rgba(255,255,255,.8)!important;font-size:13px}
+.cx-amt{margin:2px 0;font:800 40px/1.05 'Plus Jakarta Sans',sans-serif;letter-spacing:-.5px;color:#fff}
+.cx-kind{font-size:14px;color:rgba(255,255,255,.85)}
+.cx-exp{position:absolute;top:16px;right:16px;padding:3px 9px;border-radius:9999px;background:rgba(255,255,255,.14);font-size:12px;font-weight:600}
+.cx-perf{position:relative;height:0;border-top:2px dashed #CDCDCD;margin:0 16px}
+.cx-perf::before,.cx-perf::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid #CDCDCD}
+.cx-perf::before{left:-27px}.cx-perf::after{right:-27px}
+.cx-terms{display:grid;grid-template-columns:1fr 1fr;padding:4px 6px 6px}
+.cx-terms div{padding:10px 12px}
+.cx-terms div:nth-child(odd){border-right:1px solid #EEE}
+.cx-terms div:nth-child(-n+2){border-bottom:1px solid #EEE}
+.cx-terms span{display:block;font-size:12.5px;color:#595959}
+.cx-terms b{font-size:17px;font-weight:800;color:#363636}
+
+/* Option 3 · Step-by-step: progress first, then the task, then a compact offer summary. */
+.cx-prog{margin:0 0 14px}
+.cx-prog-top{display:flex;justify-content:space-between;margin:0 0 6px;font:600 12.5px/1.3 'Plus Jakarta Sans',sans-serif;color:#595959}
+.cx-prog-top b{color:#2A71D4}
+.cx-prog-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.cx-prog-bar i{height:6px;border-radius:9999px;background:#E3E8EF}
+.cx-prog-bar i:first-child{background:#2A71D4}
+.cx-sum{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 16px;border-radius:20px;background:#F5F7FA}
+.cx-sum .data-label{display:block;font-size:12.5px}
+.cx-sum .big{font:800 24px/1.15 'Plus Jakarta Sans',sans-serif;color:#363636}
+.cx-sum .meta{font-size:13px;line-height:1.5;color:#595959;text-align:right}
+.cx-sum .meta b{color:#363636}
+
+/* Option 4 · Minimal: one big number, terms behind a toggle. */
+.cx-hero-min{padding:22px 16px 18px;border-radius:24px;text-align:center;background:radial-gradient(120% 90% at 50% 0%,#E6F0FF 0%,#FFFFFF 70%);border:1px solid #E3E8EF}
+.cx-hero-min .data-label{font-size:13px}
+.cx-hero-min .cx-big{margin:4px 0 2px;font:800 52px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:-1px;color:#363636}
+.cx-hero-min .cx-pills{display:flex;justify-content:center;flex-wrap:wrap;gap:6px;margin:12px 0 6px}
+.cx-hero-min .cx-pills span{padding:5px 10px;border-radius:9999px;background:#fff;border:1px solid #DCE3EC;font-size:13px;font-weight:700;color:#363636}
+.cx-hero-min .cx-exp2{font-size:12.5px;color:#595959}
+.cx-terms-toggle{margin-top:10px;text-align:left}
+.cx-terms-toggle summary{cursor:pointer;list-style:none;text-align:center;font:700 14px/1.4 'Plus Jakarta Sans',sans-serif;color:#2A71D4}
+.cx-terms-toggle summary::-webkit-details-marker{display:none}
+.cx-terms-toggle dl{display:grid;grid-template-columns:1fr auto;gap:8px 12px;margin:10px 4px 0;font-size:14px;color:#595959}
+.cx-terms-toggle dd{margin:0;font-weight:800;color:#363636;text-align:right}
+.opt-min .lf2-h1{text-align:center}
+.opt-min .lf2-lead{justify-content:center}
+
+/* Option 5 · Get started: the known-customer "Get Started" page design. */
+.opt-o5{padding-top:0}
+.o5{padding:26px 0 10px;background:#fff}
+.o5-hi{margin:0 0 6px;text-align:center;font:700 20px/1.3 'Plus Jakarta Sans',sans-serif;color:#7A8699}
+.o5-h1{margin:0 0 22px;text-align:center;font:800 34px/1.15 'Plus Jakarta Sans',sans-serif;letter-spacing:-.5px;color:#363636!important}
+.o5-h1 span{color:#2A71D4}
+.o5-checks{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:12px}
+.o5-checks li{display:flex;gap:10px;align-items:flex-start;font-size:15px;line-height:1.4;color:#363636}
+.o5-checks img{flex:none;width:20px;height:20px;margin-top:1px}
+.o5-h2{margin:0 0 12px;font:700 18px/1.35 'Plus Jakarta Sans',sans-serif;color:#363636!important}
+.o5-phone{display:flex;align-items:center;justify-content:center;height:64px;border-radius:16px;background:#F2F2F2;font:600 26px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.04em;color:#363636}
+.o5-note{margin:10px 0 18px;text-align:center;font-size:14px;color:#595959}
+.o5-note-b{text-align:left;margin:0 0 14px}
+.o5-b[hidden],.o5-a[hidden],.o5-btn[hidden]{display:none}
+.o5-consent{margin:0 0 14px}
+.o5-consent .lf2-consent .form-check-label{font-size:12px;line-height:1.45;color:#5B6675}
+.o5-btn{display:block;width:100%;min-height:54px;margin:0 0 12px;border-radius:9999px!important;font:700 17px/1 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.o5-primary{border:0;background:#2A71D4;color:#fff}
+.o5-primary:disabled{background:#BFD3F0;cursor:not-allowed}
+.o5-outline{border:2px solid #2A71D4;background:#fff;color:#2A71D4}
+.opt-o5 + .rf-section.rf-social{padding-top:8px!important}
+.cx-link[hidden]{display:none}
+
+/* Details didn't match: the way forward is a call. */
+.cx-nomatch{border-color:#D32F2F;background:#FFF6F6}
+.cx-nomatch .cx-h2{color:#B42318!important}
+.cx-call{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 22px;border:2px solid #2A71D4;border-radius:9999px;background:#fff;color:#2A71D4;font:700 15px/1 'Plus Jakarta Sans',sans-serif;text-decoration:none}

@@ -1,8 +1,7 @@
-// Prequal landing · where to confirm the phone (for the team, Oct 2026). Not wired into the prototype's flows.
-// Today's landing design (assets/prequal/landing-a.html) unchanged, plus the phone confirmation in one of three places:
-//   phone-1-below.html   below the offer card (same spot as the Credit Karma mobile field)
-//   phone-2-bar.html     in the pinned bar, above the consent
-//   phone-3-card.html    inside the offer card, as its last row
+// Prequal landing · DESIGN 1 · Today (for the team, Oct 2026). Not wired into the prototype's flows.
+// Today's landing design (assets/prequal/landing-a.html) unchanged, plus "We'll text your code to ***-***-7890" below the offer
+// card (same spot as the Credit Karma mobile field). Writes assets/prequal/design-1-today.html.
+// (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Ticket: tools/concepts.mjs.)
 // "This isn't my number" opens the same check in the page (date of birth + SSN last 4 + new number) before any code.
 // Situations (?state=): notmine (they tapped the link), nophone (Credit Karma: no number on file),
 // nomatch (the details didn't match after 3 tries).   node tools/phone-options.mjs
@@ -29,14 +28,8 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 </section>`;
 
 const OPTIONS = [
-  { file: 'phone-1-below.html', title: 'Phone · 1 below the offer',
+  { file: 'design-1-today.html', title: 'Design 1 · Today',
     place: (h) => h.replace('<div class="lf2-next lf2-know">', `<section class="lf2-ph pp-file" id="ppFile"><span class="lf2-ph-label">We’ll text your code to</span><div class="pp-num">${NUM}</div>${link()}</section>\n${check}\n<div class="lf2-next lf2-know">`) },
-  { file: 'phone-2-bar.html', title: 'Phone · 2 in the pinned bar',
-    place: (h) => h.replace('<div class="lf2-next lf2-know">', `${check}\n<div class="lf2-next lf2-know">`)
-      .replace('<div class="rf-paybar lf2-paybar" role="region" aria-label="Your selected offer"><div class="in">', `<div class="rf-paybar lf2-paybar" role="region" aria-label="Your selected offer"><div class="in"><div class="pp-barline" id="ppFile"><span>We’ll text your code to <b>${NUM}</b></span>${link()}</div>`) },
-  { file: 'phone-3-card.html', title: 'Phone · 3 inside the offer card',
-    place: (h) => h.replace('<!-- PARKED', `<div class="pp-cardrow" id="ppFile"><div><span class="data-label">We’ll text your code to</span><b>${NUM}</b></div>${link()}</div>\n<!-- PARKED`)
-      .replace('<div class="lf2-next lf2-know">', `${check}\n<div class="lf2-next lf2-know">`) },
 ];
 
 const js = `<script>(function(){

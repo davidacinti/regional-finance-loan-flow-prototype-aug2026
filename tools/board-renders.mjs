@@ -15,14 +15,20 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
-  // Where to confirm the phone (tools/phone-options.mjs): the first screen of each option, then the situations as
-  // just their input block (same design for every option).
-  { file: 'phone-1-below.png', page: 'phone-1-below.html', first: true },
-  { file: 'phone-2-bar.png', page: 'phone-2-bar.html', first: true },
-  { file: 'phone-3-card.png', page: 'phone-3-card.html', first: true },
-  { file: 'phone-sit-notmine.png', page: 'phone-1-below.html', q: '&state=notmine', el: '#ppCheck' },
-  { file: 'phone-sit-nophone.png', page: 'phone-1-below.html', q: '&state=nophone', el: '#ppCheck' },
-  { file: 'phone-sit-nomatch.png', page: 'phone-1-below.html', q: '&state=nomatch', el: '#ppNoMatch' },
+  // Three landing designs (1 Today, 2 Get started in the prototype, 3 Ticket): from the top down to the number
+  // we'll text (upTo), then each situation as just its input block (el), in that design.
+  { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
+  { file: 'design-1-notmine.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
+  { file: 'design-1-nophone.png', page: 'design-1-today.html', q: '&state=nophone', el: '#ppCheck' },
+  { file: 'design-1-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
+  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-alt' },
+  { file: 'design-2-notmine.png', app: '?design=2&state=notmine', el: '.pq5-new' },
+  { file: 'design-2-nophone.png', app: '?design=2&state=nophone', el: '.pq5-new' },
+  { file: 'design-2-nomatch.png', app: '?design=2&state=nomatch', el: '.pq5-nomatch' },
+  { file: 'design-3-number.png', page: 'design-3-ticket.html', upTo: '.cx-a' },
+  { file: 'design-3-notmine.png', page: 'design-3-ticket.html', q: '&state=notmine', el: '.cx-b' },
+  { file: 'design-3-nophone.png', page: 'design-3-ticket.html', q: '&state=nophone', el: '.cx-b' },
+  { file: 'design-3-nomatch.png', page: 'design-3-ticket.html', q: '&state=nomatch', el: '#cxNoMatch' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -39,11 +45,16 @@ for (const s of SHOTS) {
   if (s.open) await tab.click('.lf2-toggle');
   if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));
+  if (s.upTo) {
+    const bottom = await tab.evaluate((sel) => Math.ceil(document.querySelector(sel).getBoundingClientRect().bottom + scrollY + 24), s.upTo);
+    await tab.setViewport({ width: 390, height: Math.max(844, bottom + (s.app ? 0 : 150)), deviceScaleFactor: 2 }); await new Promise(r => setTimeout(r, 500));
+    await tab.screenshot({ path: 'assets/board/' + s.file }); console.log(s.file, '390x' + Math.max(844, bottom) + ' @2x'); continue;
+  }
   // First screen: what a customer sees before scrolling (pinned bar included), @2x.
   if (s.first) { await tab.screenshot({ path: 'assets/board/' + s.file }); console.log(s.file, '390x844 @2x'); continue; }
   // Just one block (an input state), with a little white around it, @2x.
   if (s.el) {
-    const box = await tab.evaluate((sel) => { document.querySelector('.lf2-paybar').style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
+    const box = await tab.evaluate((sel) => { const bar = document.querySelector('.lf2-paybar'); if (bar) bar.style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
     await tab.screenshot({ path: 'assets/board/' + s.file, clip: box, captureBeyondViewport: true }); console.log(s.file, Math.round(box.width) + 'x' + Math.round(box.height) + ' @2x'); continue;
   }
   if (s.clipTo) {
