@@ -112,6 +112,43 @@ CONCEPTS.push(
     js: formJs([['cxPhone', 10, 'phone'], ['cxDob', 8, 'dob']]) },
 );
 
+// Concept D (security): phone on file by default (a). "This isn't my number" switches the same page to (b): a PII check
+// (date of birth + SSN last 4, matched to the offer) plus the new mobile number. Only then do we text a code, and PII
+// ("Is this you?") is shown only after the code. Stops someone from swapping the phone to receive the code and see PII.
+CONCEPTS.push({
+  file: 'concept-d-notmine.html', title: 'Concept D · Phone on file, with “This isn’t my number” (PII check + new number)', button: 'Continue', cls: 'cx-c',
+  main: cHero + stack(cTicket + `
+<section class="cx-card cx-d-a" aria-labelledby="cxSendTitle"><h2 class="cx-h2" id="cxSendTitle">We’ll text your code to</h2>
+<p class="cx-phone">***-***-7890</p>
+<button type="button" class="cx-link" id="cxNotMine">This isn’t my number</button>
+</section>
+<section class="cx-card cx-d-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
+<p class="cx-sub">For your security, we check these against your offer before we text a new number.</p>
+<div class="cx-row cx-stack1">
+<div class="cx-field"><label for="cxDob">Date of birth</label><input class="cx-input" id="cxDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
+<div class="cx-field"><label for="cxSsn">SSN · last 4</label><input class="cx-input" id="cxSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+<div class="cx-field"><label for="cxPhone">New mobile number</label><input class="cx-input" id="cxPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+</div>
+<p class="cx-help cx-lock">${lock}<span>We’ll text a 6-digit code to the new number.</span></p>
+<button type="button" class="cx-link" id="cxBack">Use ***-***-7890 instead</button>
+</section>` + cSteps('Verify by text')),
+  js: `<script>(function(){
+var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),A=document.querySelector('.cx-d-a'),B=document.querySelector('.cx-d-b');
+var d=function(v,n){return v.replace(/\\D/g,'').slice(0,n)};
+var fmt={cxPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
+ cxDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},cxSsn:function(v){return d(v,4)}};
+var need={cxDob:8,cxSsn:4,cxPhone:10};
+function ok(){return B.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
+function s(){b.disabled=!(c.checked&&ok())}
+Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
+function show(useNew){A.hidden=useNew;B.hidden=!useNew;s();(useNew?document.getElementById('cxDob'):document.getElementById('cxNotMine')).focus({preventScroll:true})}
+document.getElementById('cxNotMine').addEventListener('click',function(){show(true)});
+document.getElementById('cxBack').addEventListener('click',function(){show(false)});
+c.addEventListener('change',s);s();
+if(/[?&]state=b/.test(location.search))show(true);
+})();</script>`,
+});
+
 for (const c of CONCEPTS) {
   let html = base.slice(0, mainStart) + `<main class="rf-main lf2${c.cls ? ' ' + c.cls : ''}">` + c.main + '</main>' + base.slice(mainEnd);
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${c.title}</title>`)

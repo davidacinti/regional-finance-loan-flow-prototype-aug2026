@@ -21,6 +21,8 @@ const SHOTS = [
   { file: 'concept-c-ticket.png', page: 'concept-c-ticket.html' },
   { file: 'concept-c2-trim.png', page: 'concept-c2-trim.html' },
   { file: 'concept-c2-trim-nophone.png', page: 'concept-c2-trim-nophone.html' },
+  { file: 'concept-d-a.png', page: 'concept-d-notmine.html' },
+  { file: 'concept-d-b.png', page: 'concept-d-notmine.html', q: '&state=b' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -32,7 +34,7 @@ const tab = await browser.newPage();
 mkdirSync('assets/board', { recursive: true });
 for (const s of SHOTS) {
   await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
-  await tab.goto(BASE + s.page + '?t=' + Date.now(), { waitUntil: 'networkidle0' });
+  await tab.goto(BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
   if (s.open) await tab.click('.lf2-toggle');
   if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));
