@@ -2,7 +2,7 @@
    Same design system as the landing: Plus Jakarta Sans, text #363636/#595959, blue #2A71D4, border #CDCDCD,
    inputs 58px r17 (the funnel's field pattern), cards r20. Every option shares the verification card below. */
 
-/* Shared: verification card. State a = phone on file; state b = "This isn't my number" (PII check + new number). */
+/* Shared: verification card. State a = phone on file; state b = "Have a new number? Update it" (PII check + new number). */
 .cx-card{background:#fff;border:1px solid #CDCDCD;border-radius:20px;padding:16px 16px 14px}
 .cx-card[hidden]{display:none}
 .cx-h2{margin:0;font:800 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636!important}

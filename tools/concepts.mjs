@@ -1,6 +1,6 @@
 // Prequal landing OPTIONS for the team (Oct 2026). Not wired into the prototype's flows.
 // Four different designs, one security rule: we only text a code to a number we can tie to the customer.
-//   a (default): the code goes to the phone on file; "This isn't my number" switches the same page to
+//   a (default): the code goes to the phone on file; "Have a new number? Update it" switches the same page to
 //   b: date of birth + SSN last 4 (matched to the offer) + the new mobile number. No-phone partners (Credit Karma) open on b.
 //   PII ("Is this you?") is shown only after the code.
 // Each page is the current landing (assets/prequal/landing-a.html: head, reviews, legal footer, consent bar) with its own
@@ -17,7 +17,7 @@ const tp = '<span class="lf2-tp"><span aria-hidden="true">★</span> 4.5 on Trus
 // The shared verification card (both states) and its behavior.
 const verify = `<section class="cx-card cx-a" aria-labelledby="cxSendTitle"><h2 class="cx-h2" id="cxSendTitle">We’ll text your code to</h2>
 <p class="cx-phone">***-***-7890</p>
-<button type="button" class="cx-link" id="cxNotMine">This isn’t my number</button>
+<button type="button" class="cx-link" id="cxNotMine">Have a new number? Update it</button>
 </section>
 <section class="cx-card cx-b" aria-labelledby="cxIdTitle" hidden><h2 class="cx-h2" id="cxIdTitle">Confirm it’s you</h2>
 <p class="cx-sub">For your security, we confirm a few details before we text a new number.</p>

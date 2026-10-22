@@ -15,7 +15,7 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
-  // Landing options for the team (tools/concepts.mjs): each in state a (phone on file) and b ("This isn't my number").
+  // Landing options for the team (tools/concepts.mjs): each in state a (phone on file) and b ("Have a new number? Update it").
   { file: 'option-1-ticket-a.png', page: 'option-1-ticket.html' },
   { file: 'option-1-ticket-b.png', page: 'option-1-ticket.html', q: '&state=b' },
   { file: 'option-2-classic-a.png', page: 'option-2-classic.html' },
