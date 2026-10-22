@@ -15,6 +15,11 @@ const SHOTS = [
   // Nov 2026 board slots 1 and 1b. The landing's offer editor is parked (offer changes happen on the existing offer page).
   { file: 'prequal-landing-a-nov.png', page: 'landing-a.html' },
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
+  // One example of the "This isn't my number" / no number on file (Credit Karma) scenario, under the designs:
+  // the input, then the lookup: match → the real code screen with the new number; no match → no offer, new application.
+  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
+  { file: 'scenario-match.png', app: '?scenario=1', run: "start('prequal'); S.customer.phone='(864) 555-1234'; S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
+  { file: 'scenario-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
   // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
   { file: 'phone-first-landing.png', page: 'phone-first.html', first: true },
   { file: 'phone-first-match.png', page: 'phone-first.html', q: '&state=match', upTo: '#pf' },
@@ -23,17 +28,8 @@ const SHOTS = [
   // Three landing designs (1 Today, 2 Get started and 3 Offer page in the prototype): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
-  { file: 'design-1-notmine.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
-  { file: 'design-1-nophone.png', page: 'design-1-today.html', q: '&state=nophone', el: '#ppCheck' },
-  { file: 'design-1-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
   { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-alt' },
-  { file: 'design-2-notmine.png', app: '?design=2&state=notmine', el: '.pq5-new' },
-  { file: 'design-2-nophone.png', app: '?design=2&state=nophone', el: '.pq5-new' },
-  { file: 'design-2-nomatch.png', app: '?design=2&state=nomatch', el: '.pq5-nomatch' },
   { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file' },
-  { file: 'design-3-notmine.png', app: '?design=3&state=notmine', el: '.d3-new' },
-  { file: 'design-3-nophone.png', app: '?design=3&state=nophone', el: '.d3-new' },
-  { file: 'design-3-nomatch.png', app: '?design=3&state=nomatch', el: '.d3-nomatch' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -47,6 +43,7 @@ for (const s of SHOTS) {
   await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   await tab.goto(s.app ? BASE.replace('/assets/prequal/', '/index.html') + s.app + '&t=' + Date.now() : BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
   if (s.app) await tab.addStyleTag({ content: 'html body .panel button.flow-fab,html body .flow-fab{display:none!important;visibility:hidden!important}' });
+  if (s.run) { await tab.evaluate(s.run); await new Promise(r => setTimeout(r, 1200)); }
   if (s.open) await tab.click('.lf2-toggle');
   if (s.hide) await tab.addStyleTag({ content: s.hide + '{display:none!important}' });
   await new Promise(r => setTimeout(r, 1200));

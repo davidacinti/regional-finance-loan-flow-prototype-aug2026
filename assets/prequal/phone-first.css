@@ -7,6 +7,6 @@
 .pf-note{margin:0 0 10px;font-size:13.5px;line-height:1.45;color:#595959}
 .pf-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
 .pf-row .lf2-ph-input{padding:15px 14px}
-.pf-nomatch{display:flex;flex-direction:column;gap:4px;margin-top:12px;padding:12px 14px;border:1px solid #D32F2F;border-radius:14px;background:#FFF6F6;font-size:13.5px;line-height:1.45;color:#595959}
-.pf-nomatch b{color:#B42318;font-size:15px}
+.pf-nomatch{display:flex;flex-direction:column;gap:4px;margin-top:12px;padding:12px 14px;border:1px solid #DEDEDE;border-radius:14px;background:#F7F7F7;font-size:13.5px;line-height:1.45;color:#595959}
+.pf-nomatch b{color:#363636;font-size:15px}
 .pf-call{align-self:flex-start;margin-top:6px;padding:8px 18px;border:2px solid #2A71D4;border-radius:9999px;color:#2A71D4;font-weight:700;text-decoration:none}

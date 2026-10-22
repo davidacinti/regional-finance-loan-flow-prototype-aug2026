@@ -4,7 +4,7 @@
 //   same number      → Continue → code. Nothing else shows.
 //   different / none → date of birth + SSN last 4 slide in under it ("to match this number to your offer"), then the code.
 //                      Credit Karma sends no number, so it always takes this path; same screen as everyone else.
-//   details wrong 3× → "Those details don't match" + a few quick questions (KBA). Never "call us".
+//   details wrong 3× → "Sorry, we don't have an offer for this information" + submit a new application. Never "call us".
 // Demo: the number on file is (123) 456-7890. ?state=match | new | nomatch prefill a case for the board.
 // Writes assets/prequal/phone-first.html.   node tools/phone-first.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -23,7 +23,7 @@ const field = `<section class="lf2-ph pf" id="pf" aria-labelledby="pfLabel">
 <div><label class="lf2-ph-label" for="pfSsn">SSN last 4</label><input class="lf2-ph-input" id="pfSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
 </div>
-<div class="pf-nomatch" id="pfNoMatch" hidden role="alert"><b>Those details don’t match</b><span>Answer a few quick questions and we’ll text your code.</span><a class="pf-call" href="#">Answer questions</a></div>
+<div class="pf-nomatch" id="pfNoMatch" hidden role="alert"><b>Sorry, we don’t have an offer for this information</b><span>If you’d like, you can submit a new application.</span><a class="pf-call" href="#">Submit a new application</a></div>
 </section>`;
 
 const js = `<script>(function(){

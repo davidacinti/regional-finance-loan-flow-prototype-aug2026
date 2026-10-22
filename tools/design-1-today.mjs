@@ -3,7 +3,7 @@
 // card (same spot as the Credit Karma mobile field). Writes assets/prequal/design-1-today.html.
 // (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Offer page: index.html ?design=3.)
 // "This isn't my number" (and Credit Karma, which sends no number) shows: mobile number, then date of birth + SSN last 4.
-// Situations (?state=): notmine, nophone (Credit Karma), nomatch (details didn't match → a few quick questions, KBA).
+// Situations (?state=): notmine, nophone (Credit Karma), nomatch (no match → no offer for this information; submit a new application).
 //   node tools/design-1-today.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 
@@ -24,9 +24,9 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 <button type="button" class="pp-link" id="ppBack">Use ${NUM} instead</button>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
-<h2 class="pp-title">Those details don’t match</h2>
-<p class="pp-sub">Answer a few quick questions and we’ll text your code.</p>
-<a class="btn rf-btn pp-call" href="#">Answer questions</a>
+<h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
+<p class="pp-sub">If you’d like, you can submit a new application.</p>
+<a class="btn rf-btn pp-call" href="#">Submit a new application</a>
 </section>`;
 
 const OPTIONS = [
