@@ -1,7 +1,7 @@
 // Prequal landing · DESIGN 1 · Today (for the team, Oct 2026). Not wired into the prototype's flows.
 // Today's landing design (assets/prequal/landing-a.html) unchanged, plus "We'll text your code to ***-***-7890" below the offer
 // card (same spot as the Credit Karma mobile field). Writes assets/prequal/design-1-today.html.
-// (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Ticket: tools/concepts.mjs.)
+// (Design 2 · Get started is in the prototype: index.html ?design=2. Design 3 · Offer page: index.html ?design=3.)
 // "This isn't my number" opens the same check in the page (date of birth + SSN last 4 + new number) before any code.
 // Situations (?state=): notmine (they tapped the link), nophone (Credit Karma: no number on file),
 // nomatch (the details didn't match after 3 tries).   node tools/phone-options.mjs

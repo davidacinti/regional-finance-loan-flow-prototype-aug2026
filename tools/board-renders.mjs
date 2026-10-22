@@ -20,7 +20,7 @@ const SHOTS = [
   { file: 'phone-first-match.png', page: 'phone-first.html', q: '&state=match', upTo: '#pf' },
   { file: 'phone-first-new.png', page: 'phone-first.html', q: '&state=new', upTo: '#pf' },
   { file: 'phone-first-nomatch.png', page: 'phone-first.html', q: '&state=nomatch', upTo: '#pf' },
-  // Three landing designs (1 Today, 2 Get started in the prototype, 3 Ticket): from the top down to the number
+  // Three landing designs (1 Today, 2 Get started and 3 Offer page in the prototype): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
   { file: 'design-1-notmine.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
@@ -30,10 +30,10 @@ const SHOTS = [
   { file: 'design-2-notmine.png', app: '?design=2&state=notmine', el: '.pq5-new' },
   { file: 'design-2-nophone.png', app: '?design=2&state=nophone', el: '.pq5-new' },
   { file: 'design-2-nomatch.png', app: '?design=2&state=nomatch', el: '.pq5-nomatch' },
-  { file: 'design-3-number.png', page: 'design-3-ticket.html', upTo: '.cx-a' },
-  { file: 'design-3-notmine.png', page: 'design-3-ticket.html', q: '&state=notmine', el: '.cx-b' },
-  { file: 'design-3-nophone.png', page: 'design-3-ticket.html', q: '&state=nophone', el: '.cx-b' },
-  { file: 'design-3-nomatch.png', page: 'design-3-ticket.html', q: '&state=nomatch', el: '#cxNoMatch' },
+  { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file' },
+  { file: 'design-3-notmine.png', app: '?design=3&state=notmine', el: '.d3-new' },
+  { file: 'design-3-nophone.png', app: '?design=3&state=nophone', el: '.d3-new' },
+  { file: 'design-3-nomatch.png', app: '?design=3&state=nomatch', el: '.d3-nomatch' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };

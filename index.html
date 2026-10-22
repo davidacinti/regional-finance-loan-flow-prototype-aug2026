@@ -307,6 +307,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   render = function(shouldScroll = true){
     // Option A (landing options for the team): the funnel's own Get Started screen, so it matches the rest of the flow.
     if (S.page === 'pqOpt3') { S.page = 'confirmPhone'; baseRender(shouldScroll); S.page = 'pqOpt3'; phone.classList.remove('page-prequal'); option3(); return; }
+    // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
+    if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); return; }
     baseRender(shouldScroll);
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
@@ -404,7 +406,46 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   }
   function startOption3(state){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #D32F2F;border-radius:18px;background:#FFF6F6;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#B42318}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}</style>');
+  // DESIGN 3 · Offer page (landing designs for the team; not in the scenario builder). Open with ?design=3
+  // (&state=notmine | nophone (Credit Karma) | nomatch). The funnel's Pre-Approval Offer page, read-only (they change the offer
+  // later on the real offer page), with "We'll text your code to ***-***-7890" + "This isn't my number" under the offer.
+  let d3State = '';
+  function design3(){
+    const body = app.querySelector('.body'); if (!body) return;
+    body.querySelector('h1').innerHTML = '<span class="v4-congrats">Congratulations!</span>You’re pre&#8209;qualified<br>for <span class="blue">' + money(S.amount) + '</span>.<sup class="fs-6">1</sup>';
+    const lead = body.querySelector('h1 + p'); if (lead) lead.textContent = 'Here’s the offer you picked. You can still change it later.';
+    const card = body.querySelector('.offer-card');
+    card.innerHTML = '<div class="offer-row"><span>Loan Proceeds<sup>1</sup></span><b>' + money(S.amount) + '</b></div><div class="offer-row"><span>Term</span><b>' + S.term + ' Years</b></div>' +
+      '<div class="offer-row"><span>Origination Fee</span><b>' + money(S.amount * 0.03) + '</b></div><div class="offer-row"><span>Annual Percentage Rate<sup>2</sup></span><b>' + aprFor(S.term).toFixed(2) + '%</b></div>';
+    card.insertAdjacentHTML('afterend', '<section class="d3-phone"><div class="d3-file"><h2 class="fs-6 fw-bold">We’ll text your code to</h2><div class="fake-input v4-phone">***-***-7890</div><button type="button" class="d3-link" id="d3NotMine">This isn’t my number</button></div>' +
+      '<div class="pq5-new d3-new" hidden><h2 class="fs-6 fw-bold">Confirm it’s you</h2><p class="pq5-why" id="d3Why">We’ll text a code to your new number.</p>' +
+      '<div class="v4-about-field"><label for="d3Dob">Date of birth</label><input class="form-control form-control-lg" id="d3Dob" inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"></div>' +
+      '<div class="v4-about-field"><label for="d3Ssn">SSN · last 4</label><input class="form-control form-control-lg" id="d3Ssn" type="password" inputmode="numeric" placeholder="••••" maxlength="4"></div>' +
+      '<div class="v4-about-field"><label for="d3Phone" id="d3PhoneLabel">New mobile number</label><input class="form-control form-control-lg" id="d3Phone" type="tel" inputmode="tel" placeholder="(555) 555-5555" maxlength="14"></div>' +
+      '<button type="button" class="d3-link" id="d3Back">Use ***-***-7890 instead</button></div>' +
+      '<div class="pq5-nomatch d3-nomatch" role="alert" hidden><h2 class="fs-6 fw-bold">We couldn’t match those details</h2><p>Give us a call and we’ll help you finish your loan.</p><button type="button" class="btn-alt">Call us</button></div>' +
+      '<div class="legal-check d3-consent"><span class="boxcheck"></span><span>I have read and agree to the <u><b>Terms of Use</b></u>, <u><b>Privacy Policy</b></u>, <u><b>ESIGN Act Consent</b></u>, <u><b>Consent to Receive Calls and Text Messages</b></u> and <u><b>Consent to Receive Commercial Emails</b></u>.</span></div></section>');
+    const q = s => app.querySelector(s), file = q('.d3-file'), form = q('.d3-new'), nomatch = q('.d3-nomatch'), consent = q('.d3-consent'), tick = consent.querySelector('.boxcheck'), send = q('.sticky-offer .btn-main');
+    const digits = (v, n) => v.replace(/\D/g, '').slice(0, n);
+    const fmt = { d3Dob: v => { v = digits(v, 8); return v.length > 4 ? v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4) : v.length > 2 ? v.slice(0, 2) + '/' + v.slice(2) : v; },
+      d3Ssn: v => digits(v, 4), d3Phone: v => { v = digits(v, 10); return v.length < 4 ? v : v.length < 7 ? '(' + v.slice(0, 3) + ') ' + v.slice(3) : '(' + v.slice(0, 3) + ') ' + v.slice(3, 6) + '-' + v.slice(6); } };
+    const need = { d3Dob: 8, d3Ssn: 4, d3Phone: 10 };
+    const usingNew = () => d3State === 'notmine' || d3State === 'nophone';
+    const ok = () => d3State !== 'nomatch' && tick.classList.contains('checked') && (!usingNew() || Object.keys(need).every(k => digits(q('#' + k).value, 20).length === need[k]));
+    const sync = () => { send.disabled = !ok(); };
+    const show = () => { file.hidden = d3State !== ''; form.hidden = !usingNew(); nomatch.hidden = d3State !== 'nomatch'; consent.hidden = d3State === 'nomatch';
+      const ck = d3State === 'nophone'; q('#d3Back').hidden = ck; q('#d3PhoneLabel').textContent = ck ? 'Mobile number' : 'New mobile number'; q('#d3Why').textContent = ck ? 'We’ll text a code to this number.' : 'We’ll text a code to your new number.'; sync(); };
+    Object.keys(fmt).forEach(k => { const i = q('#' + k); i.addEventListener('input', () => { i.value = fmt[k](i.value); sync(); }); });
+    consent.onclick = () => { tick.classList.toggle('checked'); sync(); };
+    q('#d3NotMine').onclick = () => { d3State = 'notmine'; show(); q('#d3Dob').focus({ preventScroll: true }); };
+    q('#d3Back').onclick = () => { d3State = ''; show(); };
+    send.removeAttribute('data-go'); send.onclick = () => { if (!ok()) return; if (usingNew()) S.customer.phone = q('#d3Phone').value; go('sms'); };
+    show();
+  }
+  function startDesign3(state){ baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:0 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
   if (/[?&]design=2\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
+  if (/[?&]design=3\b/.test(location.search)) startDesign3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   render(false);
 })();
 </script></body></html>
