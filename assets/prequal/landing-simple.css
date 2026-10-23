@@ -14,7 +14,6 @@
 .ps-amount { font-size: 44px; line-height: 1.05; font-weight: 800; color: var(--high-emphasis-dark); letter-spacing: -.01em; margin: 2px 0 6px; }
 .ps-terms { margin: 0; font-size: 16px; line-height: 1.4; color: var(--high-emphasis-dark); }
 .ps-terms b { font-weight: 800; }
-.ps-change { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--med-emphasis-dark); }
 .ps-exp { margin: 4px 0 0; font-size: 13px; color: var(--med-emphasis-dark); }
 .ps-fn { font-size: .6em; vertical-align: super; line-height: 0; margin-left: 1px; }
 

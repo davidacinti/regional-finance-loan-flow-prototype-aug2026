@@ -22,7 +22,7 @@ const seal = '<img src="rf-check-seal.svg" alt="">';
 // Today's "Borrow your way" value props: the first two verbatim, then 100% online, then the payment one, reworded
 // around customizing the amount and term.
 const online = `<li>${seal}<div><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></div></li>`;
-const payment = `<li>${seal}<div><b>A payment you’re comfortable with</b><span>Choose the amount and term that fit your budget.</span></div></li>`;
+const payment = `<li>${seal}<div><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></div></li>`;
 const props = pick(/<div class="lf2-next lf2-know">[\s\S]*?<\/ul><\/div>/, 'value props')
   .replace(/<li>(?:(?!<li>)[\s\S])*?A payment you’re comfortable with[\s\S]*?<\/li>\n?/, '')
   .replace(/<\/ul>(?=<\/div>$)/, `${online}\n${payment}\n</ul>`).replace('lf2-know"', 'lf2-know ps-why"');
@@ -44,7 +44,6 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 <span class="ps-label" id="psLabel">You’re pre-qualified for<sup class="ps-fn">1</sup></span>
 <div class="ps-amount">$15,000</div>
 <p class="ps-terms"><b>$505</b>/month · 36 months · 13.01% APR</p>
-<p class="ps-change">You can customize this as you continue.</p>
 <p class="ps-exp">Offer expires Nov 6</p>
 <p class="ps-num" id="ppFile">Let’s keep going. Next, we’ll text a code to <b>***-***-7890</b> to save your <span class="ps-nowrap">progress · <button type="button" class="pp-link" data-notmine>Update</button></span></p>
 ${check}
