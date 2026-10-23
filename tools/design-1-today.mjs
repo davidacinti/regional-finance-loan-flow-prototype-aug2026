@@ -16,7 +16,7 @@ const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}
 // on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
 <h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
-<p class="pp-sub">Provide this information to finalize your loan.</p>
+<p class="pp-sub">We’ll send a code to this number to save your offer.</p>
 <div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
