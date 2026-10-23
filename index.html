@@ -402,7 +402,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const row = app.querySelector('.pq-ssn-row.v4-edit-row');
     if (row) {
       // Save puts the new SSN on file (shown masked); × cancels. Save waits for all 9 digits.
-      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-ssn-save disabled>Save</button></div>');
+      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-ssn-save disabled><i class="bi bi-check2" aria-hidden="true"></i>Save</button></div>');
       const inp = row.querySelector('#pqSsn'), save = row.querySelector('[data-pq-ssn-save]'), ready = () => { save.disabled = pqSsnVal.length !== 9; };
       inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; ready(); };
       save.onclick = () => { if (pqSsnVal.length !== 9) return; S.customer.ssn = pqSsnVal; pqSsnSaved = true; pqSsnOpen = false; pqSsnVal = ''; render(false); };
@@ -454,7 +454,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (row) {
       if (!editSnap || editSnap.field !== S.confirmEdit) editSnap = { field: S.confirmEdit, c: JSON.parse(JSON.stringify(S.customer)) };
       if (S.confirmEdit === 'address') addressFields(row);
-      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-save>Save</button></div>');
+      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-save><i class="bi bi-check2" aria-hidden="true"></i>Save</button></div>');
       row.querySelectorAll('input').forEach(i => i.addEventListener('input', () => checkSave(row))); row.querySelectorAll('input[type=radio]').forEach(i => i.addEventListener('change', () => checkSave(row)));
       row.querySelector('[data-pq-save]').onclick = () => { if (!rowValid()) return; editSnap = null; S.confirmEdit = null; render(false); };
       const x = row.querySelector('[data-close-edit]'); if (x) x.onclick = () => { if (editSnap) { Object.keys(S.customer).forEach(k => delete S.customer[k]); Object.assign(S.customer, editSnap.c); } editSnap = null; S.confirmEdit = null; render(false); };
@@ -467,7 +467,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (next.disabled) next.insertAdjacentHTML('afterend', '<p class="pq-confirm-hint">' + (open ? 'Save your changes to continue.' : 'Add your Social Security number to continue.') + '</p>');
   }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}' +
-    '.phone.design-v4 .pq-edit-actions{display:flex;justify-content:flex-end;margin:14px 28px 2px 0}.phone.design-v4 .pq-save{min-width:96px;height:40px;padding:0 20px;border:0;border-radius:9999px;background:#2f74d7;color:#fff;font-weight:600;font-size:15px}.phone.design-v4 .pq-save:disabled{opacity:.45}' +
+    '.phone.design-v4 .pq-edit-actions{margin:16px 28px 4px 0}.phone.design-v4 .pq-save{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:46px;padding:0 20px;border:2px solid #2f74d7;border-radius:9999px;background:#fff;color:#2f74d7;font-weight:700;font-size:16px;transition:background .15s ease,color .15s ease}.phone.design-v4 .pq-save i{font-size:20px;line-height:1}.phone.design-v4 .pq-save:not(:disabled):hover,.phone.design-v4 .pq-save:not(:disabled):active{background:#2f74d7;color:#fff}.phone.design-v4 .pq-save:focus-visible{outline:3px solid rgba(47,116,215,.35);outline-offset:2px}.phone.design-v4 .pq-save:disabled{border-color:#d5dbe3;background:#f6f8fa;color:#9aa6b5;cursor:default}' +
     '.phone.design-v4 .pq-addr-row{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;margin-right:28px}.phone.design-v4 .pq-addr-row .form-control{margin-right:0!important}' +
     '.phone.design-v4 .pq-confirm-hint{margin:8px 0 0;color:#6a6a6a;font-size:13px;text-align:center}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
