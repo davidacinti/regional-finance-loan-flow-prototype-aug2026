@@ -388,6 +388,15 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
   function sizeFrame(){ const f = app.querySelector('.pq-frame'); if (!f) return; if (!matchMedia('(max-width:720px)').matches) { f.style.height = ''; return; } const vh = (window.visualViewport ? visualViewport.height : innerHeight); f.style.height = Math.max(320, Math.round(vh - f.getBoundingClientRect().top - (window.scrollY || 0))) + 'px'; }
   addEventListener('resize', sizeFrame); if (window.visualViewport) visualViewport.addEventListener('resize', sizeFrame);
+  // Phones: the landing iframe fills the screen, so the page around it never scrolls. Something inside the frame
+  // (scrollIntoView, focus) can still scroll it on iOS/Chrome, which slid the landing up and left a grey gap under it.
+  // Put it back, except while the keyboard is open (the browser may need that scroll to keep the field in view).
+  function pinPage(){
+    if (!phone.classList.contains('page-prequal') || !matchMedia('(max-width:720px)').matches) return;
+    if (window.visualViewport && visualViewport.height < innerHeight * 0.85) return;
+    if (scrollY || document.documentElement.scrollTop || document.body.scrollTop) { scrollTo(0, 0); document.documentElement.scrollTop = document.body.scrollTop = 0; sizeFrame(); }
+  }
+  addEventListener('scroll', pinPage, { passive: true }); if (window.visualViewport) visualViewport.addEventListener('resize', pinPage);
   window.addEventListener('message', (e) => {
     // Regional's offer tapped on the affiliate's page: the affiliate's next screen, then Regional's landing.
     if (e.data && e.data.rfAff === 'next' && /^aff:\d+$/.test(S.page)) { const n = +S.page.slice(4) + 1, ch = CHANNELS[S.channel] || CHANNELS.moneylion; go(n < ch.pages.length ? 'aff:' + n : 'prequalLanding'); return; }
