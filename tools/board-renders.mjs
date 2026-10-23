@@ -45,6 +45,9 @@ const SHOTS = [
   { file: 'review-ssn-edit.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false); document.querySelector('[data-pq-ssn-open]').click();", first: true },
   { file: 'review-ssn-missing.png', app: '?nossn=1', run: "start('prequal'); S.hist=[]; go('review',false);", first: true },
   { file: 'credit-no-ssn.png', app: '?scenario=1', run: "start('prequal'); S.amount=12500; S.term=3; S.hist=[]; S.page='bankSuccess'; go('credit',false);", first: true },
+  // Full pages for the release board's "4 · Confirm" (review, SSN masked) and "13 · Apply" (credit check, no SSN card).
+  { file: 'review-full.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false);" },
+  { file: 'credit-full.png', app: '?scenario=1', run: "start('prequal'); S.amount=12500; S.term=3; S.hist=[]; S.page='bankSuccess'; go('credit',false);" },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
   { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
   { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
