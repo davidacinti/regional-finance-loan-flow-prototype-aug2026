@@ -39,6 +39,12 @@ const SHOTS = [
   // Came back (number already saved to the offer): the card's welcome-back line, then a different number → already saved.
   { file: 'simple-back.png', page: 'landing-simple.html', q: '&returning=1', el: '.ps-card' },
   { file: 'simple-taken.png', page: 'landing-simple.html', q: '&returning=1&state=taken', el: '.ps-card' },
+  // Known journeys, review + credit check (Oct 23): the SSN on file masked on the review page; editing opens an empty field;
+  // no SSN on file opens the row on load; the credit check no longer shows the SSN.
+  { file: 'review-ssn.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false);", first: true },
+  { file: 'review-ssn-edit.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false); document.querySelector('[data-pq-ssn-open]').click();", first: true },
+  { file: 'review-ssn-missing.png', app: '?nossn=1', run: "start('prequal'); S.hist=[]; go('review',false);", first: true },
+  { file: 'credit-no-ssn.png', app: '?scenario=1', run: "start('prequal'); S.amount=12500; S.term=3; S.hist=[]; S.page='bankSuccess'; go('credit',false);", first: true },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
   { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
   { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
