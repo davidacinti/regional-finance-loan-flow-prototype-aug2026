@@ -331,6 +331,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     document.querySelectorAll('[data-pq-visit]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqVisit === 'back') === pqBack)));
     // "Came back" is built into Designs 1 and 4 only.
     document.querySelectorAll('.pq-visit').forEach(x => x.hidden = landDesign === '2' || landDesign === '3');
+    document.querySelectorAll('[data-pq-ssn]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqSsn === 'no') === pqNoSsn)));
   };
   const baseRender = render;
   render = function(shouldScroll = true){
@@ -339,6 +340,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
+    if (S.page === 'review' && S.pq && pqNoSsn) ssnRow();
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
     // Scenario builder: "Known Customer Prequal" is a flow button like the others; it opens step 2, where the partner
@@ -376,7 +378,27 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   let landDesign = '1', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
-  let pqBack = /[?&]returning=1/.test(location.search);
+  let pqBack = /[?&]returning=1\b/.test(location.search);
+  // NO SSN ON FILE (demo panel "SSN on file: No", or ?nossn=1): the partner's lead has no SSN, so "Let's make sure we have
+  // everything right" opens with the SSN row already open, and Confirm waits for all 9 digits.
+  let pqNoSsn = /[?&]nossn=1\b/.test(location.search), pqSsnOpen = true, pqSsnVal = '';
+  function ssnRow(){
+    const card = app.querySelector('.v4-review-card'); if (!card) return;
+    const anchor = card.querySelector('[data-edit-row="address"]') || card.querySelector('#editAddress'), after = anchor && anchor.closest('.review-row');
+    const digits = pqSsnVal.replace(/\D/g, '').slice(0, 9), fmt = d => d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+    const html = pqSsnOpen
+      ? '<div class="review-row v4-edit-row pq-ssn-row"><button class="v4-close-edit" data-pq-ssn-close type="button" aria-label="Close">×</button><label for="pqSsn">Social Security number</label><input id="pqSsn" class="form-control" type="password" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" maxlength="11" value="' + fmt(digits) + '"><p class="pq-ssn-note"><i class="bi bi-lock" aria-hidden="true"></i> The security of your personal information is important to us.</p></div>'
+      : '<div class="review-row"><button class="v4-review-row" data-pq-ssn-open type="button"><div class="fake-label">Social Security number</div><div class="v' + (digits.length === 9 ? '' : ' pq-ssn-empty') + '">' + (digits.length === 9 ? '•••-••-' + digits.slice(5) : 'Please enter your SSN.') + '</div></button></div>';
+    if (after) after.insertAdjacentHTML('afterend', html); else card.insertAdjacentHTML('beforeend', html);
+    const next = app.querySelector('.btn-main[data-go="ready"]'), sync = () => { if (next) next.disabled = pqSsnVal.length !== 9; };
+    const inp = app.querySelector('#pqSsn');
+    if (inp) inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; sync(); };
+    const x = app.querySelector('[data-pq-ssn-close]'); if (x) x.onclick = () => { pqSsnOpen = false; render(false); };
+    const o = app.querySelector('[data-pq-ssn-open]'); if (o) o.onclick = () => { pqSsnOpen = true; render(false); setTimeout(() => { const i = app.querySelector('#pqSsn'); if (i) i.focus(); }); };
+    if (next) next.addEventListener('click', () => { S.customer.ssn = pqSsnVal; }, true);
+    sync();
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
     // Credit Karma sends no number, so every design opens on the new-number block.
@@ -426,12 +448,16 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       '<span class="pq-sub-label" id="pqLandLbl">Landing design</span><div class="pq-chips" role="group" aria-labelledby="pqLandLbl">' +
       chips('data-pq-land', Object.keys(LANDINGS), k => k + ' · ' + LANDINGS[k]) + '</div>' +
       '<div class="pq-visit"><span class="pq-sub-label" id="pqVisitLbl">Visit</span><div class="pq-chips" role="group" aria-labelledby="pqVisitLbl">' +
-      chips('data-pq-visit', ['first', 'back'], k => k === 'back' ? 'Came back (number saved)' : 'First visit') + '</div></div></div></div>');
+      chips('data-pq-visit', ['first', 'back'], k => k === 'back' ? 'Came back (number saved)' : 'First visit') + '</div></div>' +
+      '<span class="pq-sub-label" id="pqSsnLbl">SSN on file</span><div class="pq-chips" role="group" aria-labelledby="pqSsnLbl">' +
+      chips('data-pq-ssn', ['yes', 'no'], k => k === 'no' ? 'No (ask on review)' : 'Yes') + '</div></div></div>');
     const closeOnPhone = () => { if (matchMedia('(max-width:720px)').matches) { panel.classList.remove('open'); const f = panel.querySelector('.flow-fab'); if (f) f.setAttribute('aria-expanded', 'false'); } };
     panel.querySelector('[data-pq-panel]').onclick = () => { if (!S.pq) { start('prequal'); closeOnPhone(); } };
     panel.querySelectorAll('[data-pq-partner]').forEach(b => b.onclick = () => { setChannel(b.dataset.pqPartner); start('prequal'); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-land]').forEach(b => b.onclick = () => { setLanding(b.dataset.pqLand); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-visit]').forEach(b => b.onclick = () => { pqBack = b.dataset.pqVisit === 'back'; go('prequalLanding', false); closeOnPhone(); });
+    // SSN on file: shows on "Let's make sure we have everything right"; re-renders it if it's open, else applies when they get there.
+    panel.querySelectorAll('[data-pq-ssn]').forEach(b => b.onclick = () => { pqNoSsn = b.dataset.pqSsn === 'no'; pqSsnOpen = true; pqSsnVal = ''; if (S.page === 'review') render(false); else syncControls(); closeOnPhone(); });
     syncControls();
   }
   document.head.insertAdjacentHTML('beforeend', '<style>.pq-block{margin:0 0 4px}.pq-sub{margin:2px 0 8px;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.06)}.pq-sub[hidden]{display:none!important}' +
