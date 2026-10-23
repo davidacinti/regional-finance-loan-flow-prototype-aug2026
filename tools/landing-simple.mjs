@@ -1,6 +1,6 @@
 // Prequal landing · SIMPLE (Oct 22 2026 proposal, for the team). Not wired into the prototype's flows.
 // Today's landing (assets/prequal/landing-a.html) with less to read: one card with the offer under the navy "strong fit"
-// ribbon and, as its last row, one line "To finish your loan, we’ll text you a code to ***-***-7890 · update". update (and ?state=notmine|nophone|
+// ribbon and, as its last row, one line "Let’s keep going. Next, we’ll text a code to ***-***-7890 to save your progress · Update". update (and ?state=notmine|nophone|
 // nomatch) opens Design 1's block: mobile number, date of birth, SSN last 4; no match → submit a new application.
 // Today's value props (+ 100% online), reviews, pinned consent + Continue bar, its scripts and legal footer are verbatim.
 //   node tools/landing-simple.mjs   → assets/prequal/landing-simple.html
@@ -39,9 +39,9 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 <span class="ps-label" id="psLabel">You’re pre-qualified for<sup class="ps-fn">1</sup></span>
 <div class="ps-amount">$15,000</div>
 <p class="ps-terms"><b>$505</b>/month · 36 months · 13.01% APR</p>
-<p class="ps-change">Prefer a different amount or term? You can change it later.</p>
+<p class="ps-change">You can customize this as you continue.</p>
 <p class="ps-exp">Offer expires Nov 6</p>
-<p class="ps-num" id="ppFile">To finish your loan, we’ll text you a code to <span class="ps-nowrap"><b>***-***-7890</b> · <button type="button" class="pp-link" data-notmine>update</button></span></p>
+<p class="ps-num" id="ppFile">Let’s keep going. Next, we’ll text a code to <b>***-***-7890</b> to save your <span class="ps-nowrap">progress · <button type="button" class="pp-link" data-notmine>Update</button></span></p>
 ${check}
 </div>
 </section>
