@@ -4,7 +4,7 @@
 <title>Known customer prequal · Credit Karma · Pre-qualified offer landing · Regional Finance loan flow v1 (agent-readable)</title>
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#222}header,nav,.meta{font-size:14px;color:#555}.screen,.spec{border:1px solid #ccc;border-radius:12px;padding:16px;margin:16px 0}.spec{background:#f7f9fc}code{background:#f2f2f2;padding:1px 4px;border-radius:4px}</style>
 </head><body>
-<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Oct 23, 2026, 11:53 AM ET (version bde4d9f42eb9). Regenerated with every change to the prototype.</header>
+<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Oct 23, 2026, 12:01 PM ET (version 26318e07c750). Regenerated with every change to the prototype.</header>
 <nav>Journey: <a href="index.html">Known customer prequal · Credit Karma</a> · Screen 2 of 15 · <a href="01-aff-0.html">← previous</a> · <a href="03-sms.html">next: SMS code →</a></nav>
 <main><h1>Pre-qualified offer landing</h1><p class="meta">Screen key: <code>prequalLanding</code></p><section class="spec" aria-label="About this screen"><p>Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is shown ($15,000, 36 months, 13.01% APR); the customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.</p></section><section class="screen" aria-label="What the customer sees"><h2>What the customer sees</h2><header><div><a aria-label="Regional Finance home"><img alt="Regional Finance"></a></div></header><main>
 <section><div><div>
@@ -25,7 +25,10 @@
 <div><label for="ppDob">Date of birth</label><input inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div><label for="ppSsn">SSN last 4</label><input type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-</section>
+<div aria-label="Your selected offer"><div>
+<div><input type="checkbox"><label for="legal">I have read and agree to the <a>Terms of Use</a>, <a>Privacy Policy</a>, <a>ESIGN Act Consent</a>, <a>Consent to Receive Calls and Text Messages</a> and <a>Consent to Receive Commercial Emails</a>.</label></div>
+<div><div><div><b>$421</b>/month</div><div>Over 2 million customers helped</div></div><button type="button" disabled="">Continue</button></div>
+</div></div></section>
 <section hidden="">
 <h2>Sorry, we don’t have an offer for this information</h2>
 <p>If you’d like, you can submit a new application.</p>
@@ -42,10 +45,7 @@
 <li><div><b>Money as soon as today<sup>2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
 <li><div><b>A payment you’re comfortable with</b><span>Go longer for a lower monthly payment, or shorter to pay it off sooner.</span></div></li>
 </ul></div>
-</div></div></main><div aria-label="Your selected offer"><div>
-<div><input type="checkbox"><label for="legal">I have read and agree to the <a>Terms of Use</a>, <a>Privacy Policy</a>, <a>ESIGN Act Consent</a>, <a>Consent to Receive Calls and Text Messages</a> and <a>Consent to Receive Commercial Emails</a>.</label></div>
-<div><div><div><b>$421</b>/month</div><div>Over 2 million customers helped</div></div><button type="button" disabled="">Continue</button></div>
-</div></div><section aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
+</div></div></main><section aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
 </rf-social-proof></section>
 <footer><div>
 <p>† To check rates and terms you may qualify for, Regional Finance conducts a soft credit pull that will not affect your credit score. However, if you choose a product and continue your application, we will request your full credit report from one or more consumer reporting agencies, which is considered a hard credit pull and may affect your credit.</p>
@@ -62,6 +62,7 @@
 <p>Virginia Residents: Regional Finance Company of Virginia, LLC is licensed by the Virginia State Corporation Commission under the following license number: CFI-161.</p>
 <p>Copyright © 2026 Regional Management Corp. All Rights Reserved</p>
 <p><a>Privacy &amp; Cookie Policy</a> <a>Licenses &amp; Disclosures</a> <a>Investors</a> <a>Notice to California Residents</a> <a>Your Privacy Choices</a></p>
-</div></footer></section></main>
+</div></footer>
+<div hidden=""></div></section></main>
 <nav>Journey: <a href="index.html">Known customer prequal · Credit Karma</a> · Screen 2 of 15 · <a href="01-aff-0.html">← previous</a> · <a href="03-sms.html">next: SMS code →</a></nav>
 </body></html>

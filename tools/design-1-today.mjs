@@ -53,7 +53,11 @@ function ctr(el){var r=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,r
 function ok(){if(!M.hidden||!T.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
 function s(){b.disabled=!(c.checked&&ok())}
 Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
-function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';s()}
+// While they type a new number, the consent + Continue sit at the end of that block instead of in the pinned bar (a pinned
+// bar under a form felt odd). The bar element itself moves, so every script bound to it keeps working.
+var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.nextSibling,gap=document.querySelector('.rf-paybar-space');
+function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl);if(gap)gap.hidden=inl}
+function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
@@ -69,7 +73,7 @@ var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken)\\b/);show
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=6"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=7"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

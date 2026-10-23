@@ -33,3 +33,9 @@
 /* Already saved to another number: a quiet way back under the button. */
 .pp-back{margin:10px 0 0;text-align:center}.pp-back .pp-link{margin:0}
 .pp-nomatch b{white-space:nowrap;color:#363636}
+/* New-number block: the consent + Continue sit inline at its end (not pinned), full-width button, no payment line. */
+.lf2-paybar.pp-inline{position:static!important;left:auto;right:auto;bottom:auto;transform:none!important;margin:16px 0 0;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.lf2-paybar.pp-inline .in{max-width:none;margin:0;gap:14px}
+.lf2-paybar.pp-inline .lf2-pay,.lf2-paybar.pp-inline .lf2-credit-note{display:none}
+.lf2-paybar.pp-inline .row1{display:block}
+.lf2-paybar.pp-inline .rf-btn{display:block;width:100%;max-width:none;height:48px}
