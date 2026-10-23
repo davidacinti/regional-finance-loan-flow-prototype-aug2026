@@ -77,7 +77,7 @@ for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.ar
   if (s.first) { await tab.screenshot({ path: 'assets/board/' + s.file }); console.log(s.file, '390x844 @2x'); continue; }
   // Just one block (an input state), with a little white around it, @2x.
   if (s.el) {
-    const box = await tab.evaluate((sel) => { const bar = document.querySelector('.lf2-paybar'); if (bar) bar.style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
+    const box = await tab.evaluate((sel) => { const bar = document.querySelector('.lf2-paybar'); if (bar && !document.querySelector(sel).contains(bar)) bar.style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
     await tab.screenshot({ path: 'assets/board/' + s.file, clip: box, captureBeyondViewport: true }); console.log(s.file, Math.round(box.width) + 'x' + Math.round(box.height) + ' @2x'); continue;
   }
   if (s.clipTo) {
