@@ -2,7 +2,7 @@
 // Today's landing (assets/prequal/landing-a.html) with less to read: one card with the offer under the navy "strong fit"
 // ribbon and, as its last row, one line "Let’s keep going. Next, we’ll text a code to ***-***-7890 to save your progress · Update". update (and ?state=notmine|nophone|
 // nomatch) opens Design 1's block: mobile number, date of birth, SSN last 4; no match → submit a new application.
-// Today's value props (+ 100% online), reviews, pinned consent + Continue bar, its scripts and legal footer are verbatim.
+// Today's value props (+ 100% online; payment prop reworded), reviews, pinned consent + Continue bar, its scripts and legal footer are verbatim.
 //   node tools/landing-simple.mjs   → assets/prequal/landing-simple.html
 import { readFileSync, writeFileSync } from 'node:fs';
 
@@ -19,9 +19,14 @@ const check = pick1(/<section class="lf2-ph pp-check"[\s\S]*?<section class="pp-
 const checkJs = pick1(/<script>\(function\(\)\{\nvar c=document\.getElementById\('legal'\)[\s\S]*?<\/script>/, 'new-number script');
 const reviews = pick(/<section class="rf-section rf-social"[\s\S]*?<\/section>/, 'reviews');
 const seal = '<img src="rf-check-seal.svg" alt="">';
-// Today's "Borrow your way" value props, verbatim, plus one for 100% online.
-const online = `<li>${seal}<div><b>Simple, fast, and 100% online</b><span>Finish your loan from your phone or computer.</span></div></li>\n</ul>`;
-const props = pick(/<div class="lf2-next lf2-know">[\s\S]*?<\/ul><\/div>/, 'value props').replace(/<\/ul>(?=<\/div>$)/, online).replace('lf2-know"', 'lf2-know ps-why"');
+// Today's "Borrow your way" value props: the first two verbatim, then 100% online, then the payment one, reworded
+// around customizing the amount and term.
+const online = `<li>${seal}<div><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></div></li>`;
+const payment = `<li>${seal}<div><b>A payment you’re comfortable with</b><span>Choose the amount and term that fit your budget.</span></div></li>`;
+const props = pick(/<div class="lf2-next lf2-know">[\s\S]*?<\/ul><\/div>/, 'value props')
+  .replace(/<li>(?:(?!<li>)[\s\S])*?A payment you’re comfortable with[\s\S]*?<\/li>\n?/, '')
+  .replace(/<\/ul>(?=<\/div>$)/, `${online}\n${payment}\n</ul>`).replace('lf2-know"', 'lf2-know ps-why"');
+if (props.split('A payment you’re comfortable with').length !== 2) throw new Error('payment prop not replaced');
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prequal Landing · Simple</title>
