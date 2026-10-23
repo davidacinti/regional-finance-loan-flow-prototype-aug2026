@@ -42,8 +42,10 @@ const SHOTS = [
   // Known journeys, review + credit check (Oct 23): the SSN on file masked on the review page; editing opens an empty field;
   // no SSN on file opens the row on load; the credit check no longer shows the SSN.
   { file: 'review-ssn.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false);", first: true },
-  { file: 'review-ssn-edit.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false); document.querySelector('[data-pq-ssn-open]').click();", first: true },
-  { file: 'review-ssn-missing.png', app: '?nossn=1', run: "start('prequal'); S.hist=[]; go('review',false);", first: true },
+  { file: 'review-ssn-edit.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false); document.querySelector('[data-pq-ssn-open]').click();" },
+  { file: 'review-ssn-missing.png', app: '?nossn=1', run: "start('prequal'); S.hist=[]; go('review',false);" },
+  // Editing the address: line 1, line 2 (optional), city, state, ZIP, then Save; Confirm waits ("Save your changes to continue.").
+  { file: 'review-address-edit.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false); document.querySelector('[data-edit-row=address]').click();" },
   { file: 'credit-no-ssn.png', app: '?scenario=1', run: "start('prequal'); S.amount=12500; S.term=3; S.hist=[]; S.page='bankSuccess'; go('credit',false);", first: true },
   // Full pages for the release board's "4 · Confirm" (review, SSN masked) and "13 · Apply" (credit check, no SSN card).
   { file: 'review-full.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false);" },
