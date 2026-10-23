@@ -296,10 +296,28 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const FRESH = '?t=' + Date.now();
   const CH_KEY ='rf-v1-prequal-channel';
   let channel = 'moneylion';
-  try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) channel = v; } catch (e) {}
+  let used = false;
+  try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) { channel = v; used = true; } } catch (e) {}
   // Picking a channel loads the flow at once (no Start button). The picker shows the running channel, else a prompt.
   const channelOptions = () => '<option value="" disabled' + (S.pq ? '' : ' selected') + '>Choose where it starts…</option>' + Object.keys(CHANNELS).map(k => '<option value="' + k + '"' + (S.pq && k === channel ? ' selected' : '') + '>' + CHANNELS[k].label + '</option>').join('');
-  function setChannel(k){ if (!CHANNELS[k]) return; channel = k; try { localStorage.setItem(CH_KEY, k); } catch (e) {} }
+  function setChannel(k){ if (!CHANNELS[k]) return; channel = k; used = true; try { localStorage.setItem(CH_KEY, k); } catch (e) {} }
+  // Step 2 of the scenario builder: which partner the known prequal customer came from. One line each on what's different.
+  const PARTNER_NOTE = { creditkarma: 'Sends no phone number, so the landing asks for one', chatgpt: 'Concept, not in production', direct: 'No partner page, starts on Regional’s landing' };
+  function partnerStep(){
+    const body = app.querySelector('.body'); if (!body) return;
+    body.innerHTML = '<button type="button" class="pq-back" data-pq-back>‹ All demo flows</button><h1 class="title">Where does the customer start?</h1><p class="sub">Pick the partner whose pre-qualified offer they tapped.</p>' +
+      '<div class="pq-partners">' + Object.keys(CHANNELS).map(k => { const c = CHANNELS[k], note = PARTNER_NOTE[k] || c.domain;
+        return '<button type="button" class="pq-partner' + (used && k === channel ? ' is-last' : '') + '" data-partner="' + k + '"><span class="pq-p-name">' + (k === 'direct' ? 'Regional email or text' : c.short) + (used && k === channel ? '<em>Last used</em>' : '') + '</span><span class="pq-p-note">' + note + '</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>'; }).join('') + '</div>';
+    body.querySelector('[data-pq-back]').onclick = () => render();
+    body.querySelectorAll('[data-partner]').forEach(b => b.onclick = () => { setChannel(b.dataset.partner); start('prequal'); });
+    scrollTo(0, 0);
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>.pq-back{display:inline-flex;align-items:center;min-height:44px;margin:-8px 0 4px;padding:0;border:0;background:none;color:#2A71D4;font:600 14px/1 "Plus Jakarta Sans",sans-serif;cursor:pointer;align-self:flex-start}' +
+    '.pq-partners{display:flex;flex-direction:column;gap:10px;margin-top:20px;text-align:left}' +
+    '.pq-partner{position:relative;display:flex;flex-direction:column;gap:3px;width:100%;min-height:64px;padding:12px 44px 12px 18px;border:1px solid #CDCDCD;border-radius:16px;background:#fff;color:#363636;text-align:left;cursor:pointer;font-family:"Plus Jakarta Sans",sans-serif}' +
+    '.pq-partner:hover,.pq-partner:focus-visible{border-color:#2A71D4;outline:0;background:#F5F9FE}.pq-partner.is-last{border-color:#2A71D4}' +
+    '.pq-p-name{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700}.pq-p-name em{font-style:normal;font-size:11px;font-weight:700;padding:2px 8px;border-radius:9999px;background:#E8F0FB;color:#1E4F95}' +
+    '.pq-p-note{font-size:13px;line-height:1.35;color:#595959}.pq-partner svg{position:absolute;right:16px;top:50%;width:20px;height:20px;margin-top:-10px;color:#2A71D4}</style>');
   // Start: same known-customer session, then the affiliate page(s) for the chosen channel, then the landing.
   const baseStart = start;
   start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
@@ -314,11 +332,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     baseRender(shouldScroll);
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
-    if (S.page === 'blank' && !app.querySelector('[data-start="prequal"]')) {
+    // Scenario builder: "Known Customer Prequal" is a flow button like the others; it opens step 2, where the partner
+    // the customer came from is picked (one tap starts the run). The last partner used is marked.
+    if (S.page === 'blank' && !app.querySelector('[data-pq-flow]')) {
       const first = app.querySelector('.flow-choice');
-      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><label class="pq-start-label" for="pqChannel">Known Customer Prequal</label><select class="pq-ch pq-ch-start" id="pqChannel" data-channel>' + channelOptions() + '</select><p>Known customers with a pre-qualified offer (Nov 2026). The affiliate’s page, then Regional’s new landing, then the existing flow from the SMS code. Credit Karma also asks for a mobile number.</p></div>');
-      app.querySelectorAll('[data-start^="prequal"]').forEach(x => x.onclick = (e) => { e.preventDefault(); start(x.dataset.start); });
-      app.querySelectorAll('[data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); start('prequal'); });
+      if (first) first.insertAdjacentHTML('beforebegin', '<div class="flow-choice"><button class="btn-main" data-pq-flow>Known Customer Prequal</button><p>Known customers with a pre-qualified offer from a partner (Nov 2026). Next, pick the partner.</p></div>');
+      const pick = app.querySelector('[data-pq-flow]');
+      if (pick) pick.onclick = (e) => { e.preventDefault(); partnerStep(); };
     }
     if (aff) {
       const ch = CHANNELS[S.channel] || CHANNELS.moneylion, i = +S.page.slice(4);
