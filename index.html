@@ -328,6 +328,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     document.querySelectorAll('.pq-sub').forEach(s => s.hidden = !S.pq);
     document.querySelectorAll('[data-pq-partner]').forEach(b => b.setAttribute('aria-pressed', String(!!S.pq && b.dataset.pqPartner === S.channel)));
     document.querySelectorAll('[data-pq-land]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pqLand === landDesign)));
+    document.querySelectorAll('[data-pq-visit]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqVisit === 'back') === pqBack)));
+    // "Came back" is built into Designs 1 and 4 only.
+    document.querySelectorAll('.pq-visit').forEach(x => x.hidden = landDesign === '2' || landDesign === '3');
   };
   const baseRender = render;
   render = function(shouldScroll = true){
@@ -364,13 +367,16 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 1 · Today: today's landing with the number we'll text. Credit Karma (no number on file) opens on the new-number block.
     // Design 4 · Simple (tools/landing-simple.mjs): same flow and states, less to read.
     const st = d4State || (S.pq === 'b' ? 'nophone' : '');
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (landDesign === '4' ? 'landing-simple.html' : 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + '"></iframe>';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (landDesign === '4' ? 'landing-simple.html' : 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + '"></iframe>';
     designBar(); sizeFrame();
   };
   // LANDING DESIGN TOGGLE (for the team): a bar above the landing switches between the three designs in place, same run,
   // same channel. The pick is remembered, so the next run opens on it too.
   const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Today', 2: 'Get started', 3: 'Offer page', 4: 'Simple' };
   let landDesign = '1', d4State = '';
+  // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
+  // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
+  let pqBack = /[?&]returning=1/.test(location.search);
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
     // Credit Karma sends no number, so every design opens on the new-number block.
@@ -418,15 +424,18 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       '<div class="pq-sub" hidden><span class="pq-sub-label" id="pqStartsLbl">Starts from</span><div class="pq-chips" role="group" aria-labelledby="pqStartsLbl">' +
       chips('data-pq-partner', Object.keys(CHANNELS), k => k === 'direct' ? 'Regional email/text' : CHANNELS[k].short) + '</div>' +
       '<span class="pq-sub-label" id="pqLandLbl">Landing design</span><div class="pq-chips" role="group" aria-labelledby="pqLandLbl">' +
-      chips('data-pq-land', Object.keys(LANDINGS), k => k + ' · ' + LANDINGS[k]) + '</div></div></div>');
+      chips('data-pq-land', Object.keys(LANDINGS), k => k + ' · ' + LANDINGS[k]) + '</div>' +
+      '<div class="pq-visit"><span class="pq-sub-label" id="pqVisitLbl">Visit</span><div class="pq-chips" role="group" aria-labelledby="pqVisitLbl">' +
+      chips('data-pq-visit', ['first', 'back'], k => k === 'back' ? 'Came back (number saved)' : 'First visit') + '</div></div></div></div>');
     const closeOnPhone = () => { if (matchMedia('(max-width:720px)').matches) { panel.classList.remove('open'); const f = panel.querySelector('.flow-fab'); if (f) f.setAttribute('aria-expanded', 'false'); } };
     panel.querySelector('[data-pq-panel]').onclick = () => { if (!S.pq) { start('prequal'); closeOnPhone(); } };
     panel.querySelectorAll('[data-pq-partner]').forEach(b => b.onclick = () => { setChannel(b.dataset.pqPartner); start('prequal'); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-land]').forEach(b => b.onclick = () => { setLanding(b.dataset.pqLand); closeOnPhone(); });
+    panel.querySelectorAll('[data-pq-visit]').forEach(b => b.onclick = () => { pqBack = b.dataset.pqVisit === 'back'; go('prequalLanding', false); closeOnPhone(); });
     syncControls();
   }
   document.head.insertAdjacentHTML('beforeend', '<style>.pq-block{margin:0 0 4px}.pq-sub{margin:2px 0 8px;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.06)}.pq-sub[hidden]{display:none!important}' +
-    '.pq-sub-label{display:block;margin:0 0 6px;color:#b9c8db;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.pq-sub-label+.pq-chips{margin-bottom:12px}.pq-chips:last-child{margin-bottom:0}' +
+    '.pq-sub-label{display:block;margin:0 0 6px;color:#b9c8db;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.pq-sub-label+.pq-chips{margin-bottom:12px}.pq-chips:last-child{margin-bottom:0}.pq-visit[hidden]{display:none!important}.pq-visit .pq-chips{margin-bottom:0}' +
     '.panel .pq-chips{display:flex!important;flex-wrap:wrap;flex-direction:row!important;gap:6px!important}' +
     '.panel .pq-sub .pq-chip{display:inline-flex!important;align-items:center;width:auto!important;min-height:32px;margin:0!important;padding:5px 11px!important;border:1px solid #547094!important;border-radius:9999px!important;background:transparent!important;color:#fff!important;font-size:13px!important;line-height:1.2;text-align:center}' +
     '.panel .pq-sub .pq-chip:hover{border-color:#fff!important}.panel .pq-sub .pq-chip[aria-pressed="true"]{background:#fff!important;border-color:#fff!important;color:#102b51!important;font-weight:700}' +

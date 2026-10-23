@@ -30,3 +30,6 @@
 .pp-line .pp-link{margin:0 0 0 4px;font-size:14px}
 .pp-row{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}
 .pp-row .lf2-ph-input{padding:15px 14px}
+/* Already saved to another number: a quiet way back under the button. */
+.pp-back{margin:10px 0 0;text-align:center}.pp-back .pp-link{margin:0}
+.pp-nomatch b{white-space:nowrap;color:#363636}

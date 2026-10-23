@@ -36,6 +36,9 @@ const SHOTS = [
   { file: 'simple-full.png', page: 'landing-simple.html' },
   { file: 'simple-change.png', page: 'landing-simple.html', q: '&state=notmine', el: '.ps-card' },
   { file: 'simple-nomatch.png', page: 'landing-simple.html', q: '&state=nomatch', el: '.ps-card' },
+  // Came back (number already saved to the offer): the card's welcome-back line, then a different number → already saved.
+  { file: 'simple-back.png', page: 'landing-simple.html', q: '&returning=1', el: '.ps-card' },
+  { file: 'simple-taken.png', page: 'landing-simple.html', q: '&returning=1&state=taken', el: '.ps-card' },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
   { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
   { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
