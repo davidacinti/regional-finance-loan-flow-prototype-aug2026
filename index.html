@@ -298,8 +298,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   let channel = 'moneylion';
   let used = false;
   try { const v = localStorage.getItem(CH_KEY); if (CHANNELS[v]) { channel = v; used = true; } } catch (e) {}
-  // Picking a channel loads the flow at once (no Start button). The picker shows the running channel, else a prompt.
-  const channelOptions = () => '<option value="" disabled' + (S.pq ? '' : ' selected') + '>Choose where it starts…</option>' + Object.keys(CHANNELS).map(k => '<option value="' + k + '"' + (S.pq && k === channel ? ' selected' : '') + '>' + CHANNELS[k].label + '</option>').join('');
   function setChannel(k){ if (!CHANNELS[k]) return; channel = k; used = true; try { localStorage.setItem(CH_KEY, k); } catch (e) {} }
   // Step 2 of the scenario builder: which partner the known prequal customer came from. One line each on what's different.
   const PARTNER_NOTE = { creditkarma: 'Sends no phone number, so the landing asks for one', chatgpt: 'Concept, not in production', direct: 'No partner page, starts on Regional’s landing' };
@@ -322,7 +320,15 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   const baseStart = start;
   start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
   const baseSync = syncControls;
-  syncControls = function(){ baseSync(); document.querySelectorAll('[data-channel]').forEach(s => s.value = S.pq ? channel : ''); document.querySelectorAll('.pq-group').forEach(g => g.classList.toggle('active', !!S.pq)); };
+  // A prequal run is a Known run underneath: the panel marks "Known Customer Prequal" instead, and its pickers.
+  syncControls = function(){
+    baseSync();
+    if (S.pq) document.querySelectorAll('.panel [data-flow="known"]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('[data-pq-panel]').forEach(b => b.classList.toggle('active', !!S.pq));
+    document.querySelectorAll('.pq-sub').forEach(s => s.hidden = !S.pq);
+    document.querySelectorAll('[data-pq-partner]').forEach(b => b.setAttribute('aria-pressed', String(!!S.pq && b.dataset.pqPartner === S.channel)));
+    document.querySelectorAll('[data-pq-land]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pqLand === landDesign)));
+  };
   const baseRender = render;
   render = function(shouldScroll = true){
     // Option A (landing options for the team): the funnel's own Get Started screen, so it matches the rest of the flow.
@@ -372,17 +378,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     opt3New = opt3NoPhone = ck; opt3NoMatch = false; d3State = ck ? 'nophone' : ''; d4State = '';
     return landDesign === '2' ? 'pqOpt3' : landDesign === '3' ? 'pqDesign3' : 'prequalLanding';
   }
-  function designBar(){
-    app.insertAdjacentHTML('afterbegin', '<div class="pq-designs" role="group" aria-label="Landing design"><span>Landing design</span>' +
-      Object.keys(LANDINGS).map(k => '<button type="button" data-land="' + k + '" aria-pressed="' + (k === landDesign) + '">' + k + ' · ' + LANDINGS[k] + '</button>').join('') + '</div>');
-    app.querySelectorAll('[data-land]').forEach(b => b.onclick = () => {
-      landDesign = b.dataset.land; try { localStorage.setItem(LD_KEY, landDesign); } catch (e) {}
-      go('prequalLanding', false);
-    });
-    sizeFrame();
+  // The landing design is picked in the demo panel (Known Customer Prequal → Landing design), not on the page itself.
+  function designBar(){ syncControls(); sizeFrame(); }
+  function setLanding(k){
+    if (!LANDINGS[k]) return; landDesign = k; try { localStorage.setItem(LD_KEY, k); } catch (e) {}
+    // Mid-run: jump to the landing in the new design (same run, same partner). Not in a run: start one.
+    if (S.pq) go('prequalLanding', false); else start('prequal');
   }
-  document.head.insertAdjacentHTML('beforeend', '<style>.pq-designs{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#F1F3F4;border-bottom:1px solid #E1E3E6;font:600 12px/1.2 "Plus Jakarta Sans",sans-serif;color:#595959;overflow-x:auto;white-space:nowrap}@media(max-width:720px){.pq-designs{padding-right:68px}.pq-designs span{display:none}}.pq-designs span{flex:none;margin-right:2px}' +
-    '.pq-designs button{flex:none;padding:6px 11px;border:1px solid #CDCDCD;border-radius:9999px;background:#fff;color:#363636;font:inherit;cursor:pointer}.pq-designs button[aria-pressed="true"]{border-color:#2A71D4;background:#2A71D4;color:#fff}</style>');
   // Phones: the landing fills exactly the visible area (iOS Safari's 100vh runs under the toolbar, hiding the pinned bar).
   function sizeFrame(){ const f = app.querySelector('.pq-frame'); if (!f) return; if (!matchMedia('(max-width:720px)').matches) { f.style.height = ''; return; } const vh = (window.visualViewport ? visualViewport.height : innerHeight); f.style.height = Math.max(320, Math.round(vh - f.getBoundingClientRect().top - (window.scrollY || 0))) + 'px'; }
   addEventListener('resize', sizeFrame); if (window.visualViewport) visualViewport.addEventListener('resize', sizeFrame);
@@ -398,12 +400,28 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     const o = e.data.offer; if (o) { S.amount = +o.amount || 15000; S.term = +o.term || 3; S.autopay = !!o.autopay; }
     go('sms');
   });
-  // Demo panel: the two prequal entries above the existing ones.
+  // Demo panel: "Known Customer Prequal" is a flow button like the others. While a prequal run is on, two pickers open
+  // under it: where the customer starts (partner) and the landing design. Every pick applies at once.
   const grp = document.querySelector('.panel [data-flow="known"]');
-  if (grp) { grp.insertAdjacentHTML('beforebegin', '<div class="pq-group"><label class="pq-ch-label" for="pqChannelPanel">Known Customer Prequal · starts from</label><select class="pq-ch" id="pqChannelPanel" data-channel>' + channelOptions() + '</select></div>'); }
-  // Changing the channel in the panel during a prequal run restarts that run from the new channel.
-  document.querySelectorAll('.panel [data-channel]').forEach(s => s.onchange = () => { setChannel(s.value); start('prequal'); });
-  document.head.insertAdjacentHTML('beforeend', '<style>.pq-ch-label{display:block;margin:2px 0 4px;font-size:12px;font-weight:600;color:inherit;opacity:.8}.pq-group{margin:0 0 10px;padding:10px;border:1px solid rgba(255,255,255,.22);border-radius:12px}.pq-group.active{border-color:#fff;background:rgba(255,255,255,.08)}.pq-group .pq-ch{margin:0}.pq-start-label{display:block;margin:0 0 6px;font-weight:700;color:#363636;text-align:center}.pq-ch.pq-ch-start{min-height:48px;margin:0 0 5px;border:2px solid #2A71D4;border-radius:9999px;padding:0 16px;font-weight:600;color:#2A71D4}.pq-ch{display:block;width:100%;margin:0 0 8px;padding:9px 10px;border:1px solid #CDCDCD;border-radius:10px;background:#fff;color:#363636;font:inherit;font-size:14px}' +
+  if (grp) {
+    const chips = (attr, keys, label) => keys.map(k => '<button type="button" class="pq-chip" ' + attr + '="' + k + '" aria-pressed="false">' + label(k) + '</button>').join('');
+    grp.insertAdjacentHTML('beforebegin', '<div class="pq-block"><button type="button" class="pq-flow" data-pq-panel>Known Customer Prequal</button>' +
+      '<div class="pq-sub" hidden><span class="pq-sub-label" id="pqStartsLbl">Starts from</span><div class="pq-chips" role="group" aria-labelledby="pqStartsLbl">' +
+      chips('data-pq-partner', Object.keys(CHANNELS), k => k === 'direct' ? 'Regional email/text' : CHANNELS[k].short) + '</div>' +
+      '<span class="pq-sub-label" id="pqLandLbl">Landing design</span><div class="pq-chips" role="group" aria-labelledby="pqLandLbl">' +
+      chips('data-pq-land', Object.keys(LANDINGS), k => k + ' · ' + LANDINGS[k]) + '</div></div></div>');
+    const closeOnPhone = () => { if (matchMedia('(max-width:720px)').matches) { panel.classList.remove('open'); const f = panel.querySelector('.flow-fab'); if (f) f.setAttribute('aria-expanded', 'false'); } };
+    panel.querySelector('[data-pq-panel]').onclick = () => { if (!S.pq) { start('prequal'); closeOnPhone(); } };
+    panel.querySelectorAll('[data-pq-partner]').forEach(b => b.onclick = () => { setChannel(b.dataset.pqPartner); start('prequal'); closeOnPhone(); });
+    panel.querySelectorAll('[data-pq-land]').forEach(b => b.onclick = () => { setLanding(b.dataset.pqLand); closeOnPhone(); });
+    syncControls();
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>.pq-block{margin:0 0 4px}.pq-sub{margin:2px 0 8px;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.06)}.pq-sub[hidden]{display:none!important}' +
+    '.pq-sub-label{display:block;margin:0 0 6px;color:#b9c8db;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.pq-sub-label+.pq-chips{margin-bottom:12px}.pq-chips:last-child{margin-bottom:0}' +
+    '.panel .pq-chips{display:flex!important;flex-wrap:wrap;flex-direction:row!important;gap:6px!important}' +
+    '.panel .pq-sub .pq-chip{display:inline-flex!important;align-items:center;width:auto!important;min-height:32px;margin:0!important;padding:5px 11px!important;border:1px solid #547094!important;border-radius:9999px!important;background:transparent!important;color:#fff!important;font-size:13px!important;line-height:1.2;text-align:center}' +
+    '.panel .pq-sub .pq-chip:hover{border-color:#fff!important}.panel .pq-sub .pq-chip[aria-pressed="true"]{background:#fff!important;border-color:#fff!important;color:#102b51!important;font-weight:700}' +
+    '@media(max-width:720px){.panel.open>div.pq-block,.panel.open .control-group>.pq-block{display:block!important}.panel.open .pq-sub:not([hidden]){display:block!important}}' +
     '.aff-note{display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 12px;background:#F1F3F4;border-bottom:1px solid #E1E3E6;font:500 13px/1.2 "Plus Jakarta Sans",sans-serif;cursor:help}@media(max-width:720px){.aff-note{padding-right:68px}}' +
     '.aff-url{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:9999px;background:#fff;color:#363636;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.aff-url svg{flex:none;width:12px;height:12px;color:#595959}' +
     '.aff-tag{flex:none;padding:4px 9px;border-radius:9999px;background:#FFE9A8;border:1px dashed #B7791F;color:#5C3D00;font-size:11px;font-weight:700;white-space:nowrap}');

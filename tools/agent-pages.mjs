@@ -134,7 +134,8 @@ rmSync(OUT, { recursive: true, force: true }); mkdirSync(OUT, { recursive: true 
 const list = [];
 for (const J of JOURNEYS) {
   await tab.goto(BASE + 'index.html', { waitUntil: 'load' }); await W(600);
-  await tab.evaluate((ch) => { if (ch) { const s = document.querySelector('.panel [data-channel]'); s.value = ch; s.dispatchEvent(new Event('change')); } }, J.channel || null);
+  // The partner is picked like a presenter would: the demo panel's "Starts from" chip (it starts the prequal run).
+  await tab.evaluate((ch) => { if (ch) document.querySelector('.panel [data-pq-partner="' + ch + '"]').click(); }, J.channel || null);
   await tab.evaluate((f) => start(f), J.flow); await W(900);
   const screens = [];
   for (let n = 0; n < 40; n++) {
