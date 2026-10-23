@@ -19,14 +19,14 @@ const check = pick1(/<section class="lf2-ph pp-check"[\s\S]*?<section class="pp-
 const checkJs = pick1(/<script>\(function\(\)\{\nvar c=document\.getElementById\('legal'\)[\s\S]*?<\/script>/, 'new-number script');
 const reviews = pick(/<section class="rf-section rf-social"[\s\S]*?<\/section>/, 'reviews');
 const seal = '<img src="rf-check-seal.svg" alt="">';
-// Today's "Borrow your way" value props: the first two verbatim, then 100% online, then the payment one, reworded
-// around customizing the amount and term.
+// "Borrow your way" value props, in the user's order: credit score and money today verbatim from landing-a,
+// 100% online (new), then the payment one reworded around customizing the amount and term.
+const know = pick(/<div class="lf2-next lf2-know">[\s\S]*?<\/ul><\/div>/, 'value props');
+const li = (text) => { const m = know.match(new RegExp('<li>(?:(?!<li>)[\\s\\S])*?' + text + '[\\s\\S]*?<\\/li>')); if (!m) throw new Error('value prop not found: ' + text); return m[0]; };
 const online = `<li>${seal}<div><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></div></li>`;
 const payment = `<li>${seal}<div><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></div></li>`;
-const props = pick(/<div class="lf2-next lf2-know">[\s\S]*?<\/ul><\/div>/, 'value props')
-  .replace(/<li>(?:(?!<li>)[\s\S])*?A payment you’re comfortable with[\s\S]*?<\/li>\n?/, '')
-  .replace(/<\/ul>(?=<\/div>$)/, `${online}\n${payment}\n</ul>`).replace('lf2-know"', 'lf2-know ps-why"');
-if (props.split('A payment you’re comfortable with').length !== 2) throw new Error('payment prop not replaced');
+const props = know.slice(0, know.indexOf('<ul>') + 4).replace('lf2-know"', 'lf2-know ps-why"') + '\n' +
+  [li('We look beyond your credit score'), online, li('Money as soon as today'), payment].join('\n') + '\n</ul></div>';
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Prequal Landing · Simple</title>
