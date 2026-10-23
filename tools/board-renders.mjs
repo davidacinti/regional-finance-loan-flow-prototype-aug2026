@@ -1,6 +1,6 @@
 // Board renders of the prequal landings: full mobile pages (390 wide, 1x; the cropped state @2x) for the FigJam board, written to assets/board/.
 // Render publishes assets/ without the password, so the board loads them with figma.createImageAsync(<site>/assets/board/<file>).
-//   node tools/board-renders.mjs
+//   node tools/board-renders.mjs [part of a file name: render only those]
 import { createServer } from 'node:http';
 import { readFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, extname } from 'node:path';
@@ -31,6 +31,11 @@ const SHOTS = [
   { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-main', hide: '.pq-designs' },
   { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file', hide: '.pq-designs' },
   // The same three designs as full-page mockups (top to footer, pinned bar at the bottom), without the prototype's design toggle.
+  // Simpler landing proposal (tools/landing-simple.mjs): the first screen a customer sees, and the full page.
+  { file: 'simple-first.png', page: 'landing-simple.html', first: true },
+  { file: 'simple-full.png', page: 'landing-simple.html' },
+  { file: 'simple-change.png', page: 'landing-simple.html', q: '&state=notmine', el: '.ps-card' },
+  { file: 'simple-nomatch.png', page: 'landing-simple.html', q: '&state=nomatch', el: '.ps-card' },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
   { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
   { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
@@ -43,7 +48,7 @@ const BASE = 'http://localhost:' + server.address().port + '/assets/prequal/';
 const browser = await puppeteer.launch({ executablePath: SHELL, headless: 'shell', args: ['--disable-gpu', '--hide-scrollbars'] });
 const tab = await browser.newPage();
 mkdirSync('assets/board', { recursive: true });
-for (const s of SHOTS) {
+for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.argv[2]))) {
   await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
   await tab.goto(s.app ? BASE.replace('/assets/prequal/', '/index.html') + s.app + '&t=' + Date.now() : BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
   if (s.app) await tab.addStyleTag({ content: 'html body .panel button.flow-fab,html body .flow-fab{display:none!important;visibility:hidden!important}' });

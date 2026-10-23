@@ -1,0 +1,32 @@
+/* Prequal landing · SIMPLE (Oct 22 2026 proposal). Loads after rf-landing.css + ds.css.
+   The offer card (navy ribbon) and what happens next come first; today's pinned consent + Continue bar stays;
+   proof and legal follow below. */
+
+.ps { padding-top: 0; padding-bottom: 0; }
+.ps-hero { background: var(--rf-gradient-green-aqua); padding: 20px 0 64px; }
+.ps-h1 { font-size: 28px; line-height: 1.15; font-weight: 800; color: var(--high-emphasis-dark); margin: 0; letter-spacing: 0; }
+
+/* The card: the whole decision in one block. */
+.ps-card { position: relative; margin-top: -48px; background: var(--surface-white); border: 1px solid var(--outline-med-gray); border-radius: 24px; overflow: hidden; }
+.ps-card .lf2-ribbon { background: var(--brand-deep-blue); color: var(--white); }
+.ps-body { padding: 14px 20px 18px; }
+.ps-label { display: block; margin-top: 0; font-size: 14px; color: var(--med-emphasis-dark); }
+.ps-amount { font-size: 44px; line-height: 1.05; font-weight: 800; color: var(--high-emphasis-dark); letter-spacing: -.01em; margin: 2px 0 6px; }
+.ps-terms { margin: 0; font-size: 16px; line-height: 1.4; color: var(--high-emphasis-dark); }
+.ps-terms b { font-weight: 800; }
+.ps-change { margin: 8px 0 0; font-size: 13px; line-height: 1.4; color: var(--med-emphasis-dark); }
+.ps-exp { margin: 4px 0 0; font-size: 13px; color: var(--med-emphasis-dark); }
+.ps-fn { font-size: .6em; vertical-align: super; line-height: 0; margin-left: 1px; }
+
+/* Today's value props (lf2-know) under the card. */
+.ps-why { margin-top: 24px; }
+
+@media (min-width: 768px) { .ps-h1 { font-size: 36px; } }
+
+/* Last row of the card: one sentence with the number we'll text and "update" (opens Design 1's new-number block in the card). */
+.ps-num { margin: 14px 0 0; padding-top: 14px; border-top: 1px solid var(--outline-light-gray); font-size: 14px; line-height: 1.5; color: var(--med-emphasis-dark); }
+.ps-num b { font-weight: 800; letter-spacing: .04em; color: var(--high-emphasis-dark); white-space: nowrap; }
+.ps-num .pp-link { margin: 0; font-size: 14px; }
+.ps-body .pp-check, .ps-body .pp-nomatch { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--outline-light-gray); }
+.ps-body .pp-nomatch { border: 1px solid #DEDEDE; padding: 14px 16px; }
+.ps-num .ps-nowrap { white-space: nowrap; }
