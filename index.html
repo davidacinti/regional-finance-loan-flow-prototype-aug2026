@@ -342,7 +342,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
-    if (S.page === 'review' && S.flow === 'known') { ssnRow(); editSave(); }
+    if (S.page === 'review' && S.flow === 'known') ssnRow();
     // Known journeys: the SSN is shown and edited on the review page, so the credit check doesn't repeat it.
     if (S.page === 'credit' && S.flow === 'known') { const c = app.querySelector('.v4-ssn-card'); if (c) c.remove(); }
     const aff = /^aff:\d+$/.test(S.page);
@@ -399,77 +399,18 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       ? '<div class="review-row v4-edit-row pq-ssn-row"><button class="v4-close-edit" data-pq-ssn-close type="button" aria-label="Close">×</button><label for="pqSsn">Enter your full Social Security number</label><input id="pqSsn" class="form-control" type="text" inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="XXX-XX-XXXX" maxlength="11" value="' + fmt(pqSsnVal) + '"><p class="pq-ssn-note"><i class="bi bi-lock" aria-hidden="true"></i> The security of your personal information is important to us.</p></div>'
       : '<div class="review-row pq-ssn-row"><button class="v4-review-row" data-pq-ssn-open type="button"><div class="fake-label">Social Security number</div><div class="v' + (onFile ? '' : ' pq-ssn-empty') + '">' + (onFile ? '•••-••-' + String(S.customer.ssn).slice(-4) : 'Please enter your SSN.') + '</div></button></div>';
     if (after) after.insertAdjacentHTML('afterend', html); else card.insertAdjacentHTML('beforeend', html);
-    const row = app.querySelector('.pq-ssn-row.v4-edit-row');
-    if (row) {
-      // Save puts the new SSN on file (shown masked); × cancels. Save waits for all 9 digits.
-      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-ssn-save disabled><i class="bi bi-check2" aria-hidden="true"></i>Save</button></div>');
-      const inp = row.querySelector('#pqSsn'), save = row.querySelector('[data-pq-ssn-save]'), ready = () => { save.disabled = pqSsnVal.length !== 9; };
-      inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; ready(); };
-      save.onclick = () => { if (pqSsnVal.length !== 9) return; S.customer.ssn = pqSsnVal; pqSsnSaved = true; pqSsnOpen = false; pqSsnVal = ''; render(false); };
-      ready();
-    }
+    const next = app.querySelector('.btn-main[data-go="ready"]'), sync = () => { if (next) next.disabled = (open || !onFile) && pqSsnVal.length !== 9; };
+    const inp = app.querySelector('#pqSsn');
+    if (inp) inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; sync(); };
+    // No SSN on file: the field is open on load AND active (focused), ready to type into.
+    if (inp && !onFile && pqSsnOpen === null && !app.querySelector('input:focus')) setTimeout(() => inp.focus({ preventScroll: true }));
     const x = app.querySelector('[data-pq-ssn-close]'); if (x) x.onclick = () => { pqSsnOpen = false; pqSsnVal = ''; render(false); };
     const o = app.querySelector('[data-pq-ssn-open]'); if (o) o.onclick = () => { pqSsnOpen = true; pqSsnVal = ''; render(false); setTimeout(() => { const i = app.querySelector('#pqSsn'); if (i) i.focus(); }); };
+    if (next) next.addEventListener('click', () => { if (pqSsnVal.length === 9) { S.customer.ssn = pqSsnVal; pqSsnSaved = true; } pqSsnOpen = null; pqSsnVal = ''; }, true);
+    sync();
   }
-  function resetSsn(){ pqSsnOpen = null; pqSsnVal = ''; pqSsnSaved = false; editSnap = null; }
-
-  // EDITING A ROW ON THE REVIEW PAGE (both Known journeys): every open row ends with a Save button. Save keeps the change
-  // and closes the row; × puts back what was there. "Confirm and continue" waits until no row is open (and an SSN is on file),
-  // with a one-line hint under it. Home address opens as Address line 1, Address line 2 (optional), City, State, ZIP.
-  let editSnap = null;
-  const addrParts = () => {
-    const c = S.customer;
-    if (c.addr1 === undefined) {
-      const p = String(c.address || '').split(',').map(s => s.trim()).filter(Boolean), last = (p.length > 1 ? p.pop() : '').split(' ');
-      c.zip = /^\d{5}$/.test(last[last.length - 1] || '') ? last.pop() : ''; c.state = last.join(' '); c.city = p.length > 1 ? p.pop() : ''; c.addr1 = p.shift() || ''; c.addr2 = p.join(', ');
-    }
-    return c;
-  };
-  const addrJoin = (c) => [c.addr1, c.addr2, c.city, [c.state, c.zip].filter(Boolean).join(' ')].map(s => (s || '').trim()).filter(Boolean).join(', ');
-  function addressFields(row){
-    const c = addrParts(), inp = row.querySelector('#editAddress'); if (!inp) return;
-    row.querySelector('label[for="editAddress"]')?.remove();
-    inp.outerHTML = '<label for="pqA1">Address line 1</label><input id="pqA1" class="form-control" data-addr="addr1" autocomplete="address-line1" value="' + esc(c.addr1) + '">' +
-      '<label class="mt-3" for="pqA2">Address line 2 (optional)</label><input id="pqA2" class="form-control" data-addr="addr2" autocomplete="address-line2" placeholder="Apt, suite, unit" value="' + esc(c.addr2) + '">' +
-      '<label class="mt-3" for="pqCity">City</label><input id="pqCity" class="form-control" data-addr="city" autocomplete="address-level2" value="' + esc(c.city) + '">' +
-      '<div class="pq-addr-row"><div><label class="mt-3" for="pqState">State</label><input id="pqState" class="form-control" data-addr="state" autocomplete="address-level1" maxlength="2" value="' + esc(c.state) + '"></div>' +
-      '<div><label class="mt-3" for="pqZip">ZIP code</label><input id="pqZip" class="form-control" data-addr="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" value="' + esc(c.zip) + '"></div></div>';
-    row.querySelectorAll('[data-addr]').forEach(i => i.addEventListener('input', () => {
-      if (i.dataset.addr === 'state') i.value = i.value.replace(/[^a-z]/gi, '').toUpperCase().slice(0, 2);
-      if (i.dataset.addr === 'zip') i.value = i.value.replace(/\D/g, '').slice(0, 5);
-      c[i.dataset.addr] = i.value; c.address = addrJoin(c); checkSave(row);
-    }));
-  }
-  function rowValid(){
-    const c = S.customer, f = S.confirmEdit;
-    if (f === 'address') return !!(c.addr1 || '').trim() && !!(c.city || '').trim() && /^[A-Z]{2}$/.test(c.state || '') && /^\d{5}$/.test(c.zip || '');
-    if (f === 'name') return !!(c.firstName || '').trim() && !!(c.lastName || '').trim();
-    if (f === 'dob') return String(c.dob || '').replace(/\D/g, '').length === 8;
-    return true;
-  }
-  function checkSave(row){ const b = row.querySelector('[data-pq-save]'); if (b) b.disabled = !rowValid(); }
-  function editSave(){
-    const card = app.querySelector('.v4-review-card'); if (!card) return;
-    const row = S.confirmEdit && card.querySelector('.v4-edit-row:not(.pq-ssn-row)');
-    if (row) {
-      if (!editSnap || editSnap.field !== S.confirmEdit) editSnap = { field: S.confirmEdit, c: JSON.parse(JSON.stringify(S.customer)) };
-      if (S.confirmEdit === 'address') addressFields(row);
-      row.insertAdjacentHTML('beforeend', '<div class="pq-edit-actions"><button type="button" class="pq-save" data-pq-save><i class="bi bi-check2" aria-hidden="true"></i>Save</button></div>');
-      row.querySelectorAll('input').forEach(i => i.addEventListener('input', () => checkSave(row))); row.querySelectorAll('input[type=radio]').forEach(i => i.addEventListener('change', () => checkSave(row)));
-      row.querySelector('[data-pq-save]').onclick = () => { if (!rowValid()) return; editSnap = null; S.confirmEdit = null; render(false); };
-      const x = row.querySelector('[data-close-edit]'); if (x) x.onclick = () => { if (editSnap) { Object.keys(S.customer).forEach(k => delete S.customer[k]); Object.assign(S.customer, editSnap.c); } editSnap = null; S.confirmEdit = null; render(false); };
-      checkSave(row);
-    } else editSnap = null;
-    // Confirm waits for open rows to be saved (or closed) and for an SSN on file.
-    const next = app.querySelector('.btn-main[data-go="ready"]'); if (!next) return;
-    const open = !!S.confirmEdit || !!app.querySelector('#pqSsn'), noSsn = !ssnOnFile();
-    next.disabled = open || noSsn;
-    if (next.disabled) next.insertAdjacentHTML('afterend', '<p class="pq-confirm-hint">' + (open ? 'Save your changes to continue.' : 'Add your Social Security number to continue.') + '</p>');
-  }
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}' +
-    '.phone.design-v4 .pq-edit-actions{display:flex;justify-content:flex-end;margin:12px 28px 4px 0}.phone.design-v4 .pq-save{display:inline-flex;align-items:center;justify-content:center;gap:4px;width:auto;min-width:0;height:36px;padding:0 16px 0 12px;border:1.5px solid #2f74d7;border-radius:9999px;background:#fff;color:#2f74d7;font-weight:600;font-size:14px;transition:background .15s ease,color .15s ease}.phone.design-v4 .pq-save i{font-size:17px;line-height:1}.phone.design-v4 .pq-save:not(:disabled):hover,.phone.design-v4 .pq-save:not(:disabled):active{background:#2f74d7;color:#fff}.phone.design-v4 .pq-save:focus-visible{outline:3px solid rgba(47,116,215,.35);outline-offset:2px}.phone.design-v4 .pq-save:disabled{border-color:#d5dbe3;background:#f6f8fa;color:#9aa6b5;cursor:default}' +
-    '.phone.design-v4 .pq-addr-row{display:grid;grid-template-columns:1fr 1.3fr;gap:10px;margin-right:28px}.phone.design-v4 .pq-addr-row .form-control{margin-right:0!important}' +
-    '.phone.design-v4 .pq-confirm-hint{margin:8px 0 0;color:#6a6a6a;font-size:13px;text-align:center}</style>');
+  function resetSsn(){ pqSsnOpen = null; pqSsnVal = ''; pqSsnSaved = false; }
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
     // Credit Karma sends no number, so every design opens on the new-number block.
