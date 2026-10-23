@@ -283,6 +283,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   // CHANNEL (scenario builder): where the known prequal customer starts. An affiliate's own page(s) come first
   // (assets/affiliates, copied from loan-flow-v2; the affiliate's page, not Regional's), then the same landing and funnel.
   // noPhone = the partner sends no usable phone, so the landing asks for a mobile number (landing B).
+  // The partner sends a selected offer of $12,500; the customer can still go up to $15,000 on the offer page.
+  const PQ_AMOUNT = 12500;
   const CHANNELS = {
     moneylion: { label: 'MoneyLion (Engine by MoneyLion)', short: 'MoneyLion', domain: 'moneylion.com', pages: ['even-financial-moneylion.html'] },
     creditkarma: { label: 'Credit Karma', short: 'Credit Karma', domain: 'creditkarma.com', noPhone: true, pages: ['credit-karma.html'] },
@@ -318,7 +320,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     '.pq-p-note{font-size:13px;line-height:1.35;color:#595959}.pq-partner svg{position:absolute;right:16px;top:50%;width:20px;height:20px;margin-top:-10px;color:#2A71D4}</style>');
   // Start: same known-customer session, then the affiliate page(s) for the chosen channel, then the landing.
   const baseStart = start;
-  start = function(f){ if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
+  start = function(f){ resetSsn(); if (f === 'unknown') { S.pq = null; baseStart(f); S.hist = []; go('newLanding', false); return; } if (!PQ(f)) { S.pq = null; return baseStart(f); } baseStart('known'); S.pq = CHANNELS[channel].noPhone ? 'b' : 'a'; S.term = 3; S.amount = PQ_AMOUNT; /* the landing's offer: 36 months */ S.channel = channel; S.hist = []; go(CHANNELS[channel].pages.length ? 'aff:0' : 'prequalLanding', false); syncControls(); };
   const baseSync = syncControls;
   // A prequal run is a Known run underneath: the panel marks "Known Customer Prequal" instead, and its pickers.
   syncControls = function(){
@@ -340,7 +342,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
-    if (S.page === 'review' && S.pq && pqNoSsn) ssnRow();
+    if (S.page === 'review' && S.flow === 'known') ssnRow();
+    // Known journeys: the SSN is shown and edited on the review page, so the credit check doesn't repeat it.
+    if (S.page === 'credit' && S.flow === 'known') { const c = app.querySelector('.v4-ssn-card'); if (c) c.remove(); }
     const aff = /^aff:\d+$/.test(S.page);
     phone.classList.toggle('page-prequal', aff || S.page === 'prequalLanding' || S.page === 'newLanding');
     // Scenario builder: "Known Customer Prequal" is a flow button like the others; it opens step 2, where the partner
@@ -379,25 +383,31 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
   let pqBack = /[?&]returning=1\b/.test(location.search);
-  // NO SSN ON FILE (demo panel "SSN on file: No", or ?nossn=1): the partner's lead has no SSN, so "Let's make sure we have
-  // everything right" opens with the SSN row already open, and Confirm waits for all 9 digits.
-  let pqNoSsn = /[?&]nossn=1\b/.test(location.search), pqSsnOpen = true, pqSsnVal = '';
+  // SSN ON "LET'S MAKE SURE WE HAVE EVERYTHING RIGHT" (both Known journeys: Known Customer and Known Customer Prequal).
+  // On file: a row with the SSN masked (last 4 only). Editing never shows the old number: the field opens empty and needs a
+  // full new SSN; × cancels and keeps the one on file. No SSN on file (prequal, demo panel "SSN on file: No", or ?nossn=1):
+  // the row is open on page load. Confirm waits for all 9 digits whenever the field is open or nothing is on file.
+  // (The credit check no longer shows the SSN: it's edited here.)
+  let pqNoSsn = /[?&]nossn=1\b/.test(location.search), pqSsnOpen = null, pqSsnVal = '', pqSsnSaved = false;
+  const ssnOnFile = () => !(S.pq && pqNoSsn && !pqSsnSaved) && !!S.customer.ssn;
   function ssnRow(){
-    const card = app.querySelector('.v4-review-card'); if (!card) return;
+    const card = app.querySelector('.v4-review-card'); if (!card || card.querySelector('.pq-ssn-row')) return;
     const anchor = card.querySelector('[data-edit-row="address"]') || card.querySelector('#editAddress'), after = anchor && anchor.closest('.review-row');
-    const digits = pqSsnVal.replace(/\D/g, '').slice(0, 9), fmt = d => d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
-    const html = pqSsnOpen
-      ? '<div class="review-row v4-edit-row pq-ssn-row"><button class="v4-close-edit" data-pq-ssn-close type="button" aria-label="Close">×</button><label for="pqSsn">Social Security number</label><input id="pqSsn" class="form-control" type="password" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" maxlength="11" value="' + fmt(digits) + '"><p class="pq-ssn-note"><i class="bi bi-lock" aria-hidden="true"></i> The security of your personal information is important to us.</p></div>'
-      : '<div class="review-row"><button class="v4-review-row" data-pq-ssn-open type="button"><div class="fake-label">Social Security number</div><div class="v' + (digits.length === 9 ? '' : ' pq-ssn-empty') + '">' + (digits.length === 9 ? '•••-••-' + digits.slice(5) : 'Please enter your SSN.') + '</div></button></div>';
+    const onFile = ssnOnFile(), open = pqSsnOpen === null ? !onFile : pqSsnOpen;
+    const fmt = d => d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+    const html = open
+      ? '<div class="review-row v4-edit-row pq-ssn-row"><button class="v4-close-edit" data-pq-ssn-close type="button" aria-label="Close">×</button><label for="pqSsn">Social Security number</label><input id="pqSsn" class="form-control" type="password" inputmode="numeric" autocomplete="off" placeholder="•••-••-••••" maxlength="11" value="' + fmt(pqSsnVal) + '"><p class="pq-ssn-note"><i class="bi bi-lock" aria-hidden="true"></i> The security of your personal information is important to us.</p></div>'
+      : '<div class="review-row pq-ssn-row"><button class="v4-review-row" data-pq-ssn-open type="button"><div class="fake-label">Social Security number</div><div class="v' + (onFile ? '' : ' pq-ssn-empty') + '">' + (onFile ? '•••-••-' + String(S.customer.ssn).slice(-4) : 'Please enter your SSN.') + '</div></button></div>';
     if (after) after.insertAdjacentHTML('afterend', html); else card.insertAdjacentHTML('beforeend', html);
-    const next = app.querySelector('.btn-main[data-go="ready"]'), sync = () => { if (next) next.disabled = pqSsnVal.length !== 9; };
+    const next = app.querySelector('.btn-main[data-go="ready"]'), sync = () => { if (next) next.disabled = (open || !onFile) && pqSsnVal.length !== 9; };
     const inp = app.querySelector('#pqSsn');
     if (inp) inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; sync(); };
-    const x = app.querySelector('[data-pq-ssn-close]'); if (x) x.onclick = () => { pqSsnOpen = false; render(false); };
-    const o = app.querySelector('[data-pq-ssn-open]'); if (o) o.onclick = () => { pqSsnOpen = true; render(false); setTimeout(() => { const i = app.querySelector('#pqSsn'); if (i) i.focus(); }); };
-    if (next) next.addEventListener('click', () => { S.customer.ssn = pqSsnVal; }, true);
+    const x = app.querySelector('[data-pq-ssn-close]'); if (x) x.onclick = () => { pqSsnOpen = false; pqSsnVal = ''; render(false); };
+    const o = app.querySelector('[data-pq-ssn-open]'); if (o) o.onclick = () => { pqSsnOpen = true; pqSsnVal = ''; render(false); setTimeout(() => { const i = app.querySelector('#pqSsn'); if (i) i.focus(); }); };
+    if (next) next.addEventListener('click', () => { if (pqSsnVal.length === 9) { S.customer.ssn = pqSsnVal; pqSsnSaved = true; } pqSsnOpen = null; pqSsnVal = ''; }, true);
     sync();
   }
+  function resetSsn(){ pqSsnOpen = null; pqSsnVal = ''; pqSsnSaved = false; }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
@@ -434,7 +444,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (!e.data || e.data.rfPq !== 'continue' || S.page !== 'prequalLanding') return;
     if (e.data.phone) S.customer.phone = e.data.phone;
     // The offer chosen on the landing (amount, term, autopay) is the offer for the rest of the funnel.
-    const o = e.data.offer; if (o) { S.amount = +o.amount || 15000; S.term = +o.term || 3; S.autopay = !!o.autopay; }
+    const o = e.data.offer; if (o) { S.amount = +o.amount || PQ_AMOUNT; S.term = +o.term || 3; S.autopay = !!o.autopay; }
     go('sms');
   });
   // Demo panel: "Known Customer Prequal" is a flow button like the others. While a prequal run is on, two pickers open
@@ -457,7 +467,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     panel.querySelectorAll('[data-pq-land]').forEach(b => b.onclick = () => { setLanding(b.dataset.pqLand); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-visit]').forEach(b => b.onclick = () => { pqBack = b.dataset.pqVisit === 'back'; go('prequalLanding', false); closeOnPhone(); });
     // SSN on file: shows on "Let's make sure we have everything right"; re-renders it if it's open, else applies when they get there.
-    panel.querySelectorAll('[data-pq-ssn]').forEach(b => b.onclick = () => { pqNoSsn = b.dataset.pqSsn === 'no'; pqSsnOpen = true; pqSsnVal = ''; if (S.page === 'review') render(false); else syncControls(); closeOnPhone(); });
+    panel.querySelectorAll('[data-pq-ssn]').forEach(b => b.onclick = () => { pqNoSsn = b.dataset.pqSsn === 'no'; resetSsn(); if (S.page === 'review') render(false); else syncControls(); closeOnPhone(); });
     syncControls();
   }
   document.head.insertAdjacentHTML('beforeend', '<style>.pq-block{margin:0 0 4px}.pq-sub{margin:2px 0 8px;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.06)}.pq-sub[hidden]{display:none!important}' +
@@ -524,7 +534,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       if (opt3New) S.customer.phone = body.querySelector('#pq5Phone').value; go('sms'); };
     show();
   }
-  function startOption3(state){ landDesign = '2'; baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
+  function startOption3(state){ landDesign = '2'; baseStart('known'); S.pq = 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; opt3New = state === 'notmine' || state === 'nophone'; opt3NoPhone = state === 'nophone'; opt3NoMatch = state === 'nomatch'; go('pqOpt3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq5-odds{display:inline-flex;align-items:center;gap:8px;margin:0 auto 12px;padding:8px 14px;border-radius:999px;background:#E8F7EE;color:#1E7A45;font-size:13px;font-weight:600;white-space:nowrap}.phone.design-v4 .pq5-odds i{color:#4BC678;font-size:18px}.phone.design-v4 .pq5-offer{margin:0 0 22px!important;text-align:left}.phone.design-v4 .pq5-offer .offer-row b{white-space:nowrap}.phone.design-v4 .pq5-why{margin:0 0 14px;text-align:left}.phone.design-v4 .pq5-new{text-align:left}.phone.design-v4 .pq5-new .v4-about-field{margin-bottom:14px}.phone.design-v4 .pq5-consent{text-align:left;cursor:pointer}.phone.design-v4 .pq5-nomatch{margin:6px 0 22px;padding:16px 18px;border:1px solid #DEDEDE;border-radius:18px;background:#F7F7F7;text-align:left}.phone.design-v4 .pq5-nomatch h2{color:#333}.phone.design-v4 .pq5-nomatch p{text-align:left;margin:4px 0 14px}.phone.design-v4 .pq5-nomatch .btn-alt{margin:0}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:not-allowed}.pq5-new[hidden],.phone.design-v4 [hidden]{display:none!important}' +
     '.phone.design-v4 .pq5-line{margin:0 0 16px;font-size:14px;line-height:1.5;color:#595959;text-align:left}.phone.design-v4 .pq5-line b{color:#363636;letter-spacing:.04em;white-space:nowrap}' +
     '.phone.design-v4 .pq5-edit{margin:0 0 0 4px;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}</style>');
@@ -568,12 +578,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     app.insertAdjacentHTML('beforeend', '<div class="d3-spacer" aria-hidden="true" style="height:' + send.closest('.sticky-offer').offsetHeight + 'px"></div>');
     show();
   }
-  function startDesign3(state){ landDesign = '3'; baseStart('known'); S.pq = 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
+  function startDesign3(state){ landDesign = '3'; baseStart('known'); S.pq = 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:22px 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
   if (/[?&]design=2\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   if (/[?&]design=3\b/.test(location.search)) startDesign3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   // DESIGN 4 · Simple: open with ?design=4 [&state=notmine|nophone|nomatch].
-  function startDesign4(state){ landDesign = '4'; baseStart('known'); S.pq = state === 'nophone' ? 'b' : 'a'; S.term = 3; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d4State = state || ''; go('prequalLanding', false); }
+  function startDesign4(state){ landDesign = '4'; baseStart('known'); S.pq = state === 'nophone' ? 'b' : 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d4State = state || ''; go('prequalLanding', false); }
   if (/[?&]design=4\b/.test(location.search)) startDesign4((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
   render(false);
 })();

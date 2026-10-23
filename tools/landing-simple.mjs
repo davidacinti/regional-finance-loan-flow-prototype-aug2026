@@ -41,10 +41,10 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 <section class="ps-card" aria-labelledby="psLabel">
 <div class="lf2-ribbon">You’re a strong fit for this offer</div>
 <div class="ps-body">
-<span class="ps-label" id="psLabel">You’re pre-qualified for<sup class="ps-fn">1</sup></span>
-<div class="ps-amount">$15,000</div>
-<p class="ps-terms"><b>$505</b>/month · 36 months · 13.01% APR</p>
-<p class="ps-exp">Offer expires Nov 6</p>
+<span class="ps-label" id="psLabel">Your selected offer<sup class="ps-fn">1</sup></span>
+<div class="ps-amount">$12,500</div>
+<p class="ps-terms"><b>$421</b>/month · 36 months · 13.01% APR</p>
+<p class="ps-exp">Pre-qualified for up to $15,000 · Offer expires Nov 6</p>
 <p class="ps-num" id="ppFile"><span data-first>Let’s keep going. Next, we’ll</span><span data-back hidden>Welcome back. We’ll</span> text a code to <b>***-***-7890</b> to <span data-first>save your</span><span data-back hidden>pick up where you left</span> <span class="ps-nowrap"><span data-first>offer</span><span data-back hidden>off</span> · <button type="button" class="pp-link" data-notmine>Update</button></span></p>
 ${check}
 </div>
