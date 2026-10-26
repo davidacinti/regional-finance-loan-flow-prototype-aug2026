@@ -331,8 +331,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     document.querySelectorAll('[data-pq-partner]').forEach(b => b.setAttribute('aria-pressed', String(!!S.pq && b.dataset.pqPartner === S.channel)));
     document.querySelectorAll('[data-pq-land]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pqLand === landDesign)));
     document.querySelectorAll('[data-pq-visit]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqVisit === 'back') === pqBack)));
-    // "Came back" is built into Designs 1 and 4 only.
-    document.querySelectorAll('.pq-visit').forEach(x => x.hidden = landDesign === '2' || landDesign === '3');
     document.querySelectorAll('[data-pq-ssn]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqSsn === 'no') === pqNoSsn)));
   };
   const baseRender = render;
@@ -371,14 +369,14 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html' + FRESH + '"></iframe>'; sizeFrame(); return; }
     if (S.page !== 'prequalLanding') return;
     // Design 1 · Today: today's landing with the number we'll text. Credit Karma (no number on file) opens on the new-number block.
-    // Design 4 · Simple (tools/landing-simple.mjs): same flow and states, less to read.
+    // Design 2 · Unlock (tools/landing-unlock.mjs) and Design 3 · Simple (tools/landing-simple.mjs): same flow and states.
     const st = d4State || (S.pq === 'b' ? 'nophone' : '');
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (landDesign === '4' ? 'landing-simple.html' : 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + '"></iframe>';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (landDesign === '2' ? 'landing-unlock.html' : landDesign === '3' ? 'landing-simple.html' : 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + '"></iframe>';
     designBar(); sizeFrame();
   };
   // LANDING DESIGN TOGGLE (for the team): a bar above the landing switches between the three designs in place, same run,
   // same channel. The pick is remembered, so the next run opens on it too.
-  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Today', 2: 'Get started', 3: 'Offer page', 4: 'Simple' };
+  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Today', 2: 'Unlock', 3: 'Simple' };
   let landDesign = '1', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
@@ -416,7 +414,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Credit Karma sends no number, so every design opens on the new-number block.
     const ck = S.pq === 'b';
     opt3New = opt3NoPhone = ck; opt3NoMatch = false; d3State = ck ? 'nophone' : ''; d4State = '';
-    return landDesign === '2' ? 'pqOpt3' : landDesign === '3' ? 'pqDesign3' : 'prequalLanding';
+    return 'prequalLanding';
   }
   // The landing design is picked in the demo panel (Known Customer Prequal → Landing design), not on the page itself.
   function designBar(){ syncControls(); sizeFrame(); }
@@ -582,11 +580,11 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   }
   function startDesign3(state){ landDesign = '3'; baseStart('known'); S.pq = 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:22px 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
-  if (/[?&]design=2\b/.test(location.search)) startOption3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
-  if (/[?&]design=3\b/.test(location.search)) startDesign3((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
-  // DESIGN 4 · Simple: open with ?design=4 [&state=notmine|nophone|nomatch].
-  function startDesign4(state){ landDesign = '4'; baseStart('known'); S.pq = state === 'nophone' ? 'b' : 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d4State = state || ''; go('prequalLanding', false); }
-  if (/[?&]design=4\b/.test(location.search)) startDesign4((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1]);
+  // THREE LANDING DESIGNS (Oct 26 2026): 1 Today, 2 Unlock (tools/landing-unlock.mjs), 3 Simple (tools/landing-simple.mjs).
+  // Open one with ?design=1|2|3 [&state=notmine|nophone|nomatch]. (The old Get started / Offer page designs above are retired:
+  // nothing opens pqOpt3 / pqDesign3 any more.)
+  function startDesign4(state, d){ landDesign = d || '3'; baseStart('known'); S.pq = state === 'nophone' ? 'b' : 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d4State = state || ''; go('prequalLanding', false); }
+  { const m = location.search.match(/[?&]design=([123])\b/); if (m) startDesign4((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1], m[1]); }
   render(false);
 })();
 </script></body></html>

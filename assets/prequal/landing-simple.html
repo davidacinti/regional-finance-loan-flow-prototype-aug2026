@@ -209,7 +209,9 @@ Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEvent
 // While they type a new number, the consent + Continue sit at the end of that block instead of in the pinned bar (a pinned
 // bar under a form felt odd). The bar element itself moves, so every script bound to it keeps working.
 var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.nextSibling,gap=document.querySelector('.rf-paybar-space');
-function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl);if(gap)gap.hidden=inl}
+// A page whose bar is always inline (data-inline, e.g. Design 5 · Unlock) keeps it inline in both places.
+var always=bar.hasAttribute('data-inline');
+function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl||always);if(gap)gap.hidden=inl||always}
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});

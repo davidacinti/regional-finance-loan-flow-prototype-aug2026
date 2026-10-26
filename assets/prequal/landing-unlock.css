@@ -1,0 +1,31 @@
+/* Prequal landing · DESIGN 5 · UNLOCK (Oct 26 2026 proposal). Loads after rf-landing.css + ds.css + phone.css.
+   Achieve's "Access your form" pattern in the landing family's look (same as Designs 1 and 4): gradient hero with the
+   greeting, white cards (r24, #CDCDCD border, no shadows), one "Unlock your application" task card with the consent and
+   Continue inline (no pinned bar). */
+
+.lu { padding: 0 0 32px; }
+.lu-hero { background: var(--rf-gradient-green-aqua); padding: 20px 0 64px; }
+.lu-h1 { margin: 0; font-size: 28px; line-height: 1.15; font-weight: 800; color: var(--high-emphasis-dark); }
+
+/* Fast Track: what they get, in a white card over the hero. */
+.lu-panel { position: relative; margin-top: -48px; padding: 18px 20px; border: 1px solid var(--outline-med-gray); border-radius: 24px; background: #fff; }
+.lu-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lu-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; line-height: 1.4; color: var(--high-emphasis-dark); }
+.lu-list svg { flex: 0 0 20px; width: 20px; height: 20px; margin-top: 1px; }
+.lu-list b { font-weight: 800; }
+.lu-fn { font-size: .6em; vertical-align: super; line-height: 0; margin-left: 1px; }
+
+/* The task card. */
+.lu-card { margin-top: 16px; padding: 20px; border: 1px solid var(--outline-med-gray); border-radius: 24px; background: #fff; }
+.lu-head { display: flex; align-items: center; gap: 12px; }
+.lu-lock { display: flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: #EEF3FA; color: var(--brand-blue); }
+.lu-lock svg { width: 20px; height: 20px; }
+.lu-title { margin: 0; font-size: 20px; line-height: 1.25; font-weight: 800; color: var(--high-emphasis-dark); }
+.lu-sub { margin: 10px 0 14px; font-size: 15px; line-height: 1.45; color: var(--med-emphasis-dark); }
+.lu-num { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; padding: 0 16px; border: 1px solid var(--outline-med-gray); border-radius: 16px; background: var(--surface-light-gray); }
+.lu-num-val { font-size: 18px; font-weight: 700; letter-spacing: .06em; color: var(--high-emphasis-dark); }
+.lu-num .pp-link { margin: 0; }
+.lu-card .pp-check { margin-top: 0; }
+.lu-card .lf2-paybar.pp-inline { margin-top: 16px; }
+.lu-card .pp-check .lf2-paybar.pp-inline { margin-top: 4px; }
+@media (min-width: 768px) { .lu-h1 { font-size: 36px; } }

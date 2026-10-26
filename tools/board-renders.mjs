@@ -28,8 +28,9 @@ const SHOTS = [
   // Three landing designs (1 Today, 2 Get started and 3 Offer page in the prototype): from the top down to the number
   // we'll text (upTo), then each situation as just its input block (el), in that design.
   { file: 'design-1-number.png', page: 'design-1-today.html', upTo: '#ppFile' },
-  { file: 'design-2-number.png', app: '?design=2', upTo: '.btn-main', hide: '.pq-designs' },
-  { file: 'design-3-number.png', app: '?design=3', upTo: '.d3-file', hide: '.pq-designs' },
+  // Designs 2 (Unlock) and 3 (Simple): from the top down to the number we'll text.
+  { file: 'design-2-number.png', page: 'landing-unlock.html', upTo: '#ppFile' },
+  { file: 'design-3-number.png', page: 'landing-simple.html', upTo: '#ppFile' },
   // The same three designs as full-page mockups (top to footer, pinned bar at the bottom), without the prototype's design toggle.
   // Simpler landing proposal (tools/landing-simple.mjs): the first screen a customer sees, and the full page.
   { file: 'simple-first.png', page: 'landing-simple.html', first: true },
@@ -48,9 +49,11 @@ const SHOTS = [
   // Full pages for the release board's "4 · Confirm" (review, SSN masked) and "13 · Apply" (credit check, no SSN card).
   { file: 'review-full.png', app: '?scenario=1', run: "start('known'); S.hist=[]; go('review',false);" },
   { file: 'credit-full.png', app: '?scenario=1', run: "start('prequal'); S.amount=12500; S.term=3; S.hist=[]; S.page='bankSuccess'; go('credit',false);" },
+  // Design 5 · Unlock (tools/landing-unlock.mjs): first screen, full page, and the card after Update.
+  { file: 'unlock-first.png', page: 'landing-unlock.html', first: true },
+  { file: 'unlock-full.png', page: 'landing-unlock.html' },
+  { file: 'unlock-update.png', page: 'landing-unlock.html', q: '&state=notmine', el: '.lu-card' },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
-  { file: 'design-2-full.png', app: '?design=2', hide: '.pq-designs' },
-  { file: 'design-3-full.png', app: '?design=3', hide: '.pq-designs' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
