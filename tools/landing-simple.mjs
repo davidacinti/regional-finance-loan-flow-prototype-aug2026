@@ -1,6 +1,6 @@
 // Prequal landing · SIMPLE (Oct 22 2026 proposal, for the team). Not wired into the prototype's flows.
 // Today's landing (assets/prequal/landing-a.html) with less to read: one card with the offer under the navy "strong fit"
-// ribbon and, as its last row, one line "Let’s keep going. Next, we’ll text a code to ***-***-7890 to save your offer · Update". update (and ?state=notmine|nophone|
+// ribbon and, as its last row, one line "Let’s keep going. Next, we’ll text a code to ***-***-7890 to move forward · Update". update (and ?state=notmine|nophone|
 // nomatch) opens Design 1's block: mobile number, date of birth, SSN last 4; no match → submit a new application.
 // Under the card, one line with the 3 steps to the money; the pinned bar adds "Continuing won't affect your credit score."
 // Today's value props (+ 100% online; payment prop reworded), reviews, pinned consent + Continue bar, its scripts and legal footer are verbatim.
@@ -49,7 +49,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 <div class="ps-amount">$12,500</div>
 <p class="ps-terms"><b>$421</b>/month · 36 months · 13.01% APR</p>
 <p class="ps-exp">Offer expires Nov 6</p>
-<p class="ps-num" id="ppFile"><span data-first>Let’s keep going. Next, we’ll</span><span data-back hidden>Welcome back. We’ll</span> text a code to <b>***-***-7890</b> to <span data-first>save your</span><span data-back hidden>pick up where you left</span> <span class="ps-nowrap"><span data-first>offer</span><span data-back hidden>off</span> · <button type="button" class="pp-link" data-notmine>Update</button></span></p>
+<p class="ps-num" id="ppFile"><span data-first>Let’s keep going. Next, we’ll</span><span data-back hidden>Welcome back. We’ll</span> text a code to <b>***-***-7890</b> to <span data-first>move</span><span data-back hidden>pick up where you left</span> <span class="ps-nowrap"><span data-first>forward</span><span data-back hidden>off</span> · <button type="button" class="pp-link" data-notmine>Update</button></span></p>
 ${check}
 </div>
 </section>
