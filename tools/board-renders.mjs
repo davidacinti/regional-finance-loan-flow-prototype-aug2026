@@ -56,6 +56,8 @@ const SHOTS = [
   { file: 'unlock-full.png', page: 'landing-unlock.html' },
   { file: 'unlock-update.png', page: 'landing-unlock.html', q: '&state=notmine', el: '.lu-card' },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
+  // Release board slot "0 · New borrower landing" (taller than Figma's 4096 px: full pages scale down to fit).
+  { file: 'new-borrower-landing-v2.png', page: 'landing-new.html' },
 ];
 
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -93,7 +95,7 @@ for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.ar
   // Full page: grow the viewport to the page height so the pinned bar sits at the very bottom, under the footer.
   const h = await tab.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
   // Figma takes images up to 4096 px per side: full pages render at 1x (390 wide is still sharper than the 300 px board slot).
-  await tab.setViewport({ width: 390, height: h, deviceScaleFactor: 1 });
+  await tab.setViewport({ width: 390, height: h, deviceScaleFactor: Math.min(1, 4090 / h) });
   await new Promise(r => setTimeout(r, 600));
   await tab.screenshot({ path: 'assets/board/' + s.file, fullPage: false });
   console.log(s.file, 390 + 'x' + h);
