@@ -1,0 +1,241 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prequal Landing · Simple + Unlock</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=7"><link rel="stylesheet" href="landing-simple.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=2"><style>
+/* Design 2's Unlock card inside Design 3's offer card: no second border, a line above it. */
+.ps-card .lu-in{margin:0;border:0;border-top:1px solid var(--outline-light-gray);border-radius:0}
+.ps-card .ps-body{padding-bottom:20px}
+.lu-in .ps-credit{margin:0;text-align:center}
+</style></head><body>
+<header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header>
+<main class="rf-main ps">
+<section class="ps-hero"><div class="rf-shell"><div class="rf-task"><h1 class="ps-h1">Hi Jordan, your loan offer is ready.</h1></div></div></section>
+<div class="rf-shell"><div class="rf-task">
+<section class="ps-card" aria-labelledby="psLabel">
+<div class="lf2-ribbon">You’re a strong fit for this offer</div>
+<div class="ps-body">
+<span class="ps-label" id="psLabel">Your selected offer<sup class="ps-fn">1</sup></span>
+<div class="ps-amount">$12,500</div>
+<p class="ps-terms"><b>$421</b>/month · 36 months · 13.01% APR</p>
+<p class="ps-exp">Offer expires Nov 6</p>
+</div>
+<div class="lu-card lu-in" aria-labelledby="luTitle">
+<div class="lu-head"><span class="lu-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h2 class="lu-title" id="luTitle">Unlock your application</h2></div>
+<p class="lu-sub"><span data-first>Confirm your mobile number to see your full offer and keep going.</span><span data-back hidden>Confirm your mobile number to pick up where you left off.</span></p>
+<div class="lu-num" id="ppFile"><span class="lu-num-val">***-***-7890</span><button type="button" class="pp-link" data-notmine>Update</button></div>
+<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
+<h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
+<p class="pp-sub">We’ll send a code to this number to save your offer.</p>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<div class="pp-row">
+<div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
+<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+</div>
+</section>
+<section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
+<h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
+<p class="pp-sub">If you’d like, you can submit a new application.</p>
+<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
+</section>
+<section class="pp-nomatch" id="ppTaken" hidden role="alert">
+<h2 class="pp-title">This offer is already saved to another number</h2>
+<p class="pp-sub">When you started, we saved it to <b>***-***-7890</b>. To use a new number, you may need to submit a new application.</p>
+<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
+<p class="pp-back"><button type="button" class="pp-link" data-pp-back>Go back</button></p>
+</section>
+<div class="rf-paybar lf2-paybar pp-inline" data-inline role="region" aria-label="Your selected offer"><div class="in">
+<div class="form-check rf-form-check lf2-consent"><input class="form-check-input" type="checkbox" id="legal"><label class="form-check-label" for="legal">I have read and agree to the <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a>, <a href="#">ESIGN Act Consent</a>, <a href="#">Consent to Receive Calls and Text Messages</a> and <a href="#">Consent to Receive Commercial Emails</a>.</label></div>
+<div class="row1"><div><div class="lf2-pay"><b data-pq="monthly">$421</b>/month</div><div class="fine lf2-credit-note"><img src="rf-check-seal.svg" alt="">Over 2 million customers helped</div></div><button type="button" class="btn rf-btn rf-btn-primary">Continue</button></div>
+<p class="lf2-note ps-credit">Continuing won’t affect your credit score.</p>
+</div></div>
+</div>
+</section>
+<p class="ps-steps"><b>3 steps to your money:</b> verify your phone · link your bank · sign · about 5 minutes</p>
+<div class="lf2-next lf2-know ps-why"><h2>Borrow your way</h2><ul>
+<li><img src="rf-check-seal.svg" alt=""><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup class="lf2-fn lf2-fn-dag">&dagger;</sup></span></div></li>
+<li><img src="rf-check-seal.svg" alt=""><div><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></div></li>
+<li><img src="rf-check-seal.svg" alt=""><div><b>Money as soon as today<sup class="lf2-fn">2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
+<li><img src="rf-check-seal.svg" alt=""><div><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></div></li>
+</ul></div>
+</div></div>
+</main>
+<section class="rf-section rf-social" aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
+<script type="application/json">
+{
+  "trustScore": 4.5,
+  "totalReviews": 3143,
+  "profileUrl": "https://www.trustpilot.com/review/regionalfinance.com",
+  "reviews": [
+    {
+      "id": "1",
+      "stars": 5,
+      "title": "Samantha was AMAZING!",
+      "text": "Samantha was AMAZING!! She answered all my questions & explained everything thoroughly. And she even followed back up with me when I had a family emergency & didn’t call when I said I was going to. She made the entire process smooth & easy & I’d highly recommend working with her to anyone who needs a loan!",
+      "consumer": {
+        "displayName": "LaQuandra Stevenson",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/67b13d9e1e09b4631f148be4/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "2",
+      "stars": 5,
+      "title": "I have been with them for years",
+      "text": "I have been with them for years \n10/10\nGreat customer service 👏",
+      "consumer": {
+        "displayName": "Jacqueline Toliver-Morrow",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/6aa19cce186db6423b40d90f/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "3",
+      "stars": 5,
+      "title": "It was easy and painless",
+      "text": "It was easy and painless",
+      "consumer": {
+        "displayName": "Audrey Jackson-noel",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/6aa18fb074115f8d6f0fc854/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "4",
+      "stars": 5,
+      "title": "Always very friendly and helpful …",
+      "text": "Always very friendly and helpful  outstanding service.",
+      "consumer": {
+        "displayName": "Joseph Rios",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/6a1ceccf8dd5c420c98f522a/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "5",
+      "stars": 5,
+      "title": "Great people willing to help",
+      "text": "Great people willing to help.  Very knowledgable and helpful.",
+      "consumer": {
+        "displayName": "Becky Tucker",
+        "links": []
+      }
+    },
+    {
+      "id": "6",
+      "stars": 5,
+      "title": "Alexis at Regional Finance made getting…",
+      "text": "Alexis at Regional Finance made getting additional money very easy.  She made everything from the approval to the paperwork to the direct deposit flow as smooth as silk.  I have been with Regional here in Sherman, Tx for years and have never had a bad experience.  They are great about helping even with a credit score that is under 600.  I would highly recommend Regional Finance.",
+      "consumer": {
+        "displayName": "Jerry Shepard",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/5c166dfe1d69b5d625d286ac/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "7",
+      "stars": 4,
+      "title": "Quickness in processing",
+      "text": "Quickness in processing \nGreat customer service \nPayment reasonable\n\nCon: payoff not full amount owed. I was contacted by company for payment",
+      "consumer": {
+        "displayName": "Angela Adams",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/6a760a6e7b0502763ecd5e14/73x73.png"
+          }
+        ]
+      }
+    },
+    {
+      "id": "8",
+      "stars": 5,
+      "title": "The process was seamless",
+      "text": "The process was seamless.  The customer service was excellent and very helpful.",
+      "consumer": {
+        "displayName": "Gloria Gibson",
+        "links": [
+          {
+            "rel": "profile-image",
+            "href": "https://user-images.trustpilot.com/67b13d9e1e09b4631f148be4/73x73.png"
+          }
+        ]
+      }
+    }
+  ]
+}
+</script>
+</rf-social-proof></section>
+<footer class="rf-footer pq-legal-footer"><div class="legal">
+<p>&dagger; To check rates and terms you may qualify for, Regional Finance conducts a soft credit pull that will not affect your credit score. However, if you choose a product and continue your application, we will request your full credit report from one or more consumer reporting agencies, which is considered a hard credit pull and may affect your credit.</p>
+<p>(1) Loans are subject to credit approval. Certain restrictions and conditions apply. Refer to the “Terms and conditions,” disclosure in the solicitation you received for more details. <b>If you have a Credit Freeze on your credit report please have it lifted before applying.</b></p>
+<p>(2) Instant funding is available only for eligible borrowers whose selected bank account is eligible to receive funds through the real-time payments network. Eligibility is based on the bank account used to verify cash flow and receive loan proceeds. Real-time funding is not available between the hours of 11:30pm and 6am ET due to allow for overnight processes to complete and may be delayed or unavailable at other times due to other system issues, participating bank limitations, or other circumstances outside our control. If real-time funding is not available, funds will be sent by same-day or next-day ACH and are typically available within 1–3 business days, subject to processing times and the receiving bank's policies.</p>
+<p class="pq-proc"><b>IMPORTANT INFORMATION ABOUT PROCEDURES</b></p>
+<p>To help the government fight the funding of terrorism and money laundering activities, Federal law requires all financial institutions to obtain, verify, and record information that identifies each person who opens an account. What this means for you: When you open an account, we will ask for your name, address, date of birth, and other information that will allow us to identify you. We may also ask to see your driver’s license or other identifying documents.</p>
+<p class="pq-gap">Regional Finance is licensed in AL, AZ, CA, FL, GA, ID, IL, IN, LA, MO, MS, NC, NM, OK, SC, TN, TX, UT, VA, and WI.</p>
+<p>Loan approval is subject to our standard credit policies. Loan size, term, and rates may vary by state.</p>
+<p>California Residents: Loans made or arranged pursuant to a California Financing Law license.</p>
+<p>Georgia Residents: Regional Finance Company of Georgia, LLC – NMLS # 2026923.</p>
+<p>New Mexico Only: This lender is licensed and regulated by the New Mexico Regulation and Licensing Department, Financial Institutions Division P.O. Box 25101 2550 Cerrillos Road Santa Fe, New Mexico 87504. To report any unresolved problems or complaints, contact the Division by telephone at <a href="tel:5054764885">(505) 476-4885</a> or visit the website <a href="https://www.rld.nm.gov/financial-institutions/" target="_blank" rel="noopener">https://www.rld.nm.gov/financial-institutions/</a></p>
+<p>Loans through Regional Finance are made by Column, N.A. or a Regional Finance affiliate. All loans are serviced by a Regional Finance affiliate.</p>
+<p>Virginia Residents: Regional Finance Company of Virginia, LLC is licensed by the Virginia State Corporation Commission under the following license number: CFI-161.</p>
+<p class="pq-gap">Copyright © 2026 Regional Management Corp. All Rights Reserved</p>
+<p class="pq-links pq-gap"><a href="#">Privacy &amp; Cookie Policy</a> <a href="#">Licenses &amp; Disclosures</a> <a href="#">Investors</a> <a href="#">Notice to California Residents</a> <a href="#">Your Privacy Choices</a></p>
+</div></footer>
+<style>.pq-legal-footer .legal{margin-top:0}.pq-legal-footer .legal a{color:inherit;text-decoration:underline}.pq-legal-footer .pq-proc{margin-top:12px}.pq-legal-footer .pq-gap{margin-top:12px}.pq-legal-footer .pq-links{display:flex;flex-wrap:wrap;column-gap:10px;row-gap:4px}.pq-legal-footer .pq-links a{text-decoration:none}</style>
+
+<script src="pq.js?v=7"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal"),m=document.getElementById("mobile");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}else if(m){m.focus();}});})();</script><script>(function(){
+var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),F=document.getElementById('ppFile'),K=document.getElementById('ppCheck'),M=document.getElementById('ppNoMatch'),T=document.getElementById('ppTaken');
+// Came back (?returning=1): they gave us a number on their first visit, and the offer is saved to it.
+var R=/[?&]returning=1\b/.test(location.search);
+var d=function(v,n){return v.replace(/\D/g,'').slice(0,n)};
+var fmt={ppPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
+ ppDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},ppSsn:function(v){return d(v,4)}};
+var need={ppDob:8,ppSsn:4,ppPhone:10};
+// Centers a block by scrolling this page only (scrollIntoView would also scroll the prototype page around the iframe).
+function ctr(el){var r=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,r.top+window.pageYOffset-(window.innerHeight-r.height)/2))}
+function ok(){if(!M.hidden||!T.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
+function s(){b.disabled=!(c.checked&&ok())}
+Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
+// While they type a new number, the consent + Continue sit at the end of that block instead of in the pinned bar (a pinned
+// bar under a form felt odd). The bar element itself moves, so every script bound to it keeps working.
+var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.nextSibling,gap=document.querySelector('.rf-paybar-space');
+// A page whose bar is always inline (data-inline, e.g. Design 5 · Unlock) keeps it inline in both places.
+var always=bar.hasAttribute('data-inline');
+function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl||always);if(gap)gap.hidden=inl||always}
+function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);s()}
+document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
+document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
+c.addEventListener('change',s);
+// We look the details up when they continue: a match goes on to the code (pq.js sends the new number); no match (prototype:
+// SSN last 4 0000) shows "Sorry, we don't have an offer for this information" here instead. Came back with a number other
+// than the one the offer is saved to (prototype: not ending 7890): "This offer is already saved to another number".
+// Capture runs before pq.js.
+document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar .rf-btn')||b.disabled||K.hidden)return;
+ var no=d(document.getElementById('ppSsn').value,4)==='0000',taken=!no&&R&&d(document.getElementById('ppPhone').value,10).slice(-4)!=='7890';
+ if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();show(no?'nomatch':'taken');ctr(no?M:T)},true);
+var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken)\b/);show(m?m[1]:'file');
+})();</script>
+<script>/* Came back (?returning=1): the card line welcomes them back instead of "Let's keep going … save your offer". */
+if (/[?&]returning=1\b/.test(location.search)) document.querySelectorAll('[data-first],[data-back]').forEach(function (x) { x.hidden = x.hasAttribute('data-first'); });</script></body></html>

@@ -369,15 +369,17 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (S.page === 'newLanding') { app.innerHTML = '<iframe class="pq-frame" title="Check your offers" src="assets/prequal/landing-new.html' + FRESH + '"></iframe>'; sizeFrame(); return; }
     if (S.page !== 'prequalLanding') return;
     // Design 1 · Today: today's landing with the number we'll text. Credit Karma (no number on file) opens on the new-number block.
-    // Design 2 · Unlock (tools/landing-unlock.mjs) and Design 3 · Simple (tools/landing-simple.mjs): same flow and states.
+    // Design 2 · Unlock (tools/landing-unlock.mjs), Design 3 · Simple (tools/landing-simple.mjs) and Design 4 · Simple + Unlock
+    // (tools/landing-blend.mjs): same flow and states.
     const st = d4State || (S.pq === 'b' ? 'nophone' : '');
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (landDesign === '2' ? 'landing-unlock.html' : landDesign === '3' ? 'landing-simple.html' : 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + '"></iframe>';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + ({ 2: 'landing-unlock.html', 3: 'landing-simple.html', 4: 'landing-blend.html' }[landDesign] || 'design-1-today.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + '"></iframe>';
     designBar(); sizeFrame();
   };
   // LANDING DESIGN TOGGLE (for the team): a bar above the landing switches between the three designs in place, same run,
   // same channel. The pick is remembered, so the next run opens on it too.
-  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Today', 2: 'Unlock', 3: 'Simple' };
-  let landDesign = '1', d4State = '';
+  // Design 1 · Today is retired from the panel (Oct 27 2026; the board shows 2, 3 and 4). The blend opens by default.
+  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 2: 'Unlock', 3: 'Simple', 4: 'Simple + Unlock' };
+  let landDesign = '4', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
   let pqBack = /[?&]returning=1\b/.test(location.search);
@@ -580,11 +582,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   }
   function startDesign3(state){ landDesign = '3'; baseStart('known'); S.pq = 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d3State = state || ''; go('pqDesign3', false); }
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .d3-phone{margin:22px 0 18px;text-align:left}.phone.design-v4 .d3-phone h2{margin:0 0 10px}.phone.design-v4 .d3-phone .v4-phone{background:#F2F2F2!important;background-image:none!important}.phone.design-v4 .d3-link{display:inline-block;margin:10px 0 0;padding:0;border:0;background:none;color:#2F75D6;font-weight:600;text-decoration:underline;text-underline-offset:3px}.phone.design-v4 .d3-consent{margin:16px 0 0;text-align:left;cursor:pointer}.phone.design-v4 .d3-new .v4-about-field{margin-bottom:14px}</style>');
-  // THREE LANDING DESIGNS (Oct 26 2026): 1 Today, 2 Unlock (tools/landing-unlock.mjs), 3 Simple (tools/landing-simple.mjs).
+  // LANDING DESIGNS (Oct 27 2026): 2 Unlock (tools/landing-unlock.mjs), 3 Simple (tools/landing-simple.mjs), 4 Simple + Unlock
+  // (tools/landing-blend.mjs). 1 Today is still reachable with ?design=1.
   // Open one with ?design=1|2|3 [&state=notmine|nophone|nomatch]. (The old Get started / Offer page designs above are retired:
   // nothing opens pqOpt3 / pqDesign3 any more.)
   function startDesign4(state, d){ landDesign = d || '3'; baseStart('known'); S.pq = state === 'nophone' ? 'b' : 'a'; S.term = 3; S.amount = PQ_AMOUNT; S.channel = state === 'nophone' ? 'creditkarma' : 'direct'; S.hist = []; d4State = state || ''; go('prequalLanding', false); }
-  { const m = location.search.match(/[?&]design=([123])\b/); if (m) startDesign4((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1], m[1]); }
+  { const m = location.search.match(/[?&]design=([1234])\b/); if (m) startDesign4((location.search.match(/[?&]state=(notmine|nophone|nomatch)\b/) || [])[1], m[1]); }
   render(false);
 })();
 </script></body></html>

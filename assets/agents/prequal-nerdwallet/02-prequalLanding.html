@@ -4,19 +4,24 @@
 <title>Known customer prequal · NerdWallet · Pre-qualified offer landing · Regional Finance loan flow v1 (agent-readable)</title>
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#222}header,nav,.meta{font-size:14px;color:#555}.screen,.spec{border:1px solid #ccc;border-radius:12px;padding:16px;margin:16px 0}.spec{background:#f7f9fc}code{background:#f2f2f2;padding:1px 4px;border-radius:4px}</style>
 </head><body>
-<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Oct 27, 2026, 4:05 PM ET (version 981bedd14f3c). Regenerated with every change to the prototype.</header>
+<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Oct 27, 2026, 5:15 PM ET (version d84b4711641a). Regenerated with every change to the prototype.</header>
 <nav>Journey: <a href="index.html">Known customer prequal · NerdWallet</a> · Screen 2 of 15 · <a href="01-aff-0.html">← previous</a> · <a href="03-sms.html">next: SMS code →</a></nav>
-<main><h1>Pre-qualified offer landing</h1><p class="meta">Screen key: <code>prequalLanding</code></p><section class="spec" aria-label="About this screen"><p>Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is shown ($15,000, 36 months, 13.01% APR); the customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.</p></section><section class="screen" aria-label="What the customer sees"><h2>What the customer sees</h2><header><div><a aria-label="Regional Finance home"><img alt="Regional Finance"></a></div></header><main>
-<section><div><div>
-<h1>Hi Jordan, let's finish your loan.</h1>
-<p>Simple, fast, and 100% online. <span><span>★</span> 4.5 on Trustpilot</span></p>
-</div></div></section>
+<main><h1>Pre-qualified offer landing</h1><p class="meta">Screen key: <code>prequalLanding</code></p><section class="spec" aria-label="About this screen"><p>Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is shown ($15,000, 36 months, 13.01% APR); the customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.</p></section><section class="screen" aria-label="What the customer sees"><h2>What the customer sees</h2><header><div><a aria-label="Regional Finance home"><img alt="Regional Finance"></a></div></header>
+<main>
+<section><div><div><h1>Hi Jordan, your loan offer is ready.</h1></div></div></section>
 <div><div>
-<div><div>You’re a strong fit for this offer</div><div>
-<div><div><span>Your selected offer<sup>1</sup></span><div>$12,500</div><div>Pre-qualified for up to $15,000</div></div><span>Expires Nov 6</span></div>
-<div><div><span>Monthly</span><b>$421</b></div><div><span>Term</span><b>36 mo</b></div><div><span>APR</span><b>13.01%</b></div></div>
-</div></div>
-<p>We’ll text your code to <b>***-***-7890</b> <button type="button">Edit</button></p>
+<section aria-labelledby="psLabel">
+<div>You’re a strong fit for this offer</div>
+<div>
+<span>Your selected offer<sup>1</sup></span>
+<div>$12,500</div>
+<p><b>$421</b>/month · 36 months · 13.01% APR</p>
+<p>Offer expires Nov 6</p>
+</div>
+<div aria-labelledby="luTitle">
+<div><h2>Unlock your application</h2></div>
+<p><span>Confirm your mobile number to see your full offer and keep going.</span><span hidden="">Confirm your mobile number to pick up where you left off.</span></p>
+<div><span>***-***-7890</span><button type="button">Update</button></div>
 <section hidden="" aria-labelledby="ppCheckTitle">
 <h2>Where should we text your code?</h2>
 <p>We’ll send a code to this number to save your offer.</p>
@@ -37,15 +42,23 @@
 <a>Submit a new application</a>
 <p><button type="button">Go back</button></p>
 </section>
-<div><h2>Borrow your way</h2><ul>
-<li><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup>†</sup></span></div></li>
-<li><div><b>Money as soon as today<sup>2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
-<li><div><b>A payment you’re comfortable with</b><span>Go longer for a lower monthly payment, or shorter to pay it off sooner.</span></div></li>
-</ul></div>
-</div></div></main><div aria-label="Your selected offer"><div>
+<div aria-label="Your selected offer"><div>
 <div><input type="checkbox"><label for="legal">I have read and agree to the <a>Terms of Use</a>, <a>Privacy Policy</a>, <a>ESIGN Act Consent</a>, <a>Consent to Receive Calls and Text Messages</a> and <a>Consent to Receive Commercial Emails</a>.</label></div>
 <div><div><div><b>$421</b>/month</div><div>Over 2 million customers helped</div></div><button type="button" disabled="">Continue</button></div>
-</div></div><section aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
+<p>Continuing won’t affect your credit score.</p>
+</div></div>
+</div>
+</section>
+<p><b>3 steps to your money:</b> verify your phone · link your bank · sign · about 5 minutes</p>
+<div><h2>Borrow your way</h2><ul>
+<li><div><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.<sup>†</sup></span></div></li>
+<li><div><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></div></li>
+<li><div><b>Money as soon as today<sup>2</sup></b><span>Link an eligible bank account for instant funding.</span></div></li>
+<li><div><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></div></li>
+</ul></div>
+</div></div>
+</main>
+<section aria-label="Customer reviews"><rf-social-proof cta-target="_blank" heading="What customers say about Regional Finance">
 </rf-social-proof></section>
 <footer><div>
 <p>† To check rates and terms you may qualify for, Regional Finance conducts a soft credit pull that will not affect your credit score. However, if you choose a product and continue your application, we will request your full credit report from one or more consumer reporting agencies, which is considered a hard credit pull and may affect your credit.</p>
