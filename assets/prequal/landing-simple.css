@@ -29,3 +29,11 @@
 .ps-body .pp-check, .ps-body .pp-nomatch { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--outline-light-gray); }
 .ps-body .pp-nomatch { border: 1px solid #DEDEDE; padding: 14px 16px; }
 .ps-num .ps-nowrap { white-space: nowrap; }
+
+/* Under the card: the 3 steps to the money, one muted line. */
+.ps-steps { margin: 14px 4px 0; font-size: 14px; line-height: 1.5; color: var(--med-emphasis-dark); }
+.ps-steps b { font-weight: 800; color: var(--high-emphasis-dark); }
+.ps-steps + .ps-why { margin-top: 20px; }
+/* Pinned bar: the credit-score line under Continue (also when the bar sits inline in the card). */
+.lf2-paybar .ps-credit { margin: 0; }
+.lf2-paybar.pp-inline .ps-credit { margin-top: -4px; }
