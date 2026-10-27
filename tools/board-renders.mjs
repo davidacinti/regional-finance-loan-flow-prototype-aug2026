@@ -20,6 +20,8 @@ const SHOTS = [
   { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
   { file: 'scenario-match.png', app: '?scenario=1', run: "start('prequal'); S.customer.phone='(864) 555-1234'; S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
   { file: 'scenario-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
+  // Came back with a different number than the one the offer is saved to: "This offer is already saved to another number".
+  { file: 'scenario-taken.png', page: 'design-1-today.html', q: '&returning=1&state=taken', el: '#ppTaken' },
   // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
   { file: 'phone-first-landing.png', page: 'phone-first.html', first: true },
   { file: 'phone-first-match.png', page: 'phone-first.html', q: '&state=match', upTo: '#pf' },
