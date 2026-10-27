@@ -56,7 +56,7 @@ const SHOTS = [
   { file: 'unlock-full.png', page: 'landing-unlock.html' },
   { file: 'unlock-update.png', page: 'landing-unlock.html', q: '&state=notmine', el: '.lu-card' },
   { file: 'design-1-full.png', page: 'design-1-today.html' },
-  // Design 4 · Simple + Unlock (tools/landing-blend.mjs): first screen, full page, the card after Update, and down to the number.
+  // Design 1 · Simple + Unlock (tools/landing-blend.mjs): first screen, full page, the card after Update, and down to the number.
   { file: 'blend-first.png', page: 'landing-blend.html', first: true },
   { file: 'blend-full.png', page: 'landing-blend.html' },
   { file: 'blend-update.png', page: 'landing-blend.html', q: '&state=notmine', el: '.ps-card' },

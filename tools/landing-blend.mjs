@@ -1,4 +1,4 @@
-// Prequal landing · DESIGN 4 · SIMPLE + UNLOCK (Oct 27 2026). Design 3's page (hero, offer card, 3 steps line, value props,
+// Prequal landing · DESIGN 1 · SIMPLE + UNLOCK (Oct 27 2026; the default). Design 3's page (hero, offer card, 3 steps line, value props,
 // reviews, footer) with Design 2's "Unlock your application" section, unchanged, as the bottom of the offer card: the number
 // we'll text with Update (opens the mobile number + date of birth + SSN last 4 block), the consent and Continue inline
 // (no pinned bar), and Design 3's "Continuing won't affect your credit score." under Continue.
