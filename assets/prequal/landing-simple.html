@@ -226,11 +226,11 @@ function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
-// No match: up to 3 tries. Tries 1 and 2: a red line above the date of birth + SSN naming them (fields stay neutral; SSN
-// cleared, ready to retype) with "start a new application" for anyone who'd rather not keep trying; no try count. The 3rd shows "We couldn't
-// find your application" and starting a new application is the only way forward.
-function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var ss=document.getElementById('ppSsn');
- E.hidden=false;ss.value='';s();if(!quiet){ctr(K);ss.focus({preventScroll:true})}}
+// No match: up to 3 tries. Tries 1 and 2: a red line above the date of birth + SSN naming them (fields stay neutral; both
+// cleared, ready to retype; the mobile number stays) with "start a new application" for anyone who'd rather not keep trying;
+// no try count. The 3rd shows "We couldn't find your offer" and starting a new application is the only way forward.
+function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var db=document.getElementById('ppDob');
+ E.hidden=false;db.value='';document.getElementById('ppSsn').value='';s();if(!quiet){ctr(K);db.focus({preventScroll:true})}}
 // We look the application up by date of birth + SSN last 4 when they continue. Found: pq.js texts a code to the new number
 // (saved to the application once they enter it). Not found (prototype: SSN last 4 0000, or the demo panel's "Lookup: No match",
 // ?lookup=none): miss(). Found, but they came back and the offer is already saved to a number they verified (prototype: not
@@ -241,7 +241,7 @@ document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar 
  if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();if(no){miss();return}show('taken');ctr(T)},true);
 var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken|retry)\b/);
 // ?state=retry: the first no-match (board render).
-if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppDob').value='04/12/1988';document.getElementById('ppPhone').value='(864) 555-1234';miss(true)}else show(m?m[1]:'file');
+if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppPhone').value='(864) 555-1234';miss(true)}else show(m?m[1]:'file');
 })();</script>
 <script>/* Came back (?returning=1): the card line welcomes them back instead of "Let's keep going … save your offer". */
 if (/[?&]returning=1\b/.test(location.search)) document.querySelectorAll('[data-first],[data-back]').forEach(function (x) { x.hidden = x.hasAttribute('data-first'); });</script></body></html>
