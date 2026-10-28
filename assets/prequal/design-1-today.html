@@ -31,15 +31,14 @@
 
 <p class="pp-line" id="ppFile">We’ll text your code to <b>***-***-7890</b> <button type="button" class="pp-link" data-notmine>Edit</button></p>
 <section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="pp-title" id="ppCheckTitle">Let’s find your application</h2>
-<p class="pp-sub">Enter your date of birth and the last 4 of your SSN.</p>
+<h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
+<p class="pp-sub">Enter your date of birth, the last 4 of your SSN and your mobile number to keep going.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
 <p class="pp-err" id="ppErr" hidden role="alert"></p>
-<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14">
-<p class="pp-help">We’ll text a code to this number and save it to your application.</p></div>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
 <h2 class="pp-title">We couldn’t find your application</h2>
@@ -223,13 +222,14 @@ var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.next
 // A page whose bar is always inline (data-inline, e.g. Design 5 · Unlock) keeps it inline in both places.
 var always=bar.hasAttribute('data-inline');
 function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl||always);if(gap)gap.hidden=inl||always}
-// Each state shows one block. While they're finding their application, Continue says so; nothing to continue after
-// "We couldn't find your application" or "already saved", so the bar hides. Lines marked data-pp-fileonly (e.g. the Unlock
-// card's "Confirm your mobile number…") only make sense next to the number on file.
-var E=document.getElementById('ppErr'),tries=0,MAX=3,bl=b.textContent;
+// Each state shows one block. Nothing to continue after "We couldn't find your application" or "already saved", so the bar
+// hides. Lines marked data-pp-fileonly (the Unlock card's "Confirm your mobile number…") only make sense next to the number
+// on file; data-pp-checkonly ("Confirm it's you to keep going.") only next to date of birth + SSN + number.
+var E=document.getElementById('ppErr'),tries=0,MAX=3;
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);
- bar.hidden=st==='nomatch'||st==='taken';b.textContent=K.hidden?bl:'Find my application';if(K.hidden)E.hidden=true;
- document.querySelectorAll('[data-pp-fileonly]').forEach(function(x){x.hidden=st!=='file'});s()}
+ bar.hidden=st==='nomatch'||st==='taken';if(K.hidden)E.hidden=true;
+ document.querySelectorAll('[data-pp-fileonly]').forEach(function(x){x.hidden=st!=='file'});
+ document.querySelectorAll('[data-pp-checkonly]').forEach(function(x){x.hidden=K.hidden});s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
