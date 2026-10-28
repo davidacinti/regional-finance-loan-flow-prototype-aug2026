@@ -18,7 +18,7 @@ const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
 <h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
 <p class="pp-sub">Enter your date of birth, the last 4 of your SSN and your mobile number to keep going.</p>
-<p class="pp-err" id="ppErr" hidden role="alert">That doesn’t match our records. Check your information or <a href="#" data-pq-newapp>start a new application</a>.</p>
+<p class="pp-err" id="ppErr" hidden role="alert">That date of birth and SSN don’t match our records. Check them or <a href="#" data-pq-newapp>start a new application</a>.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
@@ -54,7 +54,7 @@ var need={ppDob:8,ppSsn:4,ppPhone:10};
 function ctr(el){var r=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,r.top+window.pageYOffset-(window.innerHeight-r.height)/2))}
 function ok(){if(!M.hidden||!T.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
 function s(){b.disabled=!(c.checked&&ok())}
-Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);i.classList.remove('pp-bad');s()})});
+Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
 // While they type a new number, the consent + Continue sit at the end of that block instead of in the pinned bar (a pinned
 // bar under a form felt odd). The bar element itself moves, so every script bound to it keeps working.
 var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.nextSibling,gap=document.querySelector('.rf-paybar-space');
@@ -72,11 +72,10 @@ function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
-// No match: up to 3 tries. Tries 1 and 2: red line under the date of birth + SSN (both outlined red, SSN cleared, ready to
-// retype) with "start a new application" for anyone who'd rather not keep trying; no try count. The 3rd shows "We couldn't
+// No match: up to 3 tries. Tries 1 and 2: a red line above the date of birth + SSN naming them (fields stay neutral; SSN
+// cleared, ready to retype) with "start a new application" for anyone who'd rather not keep trying; no try count. The 3rd shows "We couldn't
 // find your application" and starting a new application is the only way forward.
 function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var ss=document.getElementById('ppSsn');
- ['ppDob','ppSsn'].forEach(function(k){document.getElementById(k).classList.add('pp-bad')});
  E.hidden=false;ss.value='';s();if(!quiet){ctr(K);ss.focus({preventScroll:true})}}
 // We look the application up by date of birth + SSN last 4 when they continue. Found: pq.js texts a code to the new number
 // (saved to the application once they enter it). Not found (prototype: SSN last 4 0000, or the demo panel's "Lookup: No match",
@@ -93,7 +92,7 @@ if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppDob').value='04
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=11"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=12"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);
