@@ -45,3 +45,7 @@
 .pp-err b{font-weight:700}
 .pp-help{margin:6px 2px 0;font-size:12.5px;line-height:1.4;color:#595959}
 .pp-nomatch .pp-new{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;margin-top:4px}
+/* Tries 1 and 2: the way out, under the message. */
+.pp-err p{margin:0}
+.pp-err .pp-err-alt{margin-top:8px;padding-top:8px;border-top:1px solid #F3C9C9;color:#363636}
+.pp-err .pp-err-alt a{color:#2A71D4;font-weight:700;text-decoration:underline;text-underline-offset:3px}

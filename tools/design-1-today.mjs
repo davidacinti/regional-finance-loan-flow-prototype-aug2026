@@ -22,7 +22,8 @@ const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelle
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-<p class="pp-err" id="ppErr" hidden role="alert"></p>
+<div class="pp-err" id="ppErr" hidden role="alert"><p><b>We couldn’t find a match.</b> Check your date of birth and SSN last 4 and try again. You have <span id="ppLeft">2 more tries</span>.</p>
+<p class="pp-err-alt">Or <a href="#" data-pq-newapp>start a new application</a></p></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
@@ -72,10 +73,11 @@ function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
-// No match: up to 3 tries. Tries 1 and 2 say so right under the date of birth + SSN (SSN cleared, ready to retype); the 3rd
-// shows "We couldn't find your application" with "Start a new application".
+// No match: up to 3 tries. Tries 1 and 2 say so right under the date of birth + SSN (SSN cleared, ready to retype), with
+// "Or start a new application" for anyone who'd rather not keep trying; the 3rd shows "We couldn't find your application"
+// and starting a new application is the only way forward.
 function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var left=MAX-tries,ss=document.getElementById('ppSsn');
- E.innerHTML='<b>We couldn’t find a match.</b> Check your date of birth and SSN last 4 and try again. '+left+(left===1?' try':' tries')+' left.';
+ document.getElementById('ppLeft').textContent=left+(left===1?' more try':' more tries');
  E.hidden=false;ss.value='';s();if(!quiet){ctr(K);ss.focus({preventScroll:true})}}
 // We look the application up by date of birth + SSN last 4 when they continue. Found: pq.js texts a code to the new number
 // (saved to the application once they enter it). Not found (prototype: SSN last 4 0000, or the demo panel's "Lookup: No match",
@@ -92,7 +94,7 @@ if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppDob').value='04
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=8"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=9"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);
