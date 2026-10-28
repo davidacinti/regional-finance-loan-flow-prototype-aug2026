@@ -339,7 +339,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
-    if (S.page === 'review' && S.flow === 'known') ssnRow();
+    if (S.page !== 'review') reviewEdit = false;
+    if (S.page === 'review' && S.flow === 'known') { if (reviewEdit || S.confirmEdit) ssnRow(); else reviewPage(); }
     // Known journeys: the SSN is shown and edited on the review page, so the credit check doesn't repeat it.
     if (S.page === 'credit' && S.flow === 'known') { const c = app.querySelector('.v4-ssn-card'); if (c) c.remove(); }
     const aff = /^aff:\d+$/.test(S.page);
@@ -411,6 +412,48 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     sync();
   }
   function resetSsn(){ pqSsnOpen = null; pqSsnVal = ''; pqSsnSaved = false; }
+  // "LET'S MAKE SURE WE HAVE EVERYTHING RIGHT" (Oct 28 2026, both Known journeys): read-only details with "Update my info" and
+  // Confirm side by side. SSN on file: one "Confirm your details" card with the SSN masked. No SSN on file: "What we have" +
+  // "What we need" (the SSN field), and Continue waits for all 9 digits. "Update my info" opens the tap-a-row editor (ssnRow).
+  var reviewEdit = false;
+  function reviewPage(){
+    const onFile = ssnOnFile(), foot = app.querySelector('footer.footer');
+    const own = { Yes: 'Own', No: 'Rent' }[S.customer.homeowner] || S.customer.homeowner || 'Not provided';
+    const rows = [['Name', fullName()], ['Date of birth', S.customer.dob || 'Not provided'], ['Address', S.customer.address ? esc(S.customer.address).replace(/, (?=[^,]+, [A-Z]{2} \d)/, '<br>') : 'Not provided'],
+      ...(onFile ? [['SSN', '•••-••-' + String(S.customer.ssn).slice(-4)]] : []),
+      ['Annual income', S.customer.income ? money(S.customer.income) : 'Not provided'], ['Home ownership', own]];
+    const list = '<dl class="rv-rows">' + rows.map(r => '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>').join('') + '</dl>';
+    const lock = '<p class="rv-lock"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>The security of your personal information is important to us. See our <a href="#">Privacy Policy</a></span></p>';
+    app.innerHTML = '<div class="body center rv"><h1 class="title">Let’s make sure we<br>have everything right.</h1><p class="sub">Has anything changed? Please update your information below.</p>' +
+      (onFile
+        ? '<section class="rv-card"><h2 class="rv-head">Confirm your details</h2>' + list + '</section>' + lock
+        : '<section class="rv-card"><h2 class="rv-head">What we have</h2>' + list + '</section>' +
+          '<section class="rv-card rv-need"><h2 class="rv-head">What we need <em>Complete all fields</em></h2><div class="rv-field"><label for="rvSsn">Social Security Number</label><input id="rvSsn" class="form-control" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter your SSN" maxlength="11"></div>' + lock + '</section>') +
+      '<div class="rv-actions"><button type="button" class="rv-alt" data-rv-update>Update my info</button><button type="button" class="btn-main" data-go="ready">' + (onFile ? 'Confirm' : 'Continue') + '</button></div></div>' + (foot ? foot.outerHTML : '');
+    wire();
+    app.querySelector('[data-rv-update]').onclick = () => { reviewEdit = true; render(false); };
+    const inp = app.querySelector('#rvSsn'), next = app.querySelector('.rv-actions .btn-main');
+    if (inp) {
+      const fmt = d => d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+      next.disabled = true;
+      inp.oninput = () => { const d = inp.value.replace(/\D/g, '').slice(0, 9); inp.value = fmt(d); pqSsnVal = d; next.disabled = d.length !== 9; };
+      next.addEventListener('click', () => { if (pqSsnVal.length === 9) { S.customer.ssn = pqSsnVal; pqSsnSaved = true; } pqSsnVal = ''; }, true);
+    }
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>' +
+    '.phone .rv .sub{margin-bottom:24px}' +
+    '.phone .rv-card{margin:0 0 20px;border:1px solid #d6d6d6;border-radius:16px;overflow:hidden;background:#fff;text-align:left}' +
+    '.phone .rv-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:0;padding:14px 20px;background:#f2f2f2;font-size:13px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;color:#363636}' +
+    '.phone .rv-need .rv-head{background:#eaf3fd}.phone .rv-head em{font-size:13px;font-weight:400;font-style:italic;letter-spacing:0;text-transform:none;color:#363636}' +
+    '.phone .rv-rows{display:grid;grid-template-columns:auto 1fr;column-gap:18px;row-gap:12px;margin:0;padding:18px 20px 20px}' +
+    '.phone .rv-rows dt{font-weight:400;font-size:14px;line-height:1.4;color:#595959}.phone .rv-rows dd{margin:0;font-size:15px;line-height:1.4;color:#222;overflow-wrap:anywhere}' +
+    '.phone .rv-field{padding:18px 20px 0}.phone .rv-field label{display:block;margin:0 0 8px;font-size:14px;color:#595959}.phone .rv-field .form-control{min-height:52px;border-radius:12px;font-size:16px}' +
+    '.phone .rv-lock{display:flex;gap:6px;align-items:flex-start;margin:-4px 0 28px;padding:0 2px;font-size:12px;line-height:1.4;color:#595959;text-align:left}.phone .rv-need .rv-lock{margin:12px 20px 20px;padding:0}' +
+    '.phone .rv-lock svg{flex:none;width:14px;height:14px;margin-top:1px;fill:none;stroke:currentColor;stroke-width:2}.phone .rv-lock a{color:#2A71D4;font-weight:600;text-decoration:underline}' +
+    '.phone .rv-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}.phone .rv-actions>*{width:100%;margin:0}' +
+    '.phone .rv-alt{min-height:48px;border:1.5px solid #2A71D4;border-radius:999px;background:#fff;color:#2A71D4;font-weight:600;font-size:16px}' +
+    '.phone .rv-actions .btn-main:disabled{opacity:.45;cursor:default}' +
+    '</style>');
   document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
