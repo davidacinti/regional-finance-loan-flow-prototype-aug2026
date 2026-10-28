@@ -21,7 +21,7 @@
 .lu-lock { display: flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px; border-radius: 50%; background: #EEF3FA; color: var(--brand-blue); }
 .lu-lock svg { width: 20px; height: 20px; }
 .lu-title { margin: 0; font-size: 20px; line-height: 1.25; font-weight: 800; color: var(--high-emphasis-dark); }
-.lu-sub { margin: 10px 0 14px; font-size: 15px; line-height: 1.45; color: var(--med-emphasis-dark); }
+.lu-sub { margin: 8px 0 14px; font-size: 14px; line-height: 1.45; color: var(--med-emphasis-dark); }
 .lu-num { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; padding: 0 16px; border: 1px solid var(--outline-med-gray); border-radius: 16px; background: var(--surface-light-gray); }
 .lu-num-val { font-size: 18px; font-weight: 700; letter-spacing: .06em; color: var(--high-emphasis-dark); }
 .lu-num .pp-link { margin: 0; }
