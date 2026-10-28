@@ -25,7 +25,8 @@
 .lu-num { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 56px; padding: 0 16px; border: 1px solid var(--outline-med-gray); border-radius: 16px; background: var(--surface-light-gray); }
 .lu-num-val { font-size: 18px; font-weight: 700; letter-spacing: .06em; color: var(--high-emphasis-dark); }
 .lu-num .pp-link { margin: 0; }
-.lu-card .pp-check { margin-top: 0; }
+.lu-card .pp-check { margin-top: 18px; }
+.lu-card .pp-nomatch, .lu-card .pp-nomatch + .pp-nomatch { margin-top: 18px; }
 .lu-card .lf2-paybar.pp-inline { margin-top: 16px; }
 .lu-card .pp-check .lf2-paybar.pp-inline { margin-top: 4px; }
 @media (min-width: 768px) { .lu-h1 { font-size: 36px; } }

@@ -12,21 +12,24 @@ const NUM = '***-***-7890';
 // One small line: the masked number we'll text, with "Edit" to give a different number.
 const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}</b> <button type="button" class="pp-link" data-notmine>Edit</button></p>`;
 
-// The block that replaces "we'll text the number on file": the same for "This isn't my number" and for Credit Karma (no number
-// on file). Number first, then date of birth + SSN last 4 to match it to the offer. No security wording; never "call us".
+// The block that replaces "we'll text the number on file": the same for "Update" and for Credit Karma (no number on file).
+// Date of birth + SSN last 4 FIND the application; the mobile number is where we text the code, and once they enter the code
+// it's saved to that application (Oct 28 2026). No security wording; never "call us".
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="pp-title" id="ppCheckTitle">Where should we text your code?</h2>
-<p class="pp-sub">We’ll send a code to this number to save your offer.</p>
-<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+<h2 class="pp-title" id="ppCheckTitle">Let’s find your application</h2>
+<p class="pp-sub">Enter your date of birth and the last 4 of your SSN.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
+<p class="pp-err" id="ppErr" hidden role="alert"></p>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14">
+<p class="pp-help">We’ll text a code to this number and save it to your application.</p></div>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
-<h2 class="pp-title">Sorry, we don’t have an offer for this information</h2>
-<p class="pp-sub">If you’d like, you can submit a new application.</p>
-<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
+<h2 class="pp-title">We couldn’t find your application</h2>
+<p class="pp-sub">Those details don’t match an application with us. You can start a new one in a few minutes, and checking your offers won’t affect your credit score.</p>
+<a class="btn rf-btn rf-btn-primary pp-new" href="#" data-pq-newapp>Start a new application</a>
 </section>
 <section class="pp-nomatch" id="ppTaken" hidden role="alert">
 <h2 class="pp-title">This offer is already saved to another number</h2>
@@ -59,23 +62,37 @@ var bar=document.querySelector('.lf2-paybar'),home=bar.parentNode,after=bar.next
 // A page whose bar is always inline (data-inline, e.g. Design 5 · Unlock) keeps it inline in both places.
 var always=bar.hasAttribute('data-inline');
 function place(inl){if(inl)K.appendChild(bar);else home.insertBefore(bar,after);bar.classList.toggle('pp-inline',inl||always);if(gap)gap.hidden=inl||always}
-function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);s()}
+// Each state shows one block. While they're finding their application, Continue says so; nothing to continue after
+// "We couldn't find your application" or "already saved", so the bar hides. Lines marked data-pp-fileonly (e.g. the Unlock
+// card's "Confirm your mobile number…") only make sense next to the number on file.
+var E=document.getElementById('ppErr'),tries=0,MAX=3,bl=b.textContent;
+function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';place(!K.hidden);
+ bar.hidden=st==='nomatch'||st==='taken';b.textContent=K.hidden?bl:'Find my application';if(K.hidden)E.hidden=true;
+ document.querySelectorAll('[data-pp-fileonly]').forEach(function(x){x.hidden=st!=='file'});s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
-// We look the details up when they continue: a match goes on to the code (pq.js sends the new number); no match (prototype:
-// SSN last 4 0000) shows "Sorry, we don't have an offer for this information" here instead. Came back with a number other
-// than the one the offer is saved to (prototype: not ending 7890): "This offer is already saved to another number".
-// Capture runs before pq.js.
+// No match: up to 3 tries. Tries 1 and 2 say so right under the date of birth + SSN (SSN cleared, ready to retype); the 3rd
+// shows "We couldn't find your application" with "Start a new application".
+function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var left=MAX-tries,ss=document.getElementById('ppSsn');
+ E.innerHTML='<b>We couldn’t find a match.</b> Check your date of birth and SSN last 4 and try again. '+left+(left===1?' try':' tries')+' left.';
+ E.hidden=false;ss.value='';s();if(!quiet){ctr(K);ss.focus({preventScroll:true})}}
+// We look the application up by date of birth + SSN last 4 when they continue. Found: pq.js texts a code to the new number
+// (saved to the application once they enter it). Not found (prototype: SSN last 4 0000, or the demo panel's "Lookup: No match",
+// ?lookup=none): miss(). Found, but they came back and the offer is already saved to a number they verified (prototype: not
+// ending 7890): "This offer is already saved to another number". Capture runs before pq.js.
+var L=/[?&]lookup=none\\b/.test(location.search);
 document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar .rf-btn')||b.disabled||K.hidden)return;
- var no=d(document.getElementById('ppSsn').value,4)==='0000',taken=!no&&R&&d(document.getElementById('ppPhone').value,10).slice(-4)!=='7890';
- if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();show(no?'nomatch':'taken');ctr(no?M:T)},true);
-var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken)\\b/);show(m?m[1]:'file');
+ var no=L||d(document.getElementById('ppSsn').value,4)==='0000',taken=!no&&R&&d(document.getElementById('ppPhone').value,10).slice(-4)!=='7890';
+ if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();if(no){miss();return}show('taken');ctr(T)},true);
+var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken|retry)\\b/);
+// ?state=retry: the first no-match (board render).
+if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppDob').value='04/12/1988';document.getElementById('ppPhone').value='(864) 555-1234';miss(true)}else show(m?m[1]:'file');
 })();</script>`;
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=7"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=8"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

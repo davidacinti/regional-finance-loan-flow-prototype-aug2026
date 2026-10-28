@@ -17,11 +17,13 @@ const SHOTS = [
   { file: 'prequal-landing-b-creditkarma-nov.png', page: 'landing-b.html' },
   // One example of the "This isn't my number" / no number on file (Credit Karma) scenario, under the designs:
   // the input, then the lookup: match → the real code screen with the new number; no match → no offer, new application.
-  { file: 'scenario-input.png', page: 'design-1-today.html', q: '&state=notmine', el: '#ppCheck' },
+  // (Oct 28: find your application by date of birth + SSN last 4, in Design 1 · Simple + Unlock; no match = 3 tries.)
+  { file: 'scenario-input.png', page: 'landing-blend.html', q: '&state=notmine', el: '.lu-in' },
   { file: 'scenario-match.png', app: '?scenario=1', run: "start('prequal'); S.customer.phone='(864) 555-1234'; S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
-  { file: 'scenario-nomatch.png', page: 'design-1-today.html', q: '&state=nomatch', el: '#ppNoMatch' },
+  { file: 'scenario-retry.png', page: 'landing-blend.html', q: '&state=retry', el: '.lu-in' },
+  { file: 'scenario-nomatch.png', page: 'landing-blend.html', q: '&state=nomatch', el: '.lu-in' },
   // Came back with a different number than the one the offer is saved to: "This offer is already saved to another number".
-  { file: 'scenario-taken.png', page: 'design-1-today.html', q: '&returning=1&state=taken', el: '#ppTaken' },
+  { file: 'scenario-taken.png', page: 'landing-blend.html', q: '&returning=1&state=taken', el: '.lu-in' },
   // Phone first (tools/phone-first.mjs): the landing as people open it, then the top of the page for each case.
   { file: 'phone-first-landing.png', page: 'phone-first.html', first: true },
   { file: 'phone-first-match.png', page: 'phone-first.html', q: '&state=match', upTo: '#pf' },

@@ -31,7 +31,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=7"><link rel="stylesheet" href="landing-unlock.css?v=3"></head><body>
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=4"></head><body>
 <header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header>
 <main class="rf-main lu">
 <section class="lu-hero"><div class="rf-shell"><div class="rf-task"><h1 class="lu-h1" id="luFast"><span data-first>Hi Jordan, you’ve unlocked Fast Track</span><span data-back hidden>Welcome back, Jordan. Fast Track is still unlocked</span></h1></div></div></section>
@@ -48,7 +48,7 @@ const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta n
 
 <section class="lu-card" aria-labelledby="luTitle">
 <div class="lu-head"><span class="lu-lock">${svg('lock')}</span><h2 class="lu-title" id="luTitle">Unlock your application</h2></div>
-<p class="lu-sub"><span data-first>Confirm your mobile number to keep going.</span><span data-back hidden>Confirm your mobile number to pick up where you left off.</span></p>
+<p class="lu-sub" data-pp-fileonly><span data-first>Confirm your mobile number to keep going.</span><span data-back hidden>Confirm your mobile number to pick up where you left off.</span></p>
 <div class="lu-num" id="ppFile"><span class="lu-num-val">***-***-7890</span><button type="button" class="pp-link" data-notmine>Update</button></div>
 ${check}
 ${bar}
