@@ -331,7 +331,6 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     document.querySelectorAll('[data-pq-partner]').forEach(b => b.setAttribute('aria-pressed', String(!!S.pq && b.dataset.pqPartner === S.channel)));
     document.querySelectorAll('[data-pq-land]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.pqLand === landDesign)));
     document.querySelectorAll('[data-pq-visit]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqVisit === 'back') === pqBack)));
-    document.querySelectorAll('[data-pq-ssn]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqSsn === 'no') === pqNoSsn)));
     document.querySelectorAll('[data-pq-lookup]').forEach(b => b.setAttribute('aria-pressed', String((b.dataset.pqLookup === 'none') === pqNoMatch)));
   };
   const baseRender = render;
@@ -390,7 +389,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   let pqNoMatch = /[?&]lookup=none\b/.test(location.search);
   // SSN ON "LET'S MAKE SURE WE HAVE EVERYTHING RIGHT" (both Known journeys: Known Customer and Known Customer Prequal).
   // On file: a row with the SSN masked (last 4 only). Editing never shows the old number: the field opens empty and needs a
-  // full new SSN; × cancels and keeps the one on file. No SSN on file (prequal, demo panel "SSN on file: No", or ?nossn=1):
+  // full new SSN; × cancels and keeps the one on file. No SSN on file (prequal with ?nossn=1; the demo panel's "SSN on file" switch was removed Oct 28 2026):
   // the row is open on page load. Confirm waits for all 9 digits whenever the field is open or nothing is on file.
   // (The credit check no longer shows the SSN: it's edited here.)
   let pqNoSsn = /[?&]nossn=1\b/.test(location.search), pqSsnOpen = null, pqSsnVal = '', pqSsnSaved = false;
@@ -467,17 +466,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       '<div class="pq-visit"><span class="pq-sub-label" id="pqVisitLbl">Visit</span><div class="pq-chips" role="group" aria-labelledby="pqVisitLbl">' +
       chips('data-pq-visit', ['first', 'back'], k => k === 'back' ? 'Came back (number saved)' : 'First visit') + '</div></div>' +
       '<span class="pq-sub-label" id="pqLookupLbl">Lookup (Update or no number)</span><div class="pq-chips" role="group" aria-labelledby="pqLookupLbl">' +
-      chips('data-pq-lookup', ['found', 'none'], k => k === 'none' ? 'No match (3 tries)' : 'Finds the application') + '</div>' +
-      '<span class="pq-sub-label" id="pqSsnLbl">SSN on file</span><div class="pq-chips" role="group" aria-labelledby="pqSsnLbl">' +
-      chips('data-pq-ssn', ['yes', 'no'], k => k === 'no' ? 'No (ask on review)' : 'Yes') + '</div></div></div>');
+      chips('data-pq-lookup', ['found', 'none'], k => k === 'none' ? 'No match (3 tries)' : 'Finds the application') + '</div></div></div>');
     const closeOnPhone = () => { if (matchMedia('(max-width:720px)').matches) { panel.classList.remove('open'); const f = panel.querySelector('.flow-fab'); if (f) f.setAttribute('aria-expanded', 'false'); } };
     panel.querySelector('[data-pq-panel]').onclick = () => { if (!S.pq) { start('prequal'); closeOnPhone(); } };
     panel.querySelectorAll('[data-pq-partner]').forEach(b => b.onclick = () => { setChannel(b.dataset.pqPartner); start('prequal'); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-land]').forEach(b => b.onclick = () => { setLanding(b.dataset.pqLand); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-visit]').forEach(b => b.onclick = () => { pqBack = b.dataset.pqVisit === 'back'; go('prequalLanding', false); closeOnPhone(); });
     panel.querySelectorAll('[data-pq-lookup]').forEach(b => b.onclick = () => { pqNoMatch = b.dataset.pqLookup === 'none'; go('prequalLanding', false); closeOnPhone(); });
-    // SSN on file: shows on "Let's make sure we have everything right"; re-renders it if it's open, else applies when they get there.
-    panel.querySelectorAll('[data-pq-ssn]').forEach(b => b.onclick = () => { pqNoSsn = b.dataset.pqSsn === 'no'; resetSsn(); if (S.page === 'review') render(false); else syncControls(); closeOnPhone(); });
     syncControls();
   }
   document.head.insertAdjacentHTML('beforeend', '<style>.pq-block{margin:0 0 4px}.pq-sub{margin:2px 0 8px;padding:12px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.06)}.pq-sub[hidden]{display:none!important}' +
