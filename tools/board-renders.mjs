@@ -61,6 +61,8 @@ const SHOTS = [
   // Design 1 · Simple + Unlock (tools/landing-blend.mjs): first screen, full page, the card after Update, and down to the number.
   { file: 'blend-first.png', page: 'landing-blend.html', first: true },
   { file: 'blend-full.png', page: 'landing-blend.html' },
+  // Release board slot "1b": Credit Karma sends no number, so Design 1 opens on "Let's find your application".
+  { file: 'blend-ck-full.png', page: 'landing-blend.html', q: '&state=nophone' },
   { file: 'blend-update.png', page: 'landing-blend.html', q: '&state=notmine', el: '.ps-card' },
   { file: 'design-4-number.png', page: 'landing-blend.html', upTo: '#ppFile' },
   // Release board slot "0 · New borrower landing" (taller than Figma's 4096 px: full pages scale down to fit).
