@@ -29,6 +29,10 @@
 .lu-card .pp-check { margin-top: 0; }
 .lu-card .pp-check > .pp-title, .lu-card .pp-check > .pp-sub { display: none; }
 .lu-card .pp-nomatch, .lu-card .pp-nomatch + .pp-nomatch { margin-top: 18px; }
+/* No match after 3 tries: "We couldn't find your application" replaces the card's head (nothing left to unlock), unboxed. */
+.lu-card:has(#ppNoMatch:not([hidden])) > .lu-head { display: none; }
+.lu-card #ppNoMatch { margin-top: 0; padding: 0; border: 0; border-radius: 0; background: none; }
+.lu-card #ppNoMatch .pp-sub { margin: 8px 0 16px; font-size: 14px; color: var(--med-emphasis-dark); }
 .lu-card .lf2-paybar.pp-inline { margin-top: 16px; }
 .lu-card .pp-check .lf2-paybar.pp-inline { margin-top: 4px; }
 @media (min-width: 768px) { .lu-h1 { font-size: 36px; } }

@@ -21,7 +21,7 @@ if (!card.includes('ps-credit')) throw new Error('credit line placement failed')
 swap(/<p class="ps-num" id="ppFile">[\s\S]*?<\/p>\n<section class="lf2-ph pp-check"[\s\S]*?<section class="pp-nomatch" id="ppTaken"[\s\S]*?<\/section>\n<\/div>\n<\/section>/,
   '</div>\n' + card + '\n</section>', 'card number row');
 swap(/<div class="rf-paybar lf2-paybar"[\s\S]*?<div class="rf-paybar-space"><\/div>/, '', 'pinned bar');
-swap(/<link rel="stylesheet" href="landing-simple\.css\?v=\d+">/, (s) => s + '<link rel="stylesheet" href="landing-unlock.css?v=5">', 'stylesheet');
+swap(/<link rel="stylesheet" href="landing-simple\.css\?v=\d+">/, (s) => s + '<link rel="stylesheet" href="landing-unlock.css?v=6">', 'stylesheet');
 swap('<title>Prequal Landing · Simple</title>', '<title>Prequal Landing · Simple + Unlock</title>', 'title');
 html = html.replace('</head>', `<style>
 /* Design 2's Unlock card inside Design 3's offer card: no second border, a line above it. */
