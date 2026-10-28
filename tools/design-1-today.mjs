@@ -18,11 +18,11 @@ const line = `<p class="pp-line" id="ppFile">We’ll text your code to <b>${NUM}
 const check = `<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
 <h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
 <p class="pp-sub">Enter your date of birth, the last 4 of your SSN and your mobile number to keep going.</p>
+<p class="pp-err" id="ppErr" hidden role="alert">That doesn’t match our records. Check your information or <a href="#" data-pq-newapp>start a new application</a>.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-<p class="pp-err" id="ppErr" hidden role="alert">That doesn’t match our records. Check your information or <a href="#" data-pq-newapp>start a new application</a>.</p>
 <div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
@@ -93,7 +93,7 @@ if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppDob').value='04
 
 for (const o of OPTIONS) {
   let html = o.place(base).replace(/<title>[^<]*<\/title>/, `<title>${o.title}</title>`)
-    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=10"><link rel="stylesheet" href="pq-offer.css')
+    .replace('<link rel="stylesheet" href="pq-offer.css', '<link rel="stylesheet" href="phone.css?v=11"><link rel="stylesheet" href="pq-offer.css')
     .replace('</body>', js + '</body>');
   if (!html.includes('id="ppFile"')) throw new Error('placement failed: ' + o.file);
   writeFileSync('assets/prequal/' + o.file, html);

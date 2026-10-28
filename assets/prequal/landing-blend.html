@@ -3,7 +3,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=10"><link rel="stylesheet" href="landing-simple.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=5"><style>
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><script defer src="rf-social-proof.js"></script><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=11"><link rel="stylesheet" href="landing-simple.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=5"><style>
 /* Design 2's Unlock card inside Design 3's offer card: no second border, a line above it. */
 .ps-card .lu-in{margin:0;border:0;border-top:1px solid var(--outline-light-gray);border-radius:0}
 .ps-card .ps-body{padding-bottom:20px}
@@ -29,11 +29,11 @@
 <section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
 <h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
 <p class="pp-sub">Enter your date of birth, the last 4 of your SSN and your mobile number to keep going.</p>
+<p class="pp-err" id="ppErr" hidden role="alert">That doesn’t match our records. Check your information or <a href="#" data-pq-newapp>start a new application</a>.</p>
 <div class="pp-row">
 <div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
 <div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
 </div>
-<p class="pp-err" id="ppErr" hidden role="alert">That doesn’t match our records. Check your information or <a href="#" data-pq-newapp>start a new application</a>.</p>
 <div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
 </section>
 <section class="pp-nomatch" id="ppNoMatch" hidden role="alert">

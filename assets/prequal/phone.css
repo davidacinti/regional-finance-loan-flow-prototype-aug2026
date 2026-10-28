@@ -41,7 +41,7 @@
 .lf2-paybar.pp-inline .rf-btn{display:block;width:100%;max-width:none;height:48px}
 /* Find your application (Oct 28 2026): no-match message under date of birth + SSN, helper under the mobile number, and the
    final "We couldn't find your application" with one full-width button. */
-.pp-err{margin:-4px 2px 12px;font-size:13.5px;line-height:1.45;color:#B3261E}
+.pp-err{margin:0 2px 12px;font-size:13.5px;line-height:1.45;color:#B3261E}
 .pp-err a{color:#2A71D4;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .lf2-ph-input.pp-bad{border-color:#B3261E!important}
 .pp-help{margin:6px 2px 0;font-size:12.5px;line-height:1.4;color:#595959}
