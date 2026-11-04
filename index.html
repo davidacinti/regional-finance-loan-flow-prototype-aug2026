@@ -372,11 +372,12 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // and 3 Simple are retired, their generated pages are only build inputs for it). Credit Karma (no number on file) opens
     // on "Confirm it's you".
     const st = d4State || (S.pq === 'b' ? 'nophone' : '');
-    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/landing-blend.html' + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + (pqNoMatch ? '&lookup=none' : '') + '"></iframe>';
+    app.innerHTML = '<iframe class="pq-frame" title="Your pre-qualified offer" src="assets/prequal/' + (LAND_FILE[landDesign] || 'landing-blend.html') + FRESH + (st ? '&state=' + st : '') + (pqBack ? '&returning=1' : '') + (pqNoMatch ? '&lookup=none' : '') + '"></iframe>';
     designBar(); sizeFrame();
   };
-  // One landing design now, so the demo panel has no "Landing design" picker.
-  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Simple + Unlock' };
+  // Landing designs for the team to compare (demo panel → Known Customer Prequal → Landing design). Same states and rules.
+  // 1 = Simple + Unlock (picked Oct 28 2026) · click = “Your offer is just a click away” (Nov 4 2026).
+  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Simple + Unlock', click: 'Just a click away' }, LAND_FILE = { 1: 'landing-blend.html', click: 'landing-click.html' };
   let landDesign = '1', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
@@ -501,6 +502,8 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     grp.insertAdjacentHTML('beforebegin', '<div class="pq-block"><button type="button" class="pq-flow" data-pq-panel>Known Customer Prequal</button>' +
       '<div class="pq-sub" hidden><span class="pq-sub-label" id="pqStartsLbl">Starts from</span><div class="pq-chips" role="group" aria-labelledby="pqStartsLbl">' +
       chips('data-pq-partner', Object.keys(CHANNELS), k => k === 'direct' ? 'Regional email/text' : CHANNELS[k].short) + '</div>' +
+      '<span class="pq-sub-label" id="pqLandLbl">Landing design</span><div class="pq-chips" role="group" aria-labelledby="pqLandLbl">' +
+      chips('data-pq-land', Object.keys(LANDINGS), k => LANDINGS[k]) + '</div>' +
       '<span class="pq-sub-label" id="pqLookupLbl">Lookup (Update or no number)</span><div class="pq-chips" role="group" aria-labelledby="pqLookupLbl">' +
       chips('data-pq-lookup', ['found', 'none'], k => k === 'none' ? 'No match (3 tries)' : 'Finds the application') + '</div></div></div>');
     const closeOnPhone = () => { if (matchMedia('(max-width:720px)').matches) { panel.classList.remove('open'); const f = panel.querySelector('.flow-fab'); if (f) f.setAttribute('aria-expanded', 'false'); } };

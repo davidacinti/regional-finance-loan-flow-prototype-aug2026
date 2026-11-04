@@ -1,0 +1,159 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prequal Landing · Just a click away</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=12"><link rel="stylesheet" href="landing-simple.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=8"><style>
+/* Design 2 · "Your offer is just a click away" (Nov 2026). Same states and rules as Design 1 (landing-blend.html):
+   number on file → Send Code; Update → "Confirm it's you"; Credit Karma opens there; no match; already saved. */
+body{background:#fff}
+.ck-hero{background:linear-gradient(180deg,#D9F3FC 0%,#F4F7CF 100%);padding:28px 20px 76px;text-align:center}
+.ck-hi{font:600 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 6px}
+.ck-h1{font:800 34px/1.12 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 auto 14px;max-width:320px;letter-spacing:-.01em}
+.ck-exp{font:700 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#363636;margin:0}
+.ck-wrap{padding:0 16px;margin-top:-52px}
+.ck-card{max-width:440px;margin:0 auto;background:#fff;border:1px solid #CDCDCD;border-radius:24px;overflow:hidden}
+.ck-ribbon{background:#0D2240;color:#fff;font:700 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.1em;text-transform:uppercase;text-align:center;padding:10px 12px;border-radius:24px 24px 0 0;margin:-1px -1px 0}
+.ck-offer{padding:18px 20px 6px;text-align:center}
+.ck-amt{font:800 44px/1.1 'Plus Jakarta Sans',sans-serif;color:#2A71D4;margin:0 0 14px;font-variant-numeric:tabular-nums}
+.ck-terms{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin:0 0 14px}
+.ck-terms span{display:block;font:400 13px/1.3 'Plus Jakarta Sans',sans-serif;color:#595959}
+.ck-terms b{display:block;font:600 16px/1.4 'Plus Jakarta Sans',sans-serif;color:#363636;margin-top:6px}
+.ck-lockline{display:flex;align-items:center;gap:10px;margin:4px 20px 14px}
+.ck-lockline::before,.ck-lockline::after{content:'';flex:1;height:1px;background:#CDCDCD}
+.ck-lock{width:36px;height:36px;border:1px solid #CDCDCD;border-radius:50%;display:grid;place-items:center;color:#363636}
+.ck-lock svg{width:18px;height:18px}
+.ck-unlock{padding:0 20px 18px}
+.ck-ask{font:600 16px/1.35 'Plus Jakarta Sans',sans-serif;color:#363636;text-align:center;margin:0 auto 14px;max-width:260px}
+.ck-num{display:flex;align-items:center;justify-content:center;gap:10px;background:#F2F2F2;border-radius:999px;height:56px;margin:0 0 16px;font:500 20px/1 'Plus Jakarta Sans',sans-serif;color:#363636;font-variant-numeric:tabular-nums}
+.ck-num button{border:0;background:none;padding:6px;color:#363636;display:grid;place-items:center;border-radius:50%}
+.ck-num button:focus-visible{outline:2px solid #2A71D4}
+.ck-num svg{width:20px;height:20px}
+/* The consent + Send Code block (kept as .lf2-paybar so the page's rules and pq.js work unchanged). */
+.ck-card .lf2-paybar.pp-inline{position:static;box-shadow:none;border:0;background:none;padding:0;margin:0}
+.ck-card .lf2-paybar .in{padding:0;max-width:none}
+.ck-card .lf2-paybar .row1{display:block;margin-top:14px}
+.ck-card .lf2-paybar .row1 .rf-btn{width:100%;height:48px;border-radius:999px;font:500 16px 'Plus Jakarta Sans',sans-serif}
+.ck-card .lf2-consent label{font-size:12px;line-height:1.5;color:#595959}
+.ck-card .ck-credit{text-align:center;font-size:12px;color:#595959;margin:12px 0 0}
+.ck-card #ppCheck{padding:0 0 4px}.ck-card .pp-nomatch{padding:4px 0 0}
+.ck-why{max-width:440px;margin:28px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:22px 18px}
+.ck-why li{list-style:none}.ck-why{list-style:none}
+.ck-why svg{width:26px;height:26px;color:#B5BD00;margin-bottom:8px}
+.ck-why b{display:block;font:700 14px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin-bottom:4px}
+.ck-why span{display:block;font:400 13px/1.45 'Plus Jakarta Sans',sans-serif;color:#595959}
+.ck-rule{max-width:440px;height:1px;background:#CDCDCD;margin:28px auto 0;border:0}
+.ck-trust{max-width:440px;margin:24px auto 28px;padding:0 20px;text-align:center}
+.ck-photos{position:relative;height:174px;margin:0 auto 18px}
+.ck-photos img{position:absolute;top:5px;left:50%;width:118px;height:150px;border:4px solid #fff;border-radius:15px;box-shadow:0 6px 16px #0002;object-fit:cover}
+.ck-photos img:nth-child(1){z-index:1;transform:translateX(-135px) rotate(-10deg)}.ck-photos img:nth-child(2){z-index:2;transform:translateX(-59px)}.ck-photos img:nth-child(3){z-index:1;transform:translateX(18px) rotate(10deg)}
+.ck-trust h2{font:600 17px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 8px}
+.ck-trust p{font:400 13px/1.5 'Plus Jakarta Sans',sans-serif;color:#595959;margin:0 auto 16px;max-width:340px}
+.ck-rating{display:flex;align-items:center;justify-content:center;gap:9px}.ck-rating .leaf{width:34px;height:52px;object-fit:contain}
+.ck-rating strong{font:700 15px 'Plus Jakarta Sans',sans-serif;white-space:nowrap;color:#363636}.ck-rating strong span{font-weight:400}.ck-rating .tp{width:96px;height:auto}
+</style></head><body>
+<header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header>
+<main>
+<section class="ck-hero"><p class="ck-hi">Hi Jordan!</p><h1 class="ck-h1">Your offer is just a click away.</h1><p class="ck-exp">Offer expires Nov 6</p></section>
+<div class="ck-wrap">
+<section class="ck-card" aria-labelledby="ckAmt">
+<div class="ck-ribbon">You’re a strong fit for this offer</div>
+<div class="ck-offer">
+<div class="ck-amt" id="ckAmt" data-pq="amount">$12,500</div>
+<div class="ck-terms"><div><span>Term</span><b>3 Years</b></div><div><span>Est. Mo. Pymt</span><b><span data-pq="monthly" style="display:inline;font:inherit;color:inherit;margin:0">$421</span>/mo</b></div><div><span>APR</span><b>13.01%</b></div></div>
+</div>
+<div class="ck-lockline" aria-hidden="true"><span class="ck-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span></div>
+<div class="ck-unlock">
+<p class="ck-ask" data-pp-fileonly><span data-first>Confirm your phone number to unlock this offer.</span><span data-back hidden>Confirm your phone number to pick up where you left off.</span></p>
+<div class="ck-num" id="ppFile"><span>(123) 456-7890</span><button type="button" data-notmine aria-label="Use a different phone number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></div>
+<section class="lf2-ph pp-check" id="ppCheck" hidden aria-labelledby="ppCheckTitle">
+<h2 class="pp-title" id="ppCheckTitle">Confirm it’s you</h2>
+<p class="pp-sub">Enter your date of birth, the last 4 of your SSN and your mobile number to keep going.</p>
+<p class="pp-err" id="ppErr" hidden role="alert">We couldn’t match that date of birth and SSN to an application. Double-check them, or <a href="#" data-pq-newapp>start a new application</a>.</p>
+<div class="pp-row">
+<div class="pp-field"><label class="lf2-ph-label" for="ppDob">Date of birth</label><input class="lf2-ph-input" id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
+<div class="pp-field"><label class="lf2-ph-label" for="ppSsn">SSN last 4</label><input class="lf2-ph-input" id="ppSsn" type="password" inputmode="numeric" autocomplete="off" placeholder="••••" maxlength="4"></div>
+</div>
+<div class="pp-field"><label class="lf2-ph-label" for="ppPhone">Mobile number</label><input class="lf2-ph-input" id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(555) 555-5555" maxlength="14"></div>
+</section>
+<section class="pp-nomatch" id="ppNoMatch" hidden role="alert">
+<div class="lu-head"><span class="lu-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span><h2 class="lu-title">We couldn’t find your offer</h2></div>
+<p class="pp-sub">Sorry about that. You can still apply, and checking your offers won’t affect your credit score.</p>
+<a class="btn rf-btn rf-btn-primary pp-new" href="#" data-pq-newapp>Start a new application</a>
+</section>
+<section class="pp-nomatch" id="ppTaken" hidden role="alert">
+<h2 class="pp-title">This offer is already saved to another number</h2>
+<p class="pp-sub">When you started, we saved it to <b>***-***-7890</b>. To use a new number, you may need to submit a new application.</p>
+<a class="btn rf-btn pp-call" href="#" data-pq-newapp>Submit a new application</a>
+<p class="pp-back"><button type="button" class="pp-link" data-pp-back>Go back</button></p>
+</section>
+<div class="rf-paybar lf2-paybar pp-inline" data-inline role="region" aria-label="Unlock your offer"><div class="in">
+<div class="form-check rf-form-check lf2-consent"><input class="form-check-input" type="checkbox" id="legal"><label class="form-check-label" for="legal">I have read and agreed to the: <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a>, <a href="#">ESIGN Act Consent</a> and <a href="#">Consent to Receive Commercial Emails</a>. These materials include important information so please review them before advancing to the next stage of our digital loan process.</label></div>
+<div class="row1"><button type="button" class="btn rf-btn rf-btn-primary">Send Code</button></div>
+<p class="ck-credit">Continuing won’t affect your credit score.</p>
+</div></div>
+</div>
+</section>
+</div>
+<ul class="ck-why" aria-label="Why Regional Finance">
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h5"/><path d="m9 16 2 2 4-4"/></svg><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3v2h-3v-2H9v2H6v-3a6 6 0 0 1-1-5z"/><path d="M15 9h.01"/><path d="M10 6h4"/></svg><b>Money as soon as today</b><span>Link an eligible bank account for instant funding.</span></li>
+<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-8a2 2 0 0 1 3 2l-1 4h6a2 2 0 0 1 2 2l-2 7a2 2 0 0 1-2 2H7"/></svg><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></li>
+</ul>
+<hr class="ck-rule">
+<section class="ck-trust" aria-label="Trusted by your neighbors">
+<div class="ck-photos"><img src="../v4-neighbor-left.png" alt="Portrait of a smiling customer"><img src="../v4-neighbor-center.png" alt="Portrait of a smiling customer"><img src="../v4-neighbor-right.png" alt="Portrait of a smiling customer"></div>
+<h2>Trusted by your neighbors</h2>
+<p>For over 35 years, millions of customers have trusted us to provide the simple, transparent, and straightforward financial support they deserve.</p>
+<div class="ck-rating"><img class="leaf" src="../leaves-left.svg" alt=""><strong>4.5 <span>out of 5</span></strong><a href="https://www.trustpilot.com/review/regionalfinance.com" target="_blank" rel="noopener noreferrer" aria-label="Regional Finance reviews on Trustpilot"><img class="tp" src="../trustpilot-logo.svg" alt="Trustpilot"></a><img class="leaf" src="../leaves-right.svg" alt=""></div>
+</section>
+</main>
+<footer class="rf-footer pq-legal-footer"><div class="legal">
+<p>&dagger; To check rates and terms you may qualify for, Regional Finance conducts a soft credit pull that will not affect your credit score. However, if you choose a product and continue your application, we will request your full credit report from one or more consumer reporting agencies, which is considered a hard credit pull and may affect your credit.</p>
+<p>(1) Loans are subject to credit approval. Certain restrictions and conditions apply. Refer to the “Terms and conditions,” disclosure in the solicitation you received for more details. <b>If you have a Credit Freeze on your credit report please have it lifted before applying.</b></p>
+<p>(2) Instant funding is available only for eligible borrowers whose selected bank account is eligible to receive funds through the real-time payments network. Eligibility is based on the bank account used to verify cash flow and receive loan proceeds. Real-time funding is not available between the hours of 11:30pm and 6am ET due to allow for overnight processes to complete and may be delayed or unavailable at other times due to other system issues, participating bank limitations, or other circumstances outside our control. If real-time funding is not available, funds will be sent by same-day or next-day ACH and are typically available within 1–3 business days, subject to processing times and the receiving bank's policies.</p>
+<p class="pq-proc"><b>IMPORTANT INFORMATION ABOUT PROCEDURES</b></p>
+<p>To help the government fight the funding of terrorism and money laundering activities, Federal law requires all financial institutions to obtain, verify, and record information that identifies each person who opens an account. What this means for you: When you open an account, we will ask for your name, address, date of birth, and other information that will allow us to identify you. We may also ask to see your driver’s license or other identifying documents.</p>
+<p class="pq-gap">Regional Finance is licensed in AL, AZ, CA, FL, GA, ID, IL, IN, LA, MO, MS, NC, NM, OK, SC, TN, TX, UT, VA, and WI.</p>
+<p>Loan approval is subject to our standard credit policies. Loan size, term, and rates may vary by state.</p>
+<p>California Residents: Loans made or arranged pursuant to a California Financing Law license.</p>
+<p>Georgia Residents: Regional Finance Company of Georgia, LLC – NMLS # 2026923.</p>
+<p>New Mexico Only: This lender is licensed and regulated by the New Mexico Regulation and Licensing Department, Financial Institutions Division P.O. Box 25101 2550 Cerrillos Road Santa Fe, New Mexico 87504. To report any unresolved problems or complaints, contact the Division by telephone at <a href="tel:5054764885">(505) 476-4885</a> or visit the website <a href="https://www.rld.nm.gov/financial-institutions/" target="_blank" rel="noopener">https://www.rld.nm.gov/financial-institutions/</a></p>
+<p>Loans through Regional Finance are made by Column, N.A. or a Regional Finance affiliate. All loans are serviced by a Regional Finance affiliate.</p>
+<p>Virginia Residents: Regional Finance Company of Virginia, LLC is licensed by the Virginia State Corporation Commission under the following license number: CFI-161.</p>
+<p class="pq-gap">Copyright © 2026 Regional Management Corp. All Rights Reserved</p>
+<p class="pq-links pq-gap"><a href="#">Privacy &amp; Cookie Policy</a> <a href="#">Licenses &amp; Disclosures</a> <a href="#">Investors</a> <a href="#">Notice to California Residents</a> <a href="#">Your Privacy Choices</a></p>
+</div></footer>
+<style>.pq-legal-footer .legal{margin-top:0}.pq-legal-footer .legal a{color:inherit;text-decoration:underline}.pq-legal-footer .pq-proc{margin-top:12px}.pq-legal-footer .pq-gap{margin-top:12px}.pq-legal-footer .pq-links{display:flex;flex-wrap:wrap;column-gap:10px;row-gap:4px}.pq-legal-footer .pq-links a{text-decoration:none}</style>
+
+<script src="pq.js?v=7"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}});})();</script><script>(function(){
+// Same states as Design 1 (landing-blend.html): file / notmine / nophone / nomatch / taken / retry, ?returning=1, ?lookup=none.
+var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),F=document.getElementById('ppFile'),K=document.getElementById('ppCheck'),M=document.getElementById('ppNoMatch'),T=document.getElementById('ppTaken');
+var R=/[?&]returning=1\b/.test(location.search);
+var d=function(v,n){return v.replace(/\D/g,'').slice(0,n)};
+var fmt={ppPhone:function(v){v=d(v,10);return v.length<4?v:v.length<7?'('+v.slice(0,3)+') '+v.slice(3):'('+v.slice(0,3)+') '+v.slice(3,6)+'-'+v.slice(6)},
+ ppDob:function(v){v=d(v,8);return v.length>4?v.slice(0,2)+'/'+v.slice(2,4)+'/'+v.slice(4):v.length>2?v.slice(0,2)+'/'+v.slice(2):v},ppSsn:function(v){return d(v,4)}};
+var need={ppDob:8,ppSsn:4,ppPhone:10};
+function ctr(el){var r=el.getBoundingClientRect();window.scrollTo(0,Math.max(0,r.top+window.pageYOffset-(window.innerHeight-r.height)/2))}
+function ok(){if(!M.hidden||!T.hidden)return false;return K.hidden||Object.keys(need).every(function(k){return d(document.getElementById(k).value,20).length===need[k]})}
+function s(){b.disabled=!(c.checked&&ok())}
+Object.keys(fmt).forEach(function(k){var i=document.getElementById(k);i.addEventListener('input',function(){i.value=fmt[k](i.value);s()})});
+var bar=document.querySelector('.lf2-paybar');
+var E=document.getElementById('ppErr'),tries=0,MAX=3;
+function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';
+ bar.hidden=st==='nomatch'||st==='taken';if(K.hidden)E.hidden=true;
+ document.querySelectorAll('[data-pp-fileonly]').forEach(function(x){x.hidden=st!=='file'});s()}
+document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
+document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
+c.addEventListener('change',s);
+function miss(quiet){tries++;if(tries>=MAX){show('nomatch');ctr(M);return}var db=document.getElementById('ppDob');
+ E.hidden=false;db.value='';document.getElementById('ppSsn').value='';s();if(!quiet){ctr(K);db.focus({preventScroll:true})}}
+var L=/[?&]lookup=none\b/.test(location.search);
+document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar .rf-btn')||b.disabled||K.hidden)return;
+ var no=L||d(document.getElementById('ppSsn').value,4)==='0000',taken=!no&&R&&d(document.getElementById('ppPhone').value,10).slice(-4)!=='7890';
+ if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();if(no){miss();return}show('taken');ctr(T)},true);
+var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken|retry)\b/);
+if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppPhone').value='(864) 555-1234';miss(true)}else show(m?m[1]:'file');
+if(R)document.querySelectorAll('[data-first],[data-back]').forEach(function(x){x.hidden=x.hasAttribute('data-first')});
+})();</script></body></html>
