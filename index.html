@@ -376,9 +376,10 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     designBar(); sizeFrame();
   };
   // Landing designs for the team to compare (demo panel → Known Customer Prequal → Landing design). Same states and rules.
-  // 1 = Simple + Unlock (picked Oct 28 2026) · click = “Your offer is just a click away” (Nov 4 2026).
-  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { 1: 'Simple + Unlock', click: 'Just a click away' }, LAND_FILE = { 1: 'landing-blend.html', click: 'landing-click.html' };
-  let landDesign = '1', d4State = '';
+  // 1 = Simple + Unlock (picked Oct 28 2026) · click = “Your offer is just a click away” (Nov 4 2026)
+  // · keep = “Let’s keep going” (Nov 13 2026 copy review; the default for anyone who hasn't picked a design).
+  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { keep: 'Let’s keep going', click: 'Just a click away', 1: 'Simple + Unlock' }, LAND_FILE = { 1: 'landing-blend.html', click: 'landing-click.html', keep: 'landing-keep.html' };
+  let landDesign = 'keep', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
   let pqBack = /[?&]returning=1\b/.test(location.search);
