@@ -340,7 +340,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
     if (S.page !== 'review') reviewEdit = false;
-    if (S.page === 'review' && S.flow === 'known') { if (reviewEdit || S.confirmEdit) ssnRow(); else reviewPage(); }
+    if (S.page === 'review' && S.flow === 'known') { if (reviewEdit) editPage(); else if (S.confirmEdit) ssnRow(); else reviewPage(); }
     // Known journeys: the SSN is shown and edited on the review page, so the credit check doesn't repeat it.
     if (S.page === 'credit' && S.flow === 'known') { const c = app.querySelector('.v4-ssn-card'); if (c) c.remove(); }
     const aff = /^aff:\d+$/.test(S.page);
@@ -416,7 +416,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   function resetSsn(){ pqSsnOpen = null; pqSsnVal = ''; pqSsnSaved = false; }
   // "LET'S MAKE SURE WE HAVE EVERYTHING RIGHT" (Oct 28 2026, both Known journeys): read-only details with "Update my info" and
   // Confirm side by side. SSN on file: one "Confirm your details" card with the SSN masked. No SSN on file: "What we have" +
-  // "What we need" (the SSN field), and Continue waits for all 9 digits. "Update my info" opens the tap-a-row editor (ssnRow).
+  // "What we need" (the SSN field), and Continue waits for all 9 digits. "Update my info" opens the edit form (editPage).
   var reviewEdit = false;
   function reviewPage(){
     const onFile = ssnOnFile(), foot = app.querySelector('footer.footer');
@@ -442,6 +442,57 @@ document.head.insertAdjacentHTML('beforeend', `<style>
       next.addEventListener('click', () => { if (pqSsnVal.length === 9) { S.customer.ssn = pqSsnVal; pqSsnSaved = true; } pqSsnVal = ''; }, true);
     }
   }
+  // "UPDATE MY INFORMATION" (Nov 16 2026): the edit form behind "Update my info". One card of labelled fields, Cancel/Update.
+  // SSN: never shows the number on file (masked last 4 as the placeholder); typing enters a full new one, the eye shows/hides
+  // what's typed, and Update waits for all 9 digits once typing starts. Update saves to S.customer; both buttons go back.
+  function editPage(){
+    const c = S.customer, foot = app.querySelector('footer.footer'), onFile = ssnOnFile();
+    const fmt = d => d.length > 5 ? d.slice(0, 3) + '-' + d.slice(3, 5) + '-' + d.slice(5) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+    const dob = String(c.dob || '').replace(/\s*\/\s*/g, '/'), inc = c.income ? money(c.income) : '';
+    const own = { Yes: 'Own', No: 'Rent' }[c.homeowner] || c.homeowner || '';
+    const field = (id, label, input, after) => '<div class="ed-field"><label for="' + id + '">' + label + '</label>' + input + (after || '') + '</div>';
+    const text = (id, val, extra) => '<input id="' + id + '" class="form-control" type="text" value="' + esc(val || '') + '"' + (extra || '') + '>';
+    const lock = '<p class="rv-lock ed-lock"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>The security of your personal information is important to us. See our <a href="#">Privacy Policy</a></span></p>';
+    app.innerHTML = '<div class="body center rv ed"><h1 class="title">Update my information</h1><p class="sub">Make any updates before we continue with your loan approval</p>' +
+      '<section class="rv-card ed-card"><h2 class="rv-head">Edit your information</h2><div class="ed-fields">' +
+      field('edFirst', 'First name', text('edFirst', c.firstName, ' autocomplete="given-name"')) +
+      field('edLast', 'Last name', text('edLast', c.lastName, ' autocomplete="family-name"')) +
+      field('edDob', 'Date of birth', text('edDob', dob, ' inputmode="numeric" placeholder="MM/DD/YYYY" maxlength="10"')) +
+      field('edAddress', 'Address', text('edAddress', c.address, ' autocomplete="street-address"')) +
+      field('edSsn', 'Social Security Number', '<div class="ed-ssn"><input id="edSsn" class="form-control ed-masked" type="text" inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false" maxlength="11" placeholder="' + (onFile ? '•••-••-' + String(c.ssn).slice(-4) : 'Enter your SSN') + '"' + (onFile ? ' data-on-file' : '') + '><button type="button" class="ed-eye" aria-label="Show SSN" aria-pressed="false"><i class="bi bi-eye"></i></button></div>', lock) +
+      field('edIncome', 'Total annual income', text('edIncome', inc, ' inputmode="numeric"'), '<p class="ed-note">Alimony, child support or separate maintenance income need not be revealed if you do not wish to have it considered as a basis for repaying this obligation.</p>') +
+      field('edOwn', 'Home ownership', '<select id="edOwn" class="form-select">' + ['Rent', 'Own'].map(o => '<option' + (o === own ? ' selected' : '') + '>' + o + '</option>').join('') + '</select>') +
+      '</div></section>' +
+      '<div class="rv-actions"><button type="button" class="rv-alt" data-ed-cancel>Cancel</button><button type="button" class="btn-main" data-ed-save>Update</button></div></div>' + (foot ? foot.outerHTML : '');
+    const $ = id => app.querySelector('#' + id), save = app.querySelector('[data-ed-save]'), ssn = $('edSsn'), eye = app.querySelector('.ed-eye');
+    let ssnVal = '';
+    const sync = () => { save.disabled = (ssnVal.length > 0 || !onFile) && ssnVal.length !== 9; };
+    ssn.oninput = () => { ssnVal = ssn.value.replace(/\D/g, '').slice(0, 9); ssn.value = fmt(ssnVal); sync(); };
+    eye.onclick = () => { const hidden = ssn.classList.toggle('ed-masked'); eye.setAttribute('aria-pressed', String(!hidden)); eye.setAttribute('aria-label', hidden ? 'Show SSN' : 'Hide SSN'); eye.firstChild.className = hidden ? 'bi bi-eye' : 'bi bi-eye-slash'; };
+    $('edDob').oninput = e => { const d = e.target.value.replace(/\D/g, '').slice(0, 8); e.target.value = d.length > 4 ? d.slice(0, 2) + '/' + d.slice(2, 4) + '/' + d.slice(4) : d.length > 2 ? d.slice(0, 2) + '/' + d.slice(2) : d; };
+    $('edIncome').oninput = e => { const d = e.target.value.replace(/\D/g, '').slice(0, 9); e.target.value = d ? money(d) : ''; };
+    const back = () => { reviewEdit = false; render(false); window.scrollTo(0, 0); };
+    app.querySelector('[data-ed-cancel]').onclick = back;
+    save.onclick = () => {
+      const v = id => $(id).value.trim();
+      Object.assign(c, { firstName: v('edFirst') || c.firstName, lastName: v('edLast') || c.lastName, address: v('edAddress') || c.address, homeowner: v('edOwn') === 'Own' ? 'Yes' : 'No' });
+      const d = v('edDob').replace(/\D/g, ''); if (d.length === 8) c.dob = d.slice(0, 2) + ' / ' + d.slice(2, 4) + ' / ' + d.slice(4);
+      const i = v('edIncome').replace(/\D/g, ''); if (i) c.income = i;
+      if (ssnVal.length === 9) { c.ssn = ssnVal; pqSsnSaved = true; }
+      back();
+    };
+    sync();
+  }
+  document.head.insertAdjacentHTML('beforeend', '<style>' +
+    '.phone .ed .title{margin-bottom:12px}.phone .ed-card .rv-head{background:#eaf8fc}' +
+    '.phone .ed-fields{padding:6px 20px 22px}.phone .ed-field{margin-top:16px}.phone .ed-field label{display:block;margin:0 0 8px;font-size:14px;color:#595959}' +
+    '.phone .ed-field .form-control,.phone .ed-field .form-select{min-height:52px;border:1px solid #cfcfcf;border-radius:12px;font-size:16px;color:#222;margin:0}' +
+    '.phone .ed-ssn{position:relative}.phone .ed-ssn .form-control{padding-right:48px}.phone .ed-ssn .form-control[data-on-file]::placeholder{color:#222;opacity:1}' +
+    '.phone .ed-masked{-webkit-text-security:disc}' +
+    '.phone .ed-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:none;color:#2A71D4;font-size:20px;display:grid;place-items:center}' +
+    '.phone .ed-lock{margin:10px 0 0}.phone .ed-note{margin:10px 0 0;font-size:12px;line-height:1.45;color:#595959;text-align:left}' +
+    '.phone .ed .btn-main:disabled{opacity:.45;cursor:default}' +
+    '</style>');
   document.head.insertAdjacentHTML('beforeend', '<style>' +
     '.phone .rv .sub{margin-bottom:24px}' +
     '.phone .rv-card{margin:0 0 20px;border:1px solid #d6d6d6;border-radius:16px;overflow:hidden;background:#fff;text-align:left}' +
