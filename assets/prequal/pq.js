@@ -2,11 +2,12 @@
 // to move on to the existing SMS code screen, with the offer the customer chose. Landing links are inert in the demo.
 (function () {
   // The offer editor ("Customize your offer"). Price model, shared with index.html (pqApr / pqPayment there):
-  // APR by term, 0.25% off with autopay, 3% origination fee, fixed monthly payment (amortized).
-  var APR = { 3: 13.01, 4: 13.49, 5: 13.99 };
+  // APR by loan amount, the same for every term ($1k-$4k 15.99%, $5k-$9k 14.49%, $10k-$15k 13.34%), 0.25% off with
+  // autopay, 3% origination fee, fixed monthly payment (amortized).
+  var aprForAmount = function (a) { return a < 5000 ? 15.99 : a < 10000 ? 14.49 : 13.34; };
   // The partner sent a selected offer of $12,500 (the customer can go up to $15,000 on the offer page).
   var offer = { amount: 12500, term: 3, autopay: false };
-  var apr = function (t) { return APR[t] - (offer.autopay ? 0.25 : 0); };
+  var apr = function (t) { return aprForAmount(offer.amount) - (offer.autopay ? 0.25 : 0); };
   var payment = function () { var r = apr(offer.term) / 1200, n = offer.term * 12; return offer.amount * r / (1 - Math.pow(1 + r, -n)); };
   var money = function (v) { return '$' + Math.round(v).toLocaleString('en-US'); };
   var set = function (key, text) {
