@@ -71,9 +71,9 @@ const SHOTS = [
   // landing, and the prequal code screen.
   { file: 'keep-full.png', page: 'landing-keep.html', q: '&consent=1&stat=1' },
   { file: 'keep-desktop.png', page: 'landing-keep.html', q: '&consent=1', w: 1440 },
-  { file: 'keep-stat-term.png', page: 'landing-keep.html', q: '&stat=1', el: '.kg-offer' },
-  { file: 'keep-stat-apr.png', page: 'landing-keep.html', q: '&stat=2', el: '.kg-offer' },
-  { file: 'keep-stat-pymt.png', page: 'landing-keep.html', q: '&stat=3', el: '.kg-offer' },
+  { file: 'keep-stat-term.png', page: 'landing-keep.html', q: '&stat=1', span: ['.kg-ribbon', '.kg-lockline'] },
+  { file: 'keep-stat-apr.png', page: 'landing-keep.html', q: '&stat=2', span: ['.kg-ribbon', '.kg-lockline'] },
+  { file: 'keep-stat-pymt.png', page: 'landing-keep.html', q: '&stat=3', span: ['.kg-ribbon', '.kg-lockline'] },
   { file: 'keep-edit.png', page: 'landing-keep.html', q: '&consent=1&stat=1&state=notmine', el: '.kg-card' },
   { file: 'keep-error.png', page: 'landing-keep.html', q: '&consent=1&stat=1&state=retry', el: '.kg-card' },
   { file: 'keep-soft.png', page: 'landing-keep.html', q: '&state=nomatch', first: true },
@@ -103,6 +103,11 @@ for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.ar
   }
   // First screen: what a customer sees before scrolling (pinned bar included), @2x.
   if (s.first) { await tab.screenshot({ path: 'assets/board/' + s.file }); console.log(s.file, '390x844 @2x'); continue; }
+  // A band of the page, full width, from the top of one element to the bottom of another, @2x.
+  if (s.span) {
+    const box = await tab.evaluate(([a, b]) => { const t = document.querySelector(a).getBoundingClientRect(), u = document.querySelector(b).getBoundingClientRect(); return { x: 0, y: Math.max(0, t.top + scrollY - 12), width: innerWidth, height: u.bottom - t.top + 24 }; }, s.span);
+    await tab.screenshot({ path: 'assets/board/' + s.file, clip: box, captureBeyondViewport: true }); console.log(s.file, Math.round(box.width) + 'x' + Math.round(box.height) + ' @2x'); continue;
+  }
   // Just one block (an input state), with a little white around it, @2x.
   if (s.el) {
     const box = await tab.evaluate((sel) => { const bar = document.querySelector('.lf2-paybar'); if (bar && !document.querySelector(sel).contains(bar)) bar.style.display = 'none'; const r = document.querySelector(sel).getBoundingClientRect(); return { x: Math.max(0, r.left - 16), y: r.top + scrollY - 16, width: Math.min(390, r.width + 32), height: r.height + 32 }; }, s.el);
