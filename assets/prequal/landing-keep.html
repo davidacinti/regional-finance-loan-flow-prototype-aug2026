@@ -11,8 +11,9 @@
    with phone + date of birth + SSN last 4 and "Confirm & Send Code"; a miss → "Update your phone number" with the error;
    3 misses → the soft landing "We couldn't find your offer"; came back with a different number → already saved.
    OFFER DETAILS: desktop shows Term, APR and Est. Mo. Pymt side by side. Mobile has room for one, so the slot beside
-   the amount is a CAROUSEL of the three: it advances on its own, and on tap, swipe or arrow keys. Values come from
-   pq.js (window.rfPq). ?stat=1|2|3 opens on a slide and holds it (board renders). */
+   the amount is a CAROUSEL of the three: it just goes through them on its own, with no dots or arrows (a tap, swipe
+   or arrow key also moves it). Values come from pq.js (window.rfPq). ?stat=1|2|3 opens on a slide and holds it
+   (board renders). */
 body{background:#fff}
 [hidden]{display:none!important}
 .rf-header{height:70px}.rf-header .rf-shell{padding-inline:20px}.rf-header .rf-logo-link img{width:auto;height:30px}
@@ -34,9 +35,6 @@ body{background:#fff}
 .kg-stat:not(:first-child){opacity:0;transform:translateX(100%)}
 .kg-stat span{display:block;font:400 13px/1.3 'Plus Jakarta Sans',sans-serif;color:#595959;white-space:nowrap}
 .kg-stat b{display:block;font:700 16px/1.4 'Plus Jakarta Sans',sans-serif;color:#0D2240;margin-top:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.kg-dots{position:absolute;left:0;right:0;top:100%;display:flex;justify-content:center;gap:5px;margin-top:6px}
-.kg-dots i{width:5px;height:5px;border-radius:50%;background:#CDCDCD;transition:background-color .3s}
-.kg-dots i.on{background:#2A71D4}
 .kg-lockline{display:flex;align-items:center;margin:0 -1px 13px}
 .kg-lockline::before,.kg-lockline::after{content:'';flex:1;height:1px;background:#CDCDCD}
 .kg-lock{width:40px;height:40px;border:1px solid #CDCDCD;border-radius:50%;display:grid;place-items:center;color:#363636;background:#fff}
@@ -124,7 +122,6 @@ body.kg-nomatch .rf-footer.pq-legal-footer{border-radius:0}
 .kg-stat,.kg-stat:not(:first-child){flex:none;width:150px;opacity:1!important;transform:none!important;transition:none}
 .kg-stat+.kg-stat{border-left:1px solid #CDCDCD}
 .kg-stat b{margin-top:7px}
-.kg-dots{display:none}
 .kg-m{display:none}
 .kg-why{grid-template-columns:repeat(4,1fr);gap:24px;margin-top:47px;padding:0}
 .kg-rule{display:none}
@@ -159,9 +156,7 @@ body.kg-nomatch .rf-footer.pq-legal-footer{border-radius:0}
 <li class="kg-stat"><span>Term</span><b data-kg="term">3 Years</b></li>
 <li class="kg-stat"><span>APR</span><b data-kg="apr">13.34%</b></li>
 <li class="kg-stat"><span>Est. Mo. Pymt</span><b data-kg="monthly">$423/mo</b></li>
-</ul></div>
-<div class="kg-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
-</div>
+</ul></div></div>
 </div>
 <div class="kg-lockline" aria-hidden="true"><span class="kg-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1" fill="currentColor"/></svg></span></div>
 <div class="kg-unlock">
@@ -228,20 +223,21 @@ body.kg-nomatch .rf-footer.pq-legal-footer{border-radius:0}
 
 <script src="pq.js?v=8"></script><script>(function(){
 // OFFER DETAILS CAROUSEL (mobile): Term → APR → Est. Mo. Pymt in the slot beside the amount, one at a time.
-// It advances on its own every few seconds until the customer takes over (tap or swipe = next/previous, arrow keys);
-// it waits while the page is hidden, and doesn't auto-advance for people who ask for reduced motion.
+// It just goes through them: it advances on its own every few seconds, round and round. No dots or arrows (Nov 18 2026).
+// A tap or swipe (or arrow keys) moves it by hand and it carries on from there. It waits while the page is hidden.
+// People who ask for reduced motion get the same rotation without the slide (the value simply changes).
 // Desktop (760 and up) shows all three side by side, so nothing moves there.
-var Q=window.rfPq,box=document.getElementById('kgStats'),stats=[].slice.call(box.querySelectorAll('.kg-stat')),dots=[].slice.call(box.querySelectorAll('.kg-dots i')),
- n=stats.length,i=0,timer=null,taken=false,wide=window.matchMedia('(min-width:760px)'),calm=window.matchMedia('(prefers-reduced-motion:reduce)');
+var Q=window.rfPq,box=document.getElementById('kgStats'),stats=[].slice.call(box.querySelectorAll('.kg-stat')),
+ n=stats.length,i=0,timer=null,held=false,wide=window.matchMedia('(min-width:760px)');
 function put(k,v){var e=box.querySelector('[data-kg="'+k+'"]');if(e)e.textContent=v}
 if(Q){var p=Q.price();put('term',p.term+(p.term===1?' Year':' Years'));put('apr',p.apr.toFixed(2)+'%');put('monthly','$'+Math.round(p.monthly).toLocaleString('en-US')+'/mo')}
 function place(el,x,on,jump){if(jump){el.style.transition='none'}el.style.transform='translateX('+x+'%)';el.style.opacity=on?'1':'0';if(jump){void el.offsetWidth;el.style.transition=''}}
 function show(k,dir){k=(k%n+n)%n;if(k===i)return;var from=stats[i],to=stats[k];dir=dir||1;
  place(to,100*dir,false,true);place(to,0,true);place(from,-100*dir,false);
- i=k;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}
+ i=k}
 function stop(){clearInterval(timer);timer=null}
-function play(){stop();if(taken||wide.matches||calm.matches||document.hidden)return;timer=setInterval(function(){show(i+1,1)},3200)}
-function take(k,dir){taken=true;stop();show(k,dir)}
+function play(){stop();if(held||wide.matches||document.hidden)return;timer=setInterval(function(){show(i+1,1)},3200)}
+function take(k,dir){show(k,dir);play()}
 var x0=null;
 box.addEventListener('pointerdown',function(e){x0=e.clientX});
 box.addEventListener('pointerup',function(e){if(x0===null||wide.matches)return;var dx=e.clientX-x0;x0=null;if(dx>24)take(i-1,-1);else take(i+1,1)});
@@ -251,7 +247,7 @@ document.addEventListener('visibilitychange',play);
 function relay(){stats.forEach(function(s,j){s.style.transition='none';s.style.transform=wide.matches?'':(j===i?'translateX(0)':'translateX(100%)');s.style.opacity=wide.matches?'':(j===i?'1':'0');void s.offsetWidth;s.style.transition=''});play()}
 if(wide.addEventListener)wide.addEventListener('change',relay);
 var q=location.search.match(/[?&]stat=([1-3])\b/);
-if(q){taken=true;var k=+q[1]-1;if(k!==i){stats.forEach(function(s,j){place(s,j===k?0:100,j===k,true)});i=k;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}}
+if(q){held=true;var k=+q[1]-1;if(k!==i){stats.forEach(function(s,j){place(s,j===k?0:100,j===k,true)});i=k}}
 relay();
 })();</script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}});})();</script><script>(function(){
 // States: file / notmine / nophone / nomatch / taken / retry, ?returning=1, ?lookup=none. ?consent=1 ticks the consent (board renders).
