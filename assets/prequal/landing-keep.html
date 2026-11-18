@@ -4,78 +4,146 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="rf-landing.css"><link rel="stylesheet" href="rf-landing-v2.css"><link rel="stylesheet" href="ds.css"><link rel="stylesheet" href="pq-offer.css?v=3"><link rel="stylesheet" href="phone.css?v=12"><link rel="stylesheet" href="landing-simple.css?v=8"><link rel="stylesheet" href="landing-unlock.css?v=8"><style>
-/* Design 3 · "Let's keep going" (Nov 13 2026). Same states and rules as Design 2 (landing-click.html):
-   number on file → Send Code; edit (pencil) or no number (Credit Karma) → "Confirm your mobile number" with
-   mobile + date of birth + SSN last 4 and "Confirm & Send Code"; 3 misses → full-page "We couldn't find your offer";
-   came back with a different number → already saved. Copy from the Nov 13 copy review. */
+/* "Let's keep going": THE prequal landing. Built to the final mockups of Nov 17 2026
+   (PI-1-landing-screens-mobile-desktop-2026-11-17.pdf: 1 Landing Page, 1a edit phone, 1b error (no match),
+   Soft-Landing "Start new application"), mobile (393 wide) and desktop (760 and up).
+   States: number on file → "Text me a code"; edit (pencil) or no number (Credit Karma) → "Confirm your mobile number"
+   with phone + date of birth + SSN last 4 and "Confirm & Send Code"; a miss → "Update your phone number" with the error;
+   3 misses → the soft landing "We couldn't find your offer"; came back with a different number → already saved.
+   OFFER DETAILS: desktop shows Term, APR and Est. Mo. Pymt side by side. Mobile has room for one, so the slot beside
+   the amount is a CAROUSEL of the three: it advances on its own, and on tap, swipe or arrow keys. Values come from
+   pq.js (window.rfPq). ?stat=1|2|3 opens on a slide and holds it (board renders). */
 body{background:#fff}
 [hidden]{display:none!important}
-.kg-hero{background:linear-gradient(180deg,#D9F3FC 0%,#F4F7CF 100%);padding:26px 20px 72px;text-align:center}
-.kg-hi{font:600 18px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 4px}
-.kg-h1{font:800 34px/1.12 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 auto;max-width:340px;letter-spacing:-.01em}
-.kg-wrap{padding:0 16px;margin-top:-48px}
+.rf-header{height:70px}.rf-header .rf-shell{padding-inline:20px}.rf-header .rf-logo-link img{width:auto;height:30px}
+.kg-hero{background:linear-gradient(72deg,#F4F7D0 0%,#E2F5DF 40%,#C8F2FB 100%);padding:19px 20px 40px;text-align:center}
+.kg-hi{font:700 19px/1.37 'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:#363636;margin:0 0 10px}
+.kg-h1{font:800 32px/1.12 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 auto;max-width:340px}
+.kg-wrap{padding:0 20px;margin-top:-18px}
 .kg-card{max-width:440px;margin:0 auto;background:#fff;border:1px solid #CDCDCD;border-radius:24px;overflow:hidden}
-.kg-ribbon{background:#0D2240;color:#fff;font:700 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:10px 8px;border-radius:24px 24px 0 0;margin:-1px -1px 0;white-space:nowrap}
-.kg-offer{display:flex;align-items:center;justify-content:center;gap:20px;padding:22px 16px 26px}
-.kg-amt{font:800 44px/1 'Plus Jakarta Sans',sans-serif;color:#2A71D4;font-variant-numeric:tabular-nums}
-.kg-div{width:1px;height:48px;background:#CDCDCD}
-.kg-term{text-align:center}.kg-term span{display:block;font:400 14px/1.3 'Plus Jakarta Sans',sans-serif;color:#595959}
-.kg-term b{display:block;font:700 17px/1.4 'Plus Jakarta Sans',sans-serif;color:#0D2240;margin-top:4px}
-.kg-lockline{display:flex;align-items:center;margin:0 -1px 14px}
+.kg-ribbon{background:#0D2240;color:#fff;font:700 11px/1 'Plus Jakarta Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:8px 8px;border-radius:24px 24px 0 0;margin:-1px -1px 0;white-space:nowrap}
+/* Offer: amount | one detail at a time (mobile carousel) */
+.kg-offer{display:flex;align-items:center;padding:26px 20px 18px 22px}
+.kg-amt{flex:none;font:800 44px/1 'Plus Jakarta Sans',sans-serif;font-size:clamp(34px,11.2vw,44px);color:#2A71D4;font-variant-numeric:tabular-nums}
+.kg-div{flex:none;width:1px;height:46px;background:#CDCDCD;margin-left:22px}
+.kg-stats{position:relative;flex:1;min-width:0;border-radius:8px;cursor:pointer;touch-action:pan-y;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.kg-stats:focus-visible{outline:2px solid #2A71D4;outline-offset:4px}
+.kg-clip{overflow:hidden}
+.kg-track{display:grid;list-style:none;margin:0;padding:0}
+.kg-stat{grid-area:1/1;text-align:center;transition:transform .45s cubic-bezier(.3,.7,.2,1),opacity .35s ease}
+.kg-stat:not(:first-child){opacity:0;transform:translateX(100%)}
+.kg-stat span{display:block;font:400 13px/1.3 'Plus Jakarta Sans',sans-serif;color:#595959;white-space:nowrap}
+.kg-stat b{display:block;font:700 16px/1.4 'Plus Jakarta Sans',sans-serif;color:#0D2240;margin-top:5px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.kg-dots{position:absolute;left:0;right:0;top:100%;display:flex;justify-content:center;gap:5px;margin-top:6px}
+.kg-dots i{width:5px;height:5px;border-radius:50%;background:#CDCDCD;transition:background-color .3s}
+.kg-dots i.on{background:#2A71D4}
+.kg-lockline{display:flex;align-items:center;margin:0 -1px 13px}
 .kg-lockline::before,.kg-lockline::after{content:'';flex:1;height:1px;background:#CDCDCD}
 .kg-lock{width:40px;height:40px;border:1px solid #CDCDCD;border-radius:50%;display:grid;place-items:center;color:#363636;background:#fff}
 .kg-lock svg{width:19px;height:19px}
-.kg-unlock{padding:0 20px 20px}
-.kg-title{font:600 18px/1.35 'Plus Jakarta Sans',sans-serif;color:#363636;text-align:center;margin:0 0 14px}
-.kg-sub{font:400 14px/1.45 'Plus Jakarta Sans',sans-serif;color:#595959;text-align:center;margin:-8px auto 16px;max-width:320px}
-.kg-num{display:flex;align-items:center;justify-content:center;gap:12px;background:#F2F2F2;border-radius:16px;height:60px;margin:0 0 16px;font:600 22px/1 'Plus Jakarta Sans',sans-serif;color:#363636;font-variant-numeric:tabular-nums;position:relative}
-.kg-num button{position:absolute;right:12px;border:0;background:none;padding:8px;color:#363636;display:grid;place-items:center;border-radius:50%}
+.kg-unlock{padding:0 20px 17px}
+.kg-title{font:600 16px/1.4 'Plus Jakarta Sans',sans-serif;color:#363636;text-align:center;margin:0 0 13px}
+.kg-title.kg-small{margin:0 0 2px}
+.kg-lead{font:400 14px/1.45 'Plus Jakarta Sans',sans-serif;color:#5C677D;text-align:center;margin:0 0 15px}
+.kg-sub{font:400 14px/1.45 'Plus Jakarta Sans',sans-serif;color:#595959;text-align:center;margin:-8px auto 25px;max-width:320px}
+.kg-num{display:flex;align-items:center;justify-content:center;gap:12px;background:#F2F2F2;border-radius:16px;height:60px;margin:0 0 19px;font:600 24px/1 'Plus Jakarta Sans',sans-serif;color:#363636;font-variant-numeric:tabular-nums;position:relative}
+.kg-num button{position:absolute;right:14px;border:0;background:none;padding:8px;color:#363636;display:grid;place-items:center;border-radius:50%}
 .kg-num button:focus-visible{outline:2px solid #2A71D4}
-.kg-num svg{width:20px;height:20px}
-/* Confirm your mobile number: stacked fields (mobile, date of birth, SSN last 4). */
-.kg-card #ppCheck{padding:0}
-.kg-field{margin:0 0 16px}
-.kg-field label{display:block;font:600 15px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 8px}
+.kg-num svg{width:21px;height:21px;stroke-width:2.2}
+/* Confirm your mobile number: stacked fields (phone, date of birth, SSN last 4). */
+.kg-card #ppCheck{padding:5px 0 0}
+.kg-field{margin:0 0 26px}
+.kg-field:last-child{margin-bottom:20px}
+.kg-field label{display:block;font:600 16px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 9px}
 .kg-in{position:relative}
-.kg-field input{width:100%;height:56px;border:1px solid #CDCDCD;border-radius:16px;padding:0 16px;font:400 16px 'Plus Jakarta Sans',sans-serif;color:#363636;background:#fff}
+.kg-field input{width:100%;height:55px;border:1px solid #CDCDCD;border-radius:16px;padding:0 16px;font:400 16px 'Plus Jakarta Sans',sans-serif;color:#363636;background:#fff}
 #ppCheck .kg-field input:focus{outline:none;border-color:#2A71D4;box-shadow:0 0 0 3px #2A71D433}
 .kg-field input::placeholder{color:#8A8A8A}
 .kg-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;padding:8px;color:#2A71D4;display:grid;place-items:center}
 .kg-eye svg{width:22px;height:22px}
 #ppCheck.kg-miss .kg-id input{border-color:#D32F2F}
-.kg-err{display:flex;gap:10px;align-items:flex-start;border:1px solid #D32F2F;background:#FDECEC;border-radius:16px;padding:14px;margin:0 0 18px;font:400 14px/1.45 'Plus Jakarta Sans',sans-serif;color:#B42318;text-align:left}
+#ppCheck.kg-miss .kg-sub{margin-bottom:24px}
+.kg-err{display:flex;gap:10px;align-items:flex-start;border:1px solid #F3B1AC;background:#FDECEC;border-radius:12px;padding:14px 14px 12px;margin:0 0 18px;font:400 14px/1.35 'Plus Jakarta Sans',sans-serif;color:#C5281C;text-align:left}
 .kg-err a{color:#363636;font-weight:700}
-.kg-err i{flex:none;width:20px;height:20px;border-radius:50%;background:#D32F2F;color:#fff;font:700 13px/20px 'Plus Jakarta Sans',sans-serif;font-style:normal;text-align:center;margin-top:1px}
+.kg-err i{flex:none;width:18px;height:18px;border-radius:50%;background:#D32F2F;color:#fff;font:700 12px/18px 'Plus Jakarta Sans',sans-serif;font-style:normal;text-align:center;margin-top:1px}
 /* The consent + button block (kept as .lf2-paybar so the page's rules and pq.js work unchanged). */
 .kg-card .lf2-paybar.pp-inline{position:static;box-shadow:none;border:0;background:none;padding:0;margin:0}
-.kg-card .lf2-paybar .in{padding:0;max-width:none}
-.kg-card .lf2-paybar .row1{display:block;margin-top:16px}
-.kg-card .lf2-paybar .row1 .rf-btn{width:100%;height:52px;border-radius:999px;font:500 17px 'Plus Jakarta Sans',sans-serif}
+.kg-card .lf2-paybar .in{padding:0;max-width:none;gap:0}
+.kg-card .lf2-paybar .row1{display:block;margin-top:15px}
+.kg-card .lf2-paybar .row1 .rf-btn{width:100%;max-width:none;height:48px;border-radius:999px;font:500 14px 'Plus Jakarta Sans',sans-serif}
+.kg-card .lf2-consent.form-check{gap:14px;padding-left:3px}
+.kg-card .lf2-consent .form-check-input{flex:0 0 18px;width:18px;height:18px;margin-top:1px;border:1.5px solid #2A71D4;border-radius:3px;background-color:#fff}
+.kg-card .lf2-consent .form-check-input:checked{background-color:#fff;border-color:#2A71D4;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%232A71D4' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.6' d='m5 10.5 3.5 3.5L15 7'/%3E%3C/svg%3E")}
 .kg-card .lf2-consent label{font-size:12px;line-height:1.5;color:#595959}
-.kg-card .kg-credit{text-align:center;font-size:13px;color:#595959;margin:14px 0 0}
+.kg-card .lf2-paybar.pp-inline .lf2-consent label a{color:#363636;font-weight:600;text-decoration:underline;text-decoration-color:#363636;text-underline-offset:2px}
+.kg-card .kg-credit{text-align:center;font-size:12px;line-height:1.5;color:#5C677D;margin:13px 0 0}
 .kg-card .pp-nomatch{padding:4px 0 0}
-.kg-why{max-width:440px;margin:32px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px 18px;list-style:none}
+.kg-why{max-width:440px;margin:28px auto 0;padding:0 20px;display:grid;grid-template-columns:1fr 1fr;gap:24px 18px;list-style:none}
 .kg-why li{list-style:none}
-.kg-why .ic{width:44px;height:44px;border-radius:8px;background:#5B9BE6;color:#fff;display:grid;place-items:center;margin-bottom:12px}
+.kg-why .ic{width:48px;height:48px;border-radius:8px;background:#6FA6EC;color:#fff;display:grid;place-items:center;margin-bottom:11px}
 .kg-why .ic svg{width:24px;height:24px}
-.kg-why b{display:block;font:700 15px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin-bottom:4px}
-.kg-why span{display:block;font:400 14px/1.45 'Plus Jakarta Sans',sans-serif;color:#595959}
-.kg-rule{max-width:440px;height:1px;background:#CDCDCD;margin:28px auto 0;border:0}
-.kg-trust{max-width:440px;margin:24px auto 28px;padding:0 20px;text-align:center}
+.kg-why b{display:block;font:700 14px/1.43 'Plus Jakarta Sans',sans-serif;color:#363636;margin-bottom:0}
+.kg-why span{display:block;font:400 14px/1.43 'Plus Jakarta Sans',sans-serif;color:#595959}
+.kg-rule{max-width:400px;width:calc(100% - 40px);height:1px;background:#CDCDCD;margin:34px auto 0;border:0;opacity:1}
+.kg-trust{max-width:440px;margin:59px auto 30px;padding:0 20px;text-align:center}
 .kg-photos{position:relative;height:174px;margin:0 auto 18px}
-.kg-photos img{position:absolute;top:5px;left:50%;width:118px;height:150px;border:4px solid #fff;border-radius:15px;box-shadow:0 6px 16px #0002;object-fit:cover}
-.kg-photos img:nth-child(1){z-index:1;transform:translateX(-135px) rotate(-10deg)}.kg-photos img:nth-child(2){z-index:2;transform:translateX(-59px)}.kg-photos img:nth-child(3){z-index:1;transform:translateX(18px) rotate(10deg)}
-.kg-trust h2{font:600 17px/1.3 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 8px}
-.kg-trust p{font:400 13px/1.5 'Plus Jakarta Sans',sans-serif;color:#595959;margin:0 auto 16px;max-width:340px}
-.kg-rating{display:flex;align-items:center;justify-content:center;gap:9px}.kg-rating .leaf{width:34px;height:52px;object-fit:contain}
-.kg-rating strong{font:700 15px 'Plus Jakarta Sans',sans-serif;white-space:nowrap;color:#363636}.kg-rating strong span{font-weight:400}.kg-rating .tp{width:96px;height:auto}
-/* No match after 3 tries: its own page (header, message, button, short legal footer). */
-.kg-none{max-width:440px;margin:0 auto;padding:40px 20px 40px;text-align:center}
-.kg-none h1{font:800 34px/1.15 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 16px;letter-spacing:-.01em}
-.kg-none p{font:400 17px/1.5 'Plus Jakarta Sans',sans-serif;color:#595959;margin:0 0 28px}
-.kg-none .rf-btn{display:flex;align-items:center;justify-content:center;width:100%;height:52px;border-radius:999px;font:500 17px 'Plus Jakarta Sans',sans-serif}
+.kg-photos img{position:absolute;top:5px;left:50%;width:122px;height:156px;border:4px solid #fff;border-radius:15px;box-shadow:0 6px 16px #0002;object-fit:cover}
+.kg-photos img:nth-child(1){z-index:1;transform:translateX(-167px) rotate(-8deg)}.kg-photos img:nth-child(2){z-index:2;transform:translateX(-61px)}.kg-photos img:nth-child(3){z-index:1;transform:translateX(45px) rotate(8deg)}
+.kg-trust h2{font:600 16px/1.4 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 8px}
+.kg-trust p{font:400 14px/1.43 'Plus Jakarta Sans',sans-serif;color:#595959;margin:0 auto 14px;max-width:353px}
+.kg-rating{display:flex;align-items:center;justify-content:center;gap:12px}.kg-rating .leaf{width:38px;height:57px;object-fit:contain}
+.kg-rating strong{font:700 17px 'Plus Jakarta Sans',sans-serif;white-space:nowrap;color:#363636}.kg-rating strong span{font-weight:400}.kg-rating .tp{width:104px;height:auto}
+/* Footer as drawn: small top corners, 11px legal copy. */
+.rf-footer.pq-legal-footer{border-radius:16px 16px 0 0;padding:32px 30px}
+.rf-footer.pq-legal-footer .legal{font-size:11px;line-height:1.4;gap:10px}
+/* Soft landing (no match after 3 tries): its own page: the funnel's larger logo, message, button, short legal footer. */
+.kg-none{max-width:440px;margin:0 auto;padding:33px 20px 32px;text-align:center}
+.kg-none h1{font:800 33px/1.28 'Plus Jakarta Sans',sans-serif;color:#363636;margin:0 0 13px}
+.kg-none p{font:400 16px/1.52 'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;color:#595959;margin:0 0 30px}
+.kg-none .rf-btn{display:flex;align-items:center;justify-content:center;width:100%;max-width:none;height:48px;border-radius:999px;font:500 14px 'Plus Jakarta Sans',sans-serif}
 body.kg-nomatch main>:not(#ppNoMatch){display:none!important}
 body.kg-nomatch .kg-full{display:none}
+body.kg-nomatch{min-height:100vh;display:flex;flex-direction:column}body.kg-nomatch main{flex:1}
+body.kg-nomatch .rf-header{height:78px}
+body.kg-nomatch .rf-header .rf-logo-link img{width:auto;height:38px}
+body.kg-nomatch .rf-footer.pq-legal-footer{border-radius:0}
+@media (max-width:374px){.kg-stat span{font-size:12px}}
+@media (max-width:339px){.kg-wrap{padding:0 12px}.kg-offer{padding:26px 12px 22px 14px}.kg-div{margin-left:14px}.kg-unlock{padding:0 14px 19px}.kg-num{font-size:21px}}
+/* Desktop (the 1440 mockups): a 632px card, the three offer details side by side, four reasons in a row. */
+@media (min-width:760px){
+.rf-header{height:78px}.rf-header .rf-shell{padding-inline:80px}.rf-header .rf-logo-link img{height:38px}
+.kg-hero{padding:40px 24px 61px}
+.kg-h1{max-width:none}
+.kg-wrap{padding:0 24px}
+.kg-card,.kg-why,.kg-trust{max-width:632px}
+.kg-offer{flex-direction:column;padding:26px 20px 16px}
+.kg-div{display:none}
+.kg-stats{flex:none;margin-top:18px;cursor:default}
+.kg-clip{overflow:visible}
+.kg-track{display:flex}
+.kg-stat,.kg-stat:not(:first-child){flex:none;width:150px;opacity:1!important;transform:none!important;transition:none}
+.kg-stat+.kg-stat{border-left:1px solid #CDCDCD}
+.kg-stat b{margin-top:7px}
+.kg-dots{display:none}
+.kg-m{display:none}
+.kg-why{grid-template-columns:repeat(4,1fr);gap:24px;margin-top:47px;padding:0}
+.kg-rule{display:none}
+.kg-trust{margin-top:67px;margin-bottom:106px;padding:0}
+.kg-photos{height:254px;overflow:hidden;margin-bottom:18px}
+.kg-photos img{top:0;width:214px;height:254px;border:4px solid #fff;border-radius:14px;box-shadow:none}
+.kg-photos img:nth-child(1){width:240px;height:320px;top:-33px;transform:translateX(-283px) rotate(-11deg);border:6px solid #fff;border-radius:18px;box-shadow:0 6px 16px #0001}
+.kg-photos img:nth-child(2){transform:translateX(-107px)}
+.kg-photos img:nth-child(3){width:240px;height:320px;top:-33px;transform:translateX(46px) rotate(11deg);border:6px solid #fff;border-radius:18px;box-shadow:0 6px 16px #0001}
+.kg-trust h2{margin-bottom:7px}
+.kg-trust p{max-width:632px;margin-bottom:15px}
+.kg-rating{gap:22px}.kg-rating .leaf{width:57px;height:86px}.kg-rating strong{font-size:26px}.kg-rating .tp{width:156px}
+.rf-footer.pq-legal-footer{border-radius:0;padding:28px 30px 40px}
+.kg-none{max-width:560px;padding-top:69px}
+.kg-none h1{margin-bottom:15px}
+.kg-none p{max-width:500px;margin-left:auto;margin-right:auto;letter-spacing:0}
+.kg-none .rf-btn{width:320px;margin:0 auto}
+}
+@media (prefers-reduced-motion:reduce){.kg-stat{transition:none}}
 </style></head><body>
 <header class="rf-header"><div class="rf-shell"><a class="rf-logo-link" href="#" aria-label="Regional Finance home"><img src="logo-header.svg" alt="Regional Finance"></a></div></header>
 <main>
@@ -86,15 +154,22 @@ body.kg-nomatch .kg-full{display:none}
 <div class="kg-offer">
 <div class="kg-amt" id="kgAmt" data-pq="amount">$12,500</div>
 <div class="kg-div" aria-hidden="true"></div>
-<div class="kg-term"><span>Term</span><b>36 months</b></div>
+<div class="kg-stats" id="kgStats" role="group" aria-roledescription="carousel" aria-label="Offer details: term, APR and estimated monthly payment" tabindex="0">
+<div class="kg-clip"><ul class="kg-track">
+<li class="kg-stat"><span>Term</span><b data-kg="term">3 Years</b></li>
+<li class="kg-stat"><span>APR</span><b data-kg="apr">13.34%</b></li>
+<li class="kg-stat"><span>Est. Mo. Pymt</span><b data-kg="monthly">$423/mo</b></li>
+</ul></div>
+<div class="kg-dots" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+</div>
 </div>
 <div class="kg-lockline" aria-hidden="true"><span class="kg-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1" fill="currentColor"/></svg></span></div>
 <div class="kg-unlock">
-<h2 class="kg-title" data-pp-fileonly>Unlock your offer</h2>
-<div class="kg-num" id="ppFile"><span>(123) 456-7890</span><button type="button" data-notmine aria-label="Use a different phone number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></div>
+<div data-pp-fileonly><h2 class="kg-title kg-small">Unlock your full offer</h2><p class="kg-lead">We’ll text a code to confirm it’s you.</p></div>
+<div class="kg-num" id="ppFile"><span>(123) 456-7890</span><button type="button" data-notmine aria-label="Use a different phone number"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/><path d="m14.5 5.5 3 3"/></svg></button></div>
 <section id="ppCheck" hidden aria-labelledby="ppCheckTitle">
-<h2 class="kg-title" id="ppCheckTitle">Confirm your mobile number</h2>
-<p class="kg-sub">We also need a few details to unlock your offer.</p>
+<h2 class="kg-title" id="ppCheckTitle"><span data-kg-ok>Confirm your mobile number</span><span data-kg-miss hidden>Update your phone number</span></h2>
+<p class="kg-sub"><span data-kg-ok>We also need a few details to unlock your offer.</span><span data-kg-miss hidden>Please verify your identity to make changes.</span></p>
 <p class="kg-err" id="ppErr" hidden role="alert"><i aria-hidden="true">!</i><span>We couldn’t match the date of birth and SSN to an application. Double-check them or <a href="#" data-pq-newapp>start a new application</a>.</span></p>
 <div class="kg-field"><label for="ppPhone">Phone Number</label><input id="ppPhone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(•••) •••-••••" maxlength="14"></div>
 <div class="kg-field kg-id"><label for="ppDob">Date of Birth</label><input id="ppDob" inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
@@ -107,18 +182,18 @@ body.kg-nomatch .kg-full{display:none}
 <p class="pp-back"><button type="button" class="pp-link" data-pp-back>Go back</button></p>
 </section>
 <div class="rf-paybar lf2-paybar pp-inline" data-inline role="region" aria-label="Unlock your offer"><div class="in">
-<div class="form-check rf-form-check lf2-consent"><input class="form-check-input" type="checkbox" id="legal"><label class="form-check-label" for="legal">I have read and agreed to the: <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a>, <a href="#">ESIGN Act Consent</a> and <a href="#">Consent to Receive Commercial Emails</a>. These materials include important information so please review them before advancing to the next stage of our digital loan process.</label></div>
-<div class="row1"><button type="button" class="btn rf-btn rf-btn-primary">Send Code</button></div>
-<p class="kg-credit">This won’t affect your credit score.</p>
+<div class="form-check rf-form-check lf2-consent"><input class="form-check-input" type="checkbox" id="legal"><label class="form-check-label" for="legal">I have read and agreed to the: <a href="#">Terms of Use</a>, <a href="#">Privacy Policy</a>, <a href="#">ESIGN Act Consent</a> and <a href="#">Consent to Receive Commercial Emails</a>.</label></div>
+<div class="row1"><button type="button" class="btn rf-btn rf-btn-primary">Text me a code</button></div>
+<p class="kg-credit">Continuing won’t affect your credit score.</p>
 </div></div>
 </div>
 </section>
 </div>
 <ul class="kg-why" aria-label="Why Regional Finance">
-<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16a8 8 0 1 1 16 0"/><path d="m12 16 3.5-4"/><circle cx="12" cy="16" r="1.2"/></svg></span><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.</span></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3v2h-3v-2H9v2H6v-3a6 6 0 0 1-1-5z"/><path d="M15 9h.01"/><path d="M10 6h4"/></svg></span><b>Money as soon as today</b><span>Link an eligible bank account for instant funding.</span></li>
-<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-8a2 2 0 0 1 3 2l-1 4h6a2 2 0 0 1 2 2l-2 7a2 2 0 0 1-2 2H7"/></svg></span><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></li>
+<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7.5 14.5a4.5 4.5 0 0 1 9 0"/><path d="m12 14.5 2.6-3.4"/></svg></span><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.</span></li>
+<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></span><b>Simple, fast, and<br class="kg-m"> 100% online</b><span>Start now and finish on your own time.</span></li>
+<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11a7 6 0 0 1 13-2h2v4l-2 1v3h-3v2h-3v-2H9v2H6v-3a6 6 0 0 1-1-5z"/><path d="M15 9h.01"/><path d="M10 6h4"/></svg></span><b>Money as soon<br class="kg-m"> as&nbsp;today</b><span>Link an eligible bank account for instant funding.</span></li>
+<li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v9H4v-9z"/><path d="M7 11l4-8a2 2 0 0 1 3 2l-1 4h6a2 2 0 0 1 2 2l-2 7a2 2 0 0 1-2 2H7"/></svg></span><b>A payment you’re<br class="kg-m"> comfortable with</b><span>Customize your amount and term as you continue.</span></li>
 </ul>
 <hr class="kg-rule">
 <section class="kg-trust" aria-label="Trusted by your neighbors">
@@ -151,8 +226,35 @@ body.kg-nomatch .kg-full{display:none}
 </div></footer>
 <style>.pq-legal-footer .legal{margin-top:0}.pq-legal-footer .legal a{color:inherit;text-decoration:underline}.pq-legal-footer .pq-proc{margin-top:12px}.pq-legal-footer .pq-gap{margin-top:12px}.pq-legal-footer .pq-links{display:flex;flex-wrap:wrap;column-gap:10px;row-gap:4px}.pq-legal-footer .pq-links a{text-decoration:none}</style>
 
-<script src="pq.js?v=7"></script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}});})();</script><script>(function(){
-// Same states as Design 2 (landing-click.html): file / notmine / nophone / nomatch / taken / retry, ?returning=1, ?lookup=none.
+<script src="pq.js?v=8"></script><script>(function(){
+// OFFER DETAILS CAROUSEL (mobile): Term → APR → Est. Mo. Pymt in the slot beside the amount, one at a time.
+// It advances on its own every few seconds until the customer takes over (tap or swipe = next/previous, arrow keys);
+// it waits while the page is hidden, and doesn't auto-advance for people who ask for reduced motion.
+// Desktop (760 and up) shows all three side by side, so nothing moves there.
+var Q=window.rfPq,box=document.getElementById('kgStats'),stats=[].slice.call(box.querySelectorAll('.kg-stat')),dots=[].slice.call(box.querySelectorAll('.kg-dots i')),
+ n=stats.length,i=0,timer=null,taken=false,wide=window.matchMedia('(min-width:760px)'),calm=window.matchMedia('(prefers-reduced-motion:reduce)');
+function put(k,v){var e=box.querySelector('[data-kg="'+k+'"]');if(e)e.textContent=v}
+if(Q){var p=Q.price();put('term',p.term+(p.term===1?' Year':' Years'));put('apr',p.apr.toFixed(2)+'%');put('monthly','$'+Math.round(p.monthly).toLocaleString('en-US')+'/mo')}
+function place(el,x,on,jump){if(jump){el.style.transition='none'}el.style.transform='translateX('+x+'%)';el.style.opacity=on?'1':'0';if(jump){void el.offsetWidth;el.style.transition=''}}
+function show(k,dir){k=(k%n+n)%n;if(k===i)return;var from=stats[i],to=stats[k];dir=dir||1;
+ place(to,100*dir,false,true);place(to,0,true);place(from,-100*dir,false);
+ i=k;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}
+function stop(){clearInterval(timer);timer=null}
+function play(){stop();if(taken||wide.matches||calm.matches||document.hidden)return;timer=setInterval(function(){show(i+1,1)},3200)}
+function take(k,dir){taken=true;stop();show(k,dir)}
+var x0=null;
+box.addEventListener('pointerdown',function(e){x0=e.clientX});
+box.addEventListener('pointerup',function(e){if(x0===null||wide.matches)return;var dx=e.clientX-x0;x0=null;if(dx>24)take(i-1,-1);else take(i+1,1)});
+box.addEventListener('pointercancel',function(){x0=null});
+box.addEventListener('keydown',function(e){if(wide.matches)return;if(e.key==='ArrowRight'||e.key==='Enter'||e.key===' '){e.preventDefault();take(i+1,1)}else if(e.key==='ArrowLeft'){e.preventDefault();take(i-1,-1)}});
+document.addEventListener('visibilitychange',play);
+function relay(){stats.forEach(function(s,j){s.style.transition='none';s.style.transform=wide.matches?'':(j===i?'translateX(0)':'translateX(100%)');s.style.opacity=wide.matches?'':(j===i?'1':'0');void s.offsetWidth;s.style.transition=''});play()}
+if(wide.addEventListener)wide.addEventListener('change',relay);
+var q=location.search.match(/[?&]stat=([1-3])\b/);
+if(q){taken=true;var k=+q[1]-1;if(k!==i){stats.forEach(function(s,j){place(s,j===k?0:100,j===k,true)});i=k;dots.forEach(function(d,j){d.classList.toggle('on',j===i)})}}
+relay();
+})();</script><script>(function(){var c=document.getElementById("legal"),b=document.querySelector(".lf2-paybar .rf-btn");if(!c||!b)return;function s(){b.disabled=!c.checked;}c.addEventListener("change",s);s();})();</script><script>(function(){var b=document.querySelector(".lf2-paybar .rf-btn"),row=b&&b.parentNode,w=document.querySelector(".lf2-consent"),c=document.getElementById("legal");if(!b||!w||!c)return;c.addEventListener("change",function(){if(c.checked)w.classList.remove("lf2-need");});row.addEventListener("click",function(e){if(!b.disabled)return;var r=b.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)return;if(!c.checked){w.classList.remove("lf2-need");void w.offsetWidth;w.classList.add("lf2-need");c.focus({preventScroll:true});}});})();</script><script>(function(){
+// States: file / notmine / nophone / nomatch / taken / retry, ?returning=1, ?lookup=none. ?consent=1 ticks the consent (board renders).
 var c=document.getElementById('legal'),b=document.querySelector('.lf2-paybar .rf-btn'),F=document.getElementById('ppFile'),K=document.getElementById('ppCheck'),M=document.getElementById('ppNoMatch'),T=document.getElementById('ppTaken');
 var R=/[?&]returning=1\b/.test(location.search);
 var d=function(v,n){return v.replace(/\D/g,'').slice(0,n)};
@@ -167,21 +269,24 @@ var eye=document.getElementById('kgEye'),ssn=document.getElementById('ppSsn');
 eye.addEventListener('click',function(){var on=ssn.type==='password';ssn.type=on?'text':'password';eye.setAttribute('aria-pressed',String(on));eye.setAttribute('aria-label',on?'Hide SSN last 4':'Show SSN last 4');eye.querySelector('[data-slash]').style.display=on?'none':''});
 var bar=document.querySelector('.lf2-paybar');
 var E=document.getElementById('ppErr'),tries=0,MAX=3;
+// After a miss the block reads "Update your phone number / Please verify your identity to make changes." (mockup 1b).
+function heads(missed){K.querySelectorAll('[data-kg-ok]').forEach(function(x){x.hidden=missed});K.querySelectorAll('[data-kg-miss]').forEach(function(x){x.hidden=!missed})}
 function show(st){F.hidden=st!=='file';K.hidden=st!=='notmine'&&st!=='nophone';M.hidden=st!=='nomatch';T.hidden=st!=='taken';
- bar.hidden=st==='nomatch'||st==='taken';if(K.hidden){E.hidden=true;K.classList.remove('kg-miss')}
+ bar.hidden=st==='nomatch'||st==='taken';if(K.hidden){E.hidden=true;K.classList.remove('kg-miss');heads(false)}
  document.body.classList.toggle('kg-nomatch',st==='nomatch');
- b.textContent=st==='file'?'Send Code':'Confirm & Send Code';
+ b.textContent=st==='file'?'Text me a code':'Confirm & Send Code';
  document.querySelectorAll('[data-pp-fileonly]').forEach(function(x){x.hidden=st!=='file'});s()}
 document.querySelectorAll('[data-notmine]').forEach(function(x){x.addEventListener('click',function(){show('notmine');ctr(K)})});
 document.querySelectorAll('[data-pp-back]').forEach(function(x){x.addEventListener('click',function(){show('file');ctr(F)})});
 c.addEventListener('change',s);
 function miss(quiet){tries++;if(tries>=MAX){show('nomatch');window.scrollTo(0,0);return}var db=document.getElementById('ppDob');
- E.hidden=false;K.classList.add('kg-miss');db.value='';ssn.value='';s();if(!quiet){ctr(K);db.focus({preventScroll:true})}}
+ E.hidden=false;K.classList.add('kg-miss');heads(true);db.value='';ssn.value='';s();if(!quiet){ctr(K);db.focus({preventScroll:true})}}
 var L=/[?&]lookup=none\b/.test(location.search);
 document.addEventListener('click',function(e){if(!e.target.closest('.lf2-paybar .rf-btn')||b.disabled||K.hidden)return;
  var no=L||d(ssn.value,4)==='0000',taken=!no&&R&&d(document.getElementById('ppPhone').value,10).slice(-4)!=='7890';
  if(!no&&!taken)return;e.stopImmediatePropagation();e.preventDefault();if(no){miss();return}show('taken');ctr(T)},true);
+if(/[?&]consent=1\b/.test(location.search))c.checked=true;
 var m=location.search.match(/[?&]state=(notmine|nophone|nomatch|taken|retry)\b/);
-if(m&&m[1]==='retry'){show('notmine');document.getElementById('ppPhone').value='(864) 555-1234';miss(true)}else show(m?m[1]:'file');
+if(m&&m[1]==='retry'){show('notmine');miss(true)}else show(m?m[1]:'file');
 if(R)document.querySelectorAll('[data-first],[data-back]').forEach(function(x){x.hidden=x.hasAttribute('data-first')});
 })();</script></body></html>

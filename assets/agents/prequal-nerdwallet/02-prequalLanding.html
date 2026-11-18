@@ -4,9 +4,9 @@
 <title>Known customer prequal · NerdWallet · Pre-qualified offer landing · Regional Finance loan flow v1 (agent-readable)</title>
 <style>body{font:16px/1.5 system-ui,sans-serif;max-width:760px;margin:24px auto;padding:0 16px;color:#222}header,nav,.meta{font-size:14px;color:#555}.screen,.spec{border:1px solid #ccc;border-radius:12px;padding:16px;margin:16px 0}.spec{background:#f7f9fc}code{background:#f2f2f2;padding:1px 4px;border-radius:4px}</style>
 </head><body>
-<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Nov 13, 2026, 1:52 PM ET (version a0c33f1a065f). Regenerated with every change to the prototype.</header>
+<header>Regional Finance · Loan flow prototype v1 · <strong>agent-readable copy</strong> (plain HTML, no JavaScript) · <a href="../index.html">All journeys</a> · Updated Nov 18, 2026, 11:07 AM ET (version ec735ae130a7). Regenerated with every change to the prototype.</header>
 <nav>Journey: <a href="index.html">Known customer prequal · NerdWallet</a> · Screen 2 of 15 · <a href="01-aff-0.html">← previous</a> · <a href="03-sms.html">next: SMS code →</a></nav>
-<main><h1>Pre-qualified offer landing</h1><p class="meta">Screen key: <code>prequalLanding</code></p><section class="spec" aria-label="About this screen"><p>Regional’s pre-qualified offer landing (Nov 2026 release). The pre-qualified offer is shown ($15,000, 36 months, 13.01% APR); the customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. The customer accepts the consents in the pinned bar and continues. When the channel sends no usable phone (Credit Karma) it also asks for a mobile number, and the code is texted there. Next: the SMS code.</p></section><section class="screen" aria-label="What the customer sees"><h2>What the customer sees</h2><header><div><a aria-label="Regional Finance home"><img alt="Regional Finance"></a></div></header>
+<main><h1>Pre-qualified offer landing</h1><p class="meta">Screen key: <code>prequalLanding</code></p><section class="spec" aria-label="About this screen"><p>Regional’s pre-qualified offer landing (“Let’s keep going”, built to the final mockups of Nov 17 2026). The card shows the pre-qualified offer: the amount, with the term, the APR and the estimated monthly payment. On a desktop the three sit side by side; on a phone there is room for one, so they rotate in a small carousel beside the amount (it advances on its own; a tap or swipe moves it). The customer can change amount, term and autopay later, on the existing offer page after “Is this you?”. To continue, the customer ticks the consent and taps “Text me a code”, which texts a code to the number on file; the pencil opens “Confirm your mobile number” (phone number, date of birth, last 4 of the SSN, “Confirm &amp; Send Code”). When the channel sends no usable phone (Credit Karma) the page opens on those fields. If the date of birth and SSN don’t match an application the block reads “Update your phone number” with an error; after three misses the page becomes “We couldn’t find your offer” with “Start a new application”. Next: the SMS code.</p></section><section class="screen" aria-label="What the customer sees"><h2>What the customer sees</h2><header><div><a aria-label="Regional Finance home"><img alt="Regional Finance"></a></div></header>
 <main>
 <section><p>Hi Jordan!</p><h1><span>Let’s keep going.</span><span hidden="">Welcome back. Let’s keep going.</span></h1></section>
 <div>
@@ -14,14 +14,21 @@
 <div>Your pre-qualified offer is waiting</div>
 <div>
 <div>$12,500</div>
-<div><span>Term</span><b>36 months</b></div>
+<div aria-roledescription="carousel" aria-label="Offer details: term, APR and estimated monthly payment">
+<div><ul>
+<li><span>Term</span><b>3 Years</b></li>
+<li><span>APR</span><b>13.34%</b></li>
+<li><span>Est. Mo. Pymt</span><b>$423/mo</b></li>
+</ul></div>
+<div><i></i><i></i><i></i></div>
+</div>
 </div>
 <div>
-<h2>Unlock your offer</h2>
+<div><h2>Unlock your full offer</h2><p>We’ll text a code to confirm it’s you.</p></div>
 <div><span>(123) 456-7890</span><button type="button" aria-label="Use a different phone number"></button></div>
 <section hidden="" aria-labelledby="ppCheckTitle">
-<h2>Confirm your mobile number</h2>
-<p>We also need a few details to unlock your offer.</p>
+<h2><span>Confirm your mobile number</span><span hidden="">Update your phone number</span></h2>
+<p><span>We also need a few details to unlock your offer.</span><span hidden="">Please verify your identity to make changes.</span></p>
 <p hidden=""><i>!</i><span>We couldn’t match the date of birth and SSN to an application. Double-check them or <a>start a new application</a>.</span></p>
 <div><label for="ppPhone">Phone Number</label><input type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(•••) •••-••••" maxlength="14"></div>
 <div><label for="ppDob">Date of Birth</label><input inputmode="numeric" autocomplete="bday" placeholder="MM/DD/YYYY" maxlength="10"></div>
@@ -34,18 +41,18 @@
 <p><button type="button">Go back</button></p>
 </section>
 <div aria-label="Unlock your offer"><div>
-<div><input type="checkbox"><label for="legal">I have read and agreed to the: <a>Terms of Use</a>, <a>Privacy Policy</a>, <a>ESIGN Act Consent</a> and <a>Consent to Receive Commercial Emails</a>. These materials include important information so please review them before advancing to the next stage of our digital loan process.</label></div>
-<div><button type="button" disabled="">Send Code</button></div>
-<p>This won’t affect your credit score.</p>
+<div><input type="checkbox"><label for="legal">I have read and agreed to the: <a>Terms of Use</a>, <a>Privacy Policy</a>, <a>ESIGN Act Consent</a> and <a>Consent to Receive Commercial Emails</a>.</label></div>
+<div><button type="button" disabled="">Text me a code</button></div>
+<p>Continuing won’t affect your credit score.</p>
 </div></div>
 </div>
 </section>
 </div>
 <ul aria-label="Why Regional Finance">
 <li><b>We look beyond your credit score</b><span>Your income and budget count, not just your score.</span></li>
-<li><b>Simple, fast, and 100% online</b><span>Start now and finish on your own time.</span></li>
-<li><b>Money as soon as today</b><span>Link an eligible bank account for instant funding.</span></li>
-<li><b>A payment you’re comfortable with</b><span>Customize your amount and term as you continue.</span></li>
+<li><b>Simple, fast, and<br> 100% online</b><span>Start now and finish on your own time.</span></li>
+<li><b>Money as soon<br> as&nbsp;today</b><span>Link an eligible bank account for instant funding.</span></li>
+<li><b>A payment you’re<br> comfortable with</b><span>Customize your amount and term as you continue.</span></li>
 </ul>
 <hr>
 <section aria-label="Trusted by your neighbors">

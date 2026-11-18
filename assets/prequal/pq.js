@@ -16,6 +16,9 @@
       el.textContent = text; el.classList.remove('lf2-flash'); void el.offsetWidth; el.classList.add('lf2-flash');
     });
   };
+  // Landings that show the offer's term, APR and est. monthly payment (landing-keep.html) read them from this model,
+  // so the landing always matches the offer page.
+  window.rfPq = { offer: offer, price: function () { return { term: offer.term, apr: apr(offer.term), monthly: payment() }; } };
   var edit = document.getElementById('pqEdit');
   function show() {
     set('amount', money(offer.amount)); set('monthly', money(payment())); set('term', offer.term * 12 + ' mo');

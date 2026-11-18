@@ -340,6 +340,15 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     // Design 3: the funnel's own Pre-Approval Offer page (title, offer card, pinned monthly payment) + the phone step.
     if (S.page === 'pqDesign3') { S.page = 'offer'; baseRender(shouldScroll); S.page = 'pqDesign3'; phone.classList.remove('page-prequal'); design3(); designBar(); return; }
     baseRender(shouldScroll);
+    // Known Customer Prequal, final mockups of Nov 17 2026 ("2 - Phone Verification, OTP"): the title breaks after
+    // "Please enter the", the number sits on its own smaller line, and the buttons are sentence case.
+    // Known and New Customer keep today's code screen.
+    if (S.page === 'sms' && S.pq) {
+      const t = app.querySelector('h1.title'), num = t && t.querySelector('.blue'), main = app.querySelector('.btn-main'), resend = [...app.querySelectorAll('.btn-link')].find(b => /resend/i.test(b.textContent));
+      if (num) { t.innerHTML = 'Please enter the<br>6-digit code sent to<br>'; num.classList.add('pq-otp-num'); t.appendChild(num); }
+      if (main) main.textContent = 'Verify code';
+      if (resend) resend.textContent = 'Resend code';
+    }
     if (S.page !== 'review') reviewEdit = false;
     if (S.page === 'review' && S.flow === 'known') { if (reviewEdit) editPage(); else if (S.confirmEdit) ssnRow(); else reviewPage(); }
     // Known journeys: the SSN is shown and edited on the review page, so the credit check doesn't repeat it.
@@ -378,8 +387,9 @@ document.head.insertAdjacentHTML('beforeend', `<style>
   };
   // Landing designs for the team to compare (demo panel → Known Customer Prequal → Landing design). Same states and rules.
   // 1 = Simple + Unlock (picked Oct 28 2026) · click = “Your offer is just a click away” (Nov 4 2026)
-  // · keep = “Let’s keep going” (Nov 13 2026 copy review; the default for anyone who hasn't picked a design).
-  const LD_KEY = 'rf-v1-prequal-design', LANDINGS = { keep: 'Let’s keep going', click: 'Just a click away', 1: 'Simple + Unlock' }, LAND_FILE = { 1: 'landing-blend.html', click: 'landing-click.html', keep: 'landing-keep.html' };
+  // · keep = “Let’s keep going” (Nov 13 2026 copy review; THE landing since the final mockups of Nov 17 2026, and the default).
+  //   The storage key ends in -2 so a design someone picked before Nov 18 2026 doesn't hide the final landing.
+  const LD_KEY = 'rf-v1-prequal-design-2', LANDINGS = { keep: 'Let’s keep going', click: 'Just a click away', 1: 'Simple + Unlock' }, LAND_FILE = { 1: 'landing-blend.html', click: 'landing-click.html', keep: 'landing-keep.html' };
   let landDesign = 'keep', d4State = '';
   // CAME BACK: the customer gave us a number on a first visit, left, and came back from the partner. The offer is saved to
   // that number (prototype: ***-***-7890); a different number shows "This offer is already saved to another number".
@@ -509,7 +519,7 @@ document.head.insertAdjacentHTML('beforeend', `<style>
     '.phone .rv-alt{min-height:48px;border:1.5px solid #2A71D4;border-radius:999px;background:#fff;color:#2A71D4;font-weight:600;font-size:16px}' +
     '.phone .rv-actions .btn-main:disabled{opacity:.45;cursor:default}' +
     '</style>');
-  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
+  document.head.insertAdjacentHTML('beforeend', '<style>.phone.design-v4 .title .pq-otp-num{display:inline-block;margin-top:6px;font-size:22px;font-weight:700;letter-spacing:0;line-height:1.3}.phone.design-v4 .pq-ssn-note{display:flex;align-items:center;gap:6px;margin:8px 28px 0 0;color:#6a6a6a;font-size:11px;line-height:1.35;text-align:left}.phone.design-v4 .pq-ssn-empty{color:#8d8d8d!important}.phone.design-v4 .btn-main:disabled{opacity:.45;cursor:default}</style>');
   try { const v = localStorage.getItem(LD_KEY); if (LANDINGS[v]) landDesign = v; } catch (e) {}
   function landingPage(){
     // Credit Karma sends no number, so every design opens on the new-number block.

@@ -66,6 +66,18 @@ const SHOTS = [
   { file: 'blend-update.png', page: 'landing-blend.html', q: '&state=notmine', el: '.ps-card' },
   { file: 'design-4-number.png', page: 'landing-blend.html', upTo: '#ppFile' },
   // Release board slot "0 · New borrower landing" (taller than Figma's 4096 px: full pages scale down to fit).
+  // "Let's keep going" as built to the final mockups of Nov 17 2026 (PI-1 landing screens): the page (mobile + desktop),
+  // the mobile offer-details carousel on each slide (?stat holds a slide), edit phone, the no-match error, the soft
+  // landing, and the prequal code screen.
+  { file: 'keep-full.png', page: 'landing-keep.html', q: '&consent=1&stat=1' },
+  { file: 'keep-desktop.png', page: 'landing-keep.html', q: '&consent=1', w: 1440 },
+  { file: 'keep-stat-term.png', page: 'landing-keep.html', q: '&stat=1', el: '.kg-offer' },
+  { file: 'keep-stat-apr.png', page: 'landing-keep.html', q: '&stat=2', el: '.kg-offer' },
+  { file: 'keep-stat-pymt.png', page: 'landing-keep.html', q: '&stat=3', el: '.kg-offer' },
+  { file: 'keep-edit.png', page: 'landing-keep.html', q: '&consent=1&stat=1&state=notmine', el: '.kg-card' },
+  { file: 'keep-error.png', page: 'landing-keep.html', q: '&consent=1&stat=1&state=retry', el: '.kg-card' },
+  { file: 'keep-soft.png', page: 'landing-keep.html', q: '&state=nomatch', first: true },
+  { file: 'keep-code.png', app: '?scenario=1', run: "start('prequal'); S.hist=[]; go('sms',false);", hide: '.ios-note', first: true },
   { file: 'new-borrower-landing-v2.png', page: 'landing-new.html' },
 ];
 
@@ -77,7 +89,7 @@ const browser = await puppeteer.launch({ executablePath: SHELL, headless: 'shell
 const tab = await browser.newPage();
 mkdirSync('assets/board', { recursive: true });
 for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.argv[2]))) {
-  await tab.setViewport({ width: 390, height: 844, deviceScaleFactor: 2 });
+  await tab.setViewport({ width: s.w || 390, height: 844, deviceScaleFactor: s.w ? 1 : 2 });
   await tab.goto(s.app ? BASE.replace('/assets/prequal/', '/index.html') + s.app + '&t=' + Date.now() : BASE + s.page + '?t=' + Date.now() + (s.q || ''), { waitUntil: 'networkidle0' });
   if (s.app) await tab.addStyleTag({ content: 'html body .panel button.flow-fab,html body .flow-fab{display:none!important;visibility:hidden!important}' });
   if (s.run) { await tab.evaluate(s.run); await new Promise(r => setTimeout(r, 1200)); }
@@ -104,9 +116,9 @@ for (const s of SHOTS.filter(s => !process.argv[2] || s.file.includes(process.ar
   // Full page: grow the viewport to the page height so the pinned bar sits at the very bottom, under the footer.
   const h = await tab.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
   // Figma takes images up to 4096 px per side: full pages render at 1x (390 wide is still sharper than the 300 px board slot).
-  await tab.setViewport({ width: 390, height: h, deviceScaleFactor: Math.min(1, 4090 / h) });
+  await tab.setViewport({ width: s.w || 390, height: h, deviceScaleFactor: Math.min(1, 4090 / h) });
   await new Promise(r => setTimeout(r, 600));
   await tab.screenshot({ path: 'assets/board/' + s.file, fullPage: false });
-  console.log(s.file, 390 + 'x' + h);
+  console.log(s.file, (s.w || 390) + 'x' + h);
 }
 await browser.close(); server.close();
